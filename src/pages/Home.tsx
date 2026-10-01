@@ -12,8 +12,8 @@ import { SkeletonCard } from '../components/SkeletonCard';
 import { NoResults } from '../components/NoResults';
 import { SEO } from '../components/SEO';
 import { CertificationSelector, type CertificationFilter } from '../components/CertificationSelector';
-import { fetchMoviesByLanguage, searchMovies, PROVIDERS } from '../services/tmdb';
-import { matchesCertificationFilter } from '../services/sanghi';
+import { fetchCuratedMovies, fetchMoviesByLanguage, searchMovies, PROVIDERS } from '../services/tmdb';
+import { getProfilesForSelection, matchesCertificationFilter } from '../services/sanghi';
 import type { Movie } from '../types/movie';
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -61,6 +61,17 @@ export function Home() {
 
     if (searchQuery) {
       fetchedMovies = await searchMovies(searchQuery, selectedRegion);
+    } else if (certificationFilter !== 'all') {
+      const profiles = getProfilesForSelection(
+        certificationFilter,
+        selectedLanguage,
+        selectedDecade
+      );
+      fetchedMovies = await fetchCuratedMovies(
+        profiles,
+        selectedRegion,
+        selectedProviders
+      );
     } else {
       fetchedMovies = await fetchMoviesByLanguage(
         selectedLanguage,
@@ -72,9 +83,15 @@ export function Home() {
       );
     }
 
-    const visibleMovies = fetchedMovies.filter(movie =>
+    let visibleMovies = fetchedMovies.filter(movie =>
       matchesCertificationFilter(movie, certificationFilter)
     );
+
+    if (certificationFilter !== 'all' && selectedGenre !== undefined) {
+      visibleMovies = visibleMovies.filter(movie =>
+        movie.genres?.some(genre => genre.id === selectedGenre) ?? true
+      );
+    }
 
     setMovies(visibleMovies);
     setUnusedMovies(shuffleArray([...visibleMovies]));
@@ -142,10 +159,10 @@ export function Home() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "FlickPick",
-    "url": "https://movieselectprime.netlify.app/",
+    "url": "https://justflickpick.netlify.app/",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://movieselectprime.netlify.app/?q={search_term_string}",
+      "target": "https://justflickpick.netlify.app/?q={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   };
