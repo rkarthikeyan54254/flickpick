@@ -38,6 +38,18 @@ export interface EvidenceItem {
   url?: string;
 }
 
+export interface PublicationGate {
+  adversarialPass: boolean;
+  regionalContextPass: boolean;
+  socialRadarPass: boolean;
+  adaptationDeltaPass: 'passed' | 'not-applicable';
+  narrativeIntegrityPass: boolean;
+  factInterpretationIntentPass: boolean;
+  evidenceSufficiencyPass: boolean;
+  explanationPass: boolean;
+  selfFalsificationPass: boolean;
+}
+
 export interface SanghiProfile {
   title: string;
   year: number;
@@ -49,6 +61,7 @@ export interface SanghiProfile {
   reviewedAt: string;
   reviewDepth?: ReviewDepth;
   auditStatus?: AuditStatus;
+  publicationGate?: PublicationGate;
   dimensions: SanghiDimensions;
   tags: string[];
   reasons: string[];
