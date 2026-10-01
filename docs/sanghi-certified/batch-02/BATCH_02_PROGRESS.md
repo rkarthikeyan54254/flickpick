@@ -9,11 +9,11 @@
 | Language | Target | Researched | Gate-passed | Provisional |
 |---|---:|---:|---:|---:|
 | Hindi | 10 | 10 | 9 | 1 |
-| Tamil | 10 | 0 | 0 | 0 |
+| Tamil | 10 | 5 | 4 | 1 |
 | Telugu | 10 | 0 | 0 | 0 |
 | Malayalam | 10 | 0 | 0 | 0 |
 | Kannada | 10 | 0 | 0 | 0 |
-| **Total** | **50** | **10** | **9** | **1** |
+| **Total** | **50** | **15** | **13** | **2** |
 
 ## Hindi tranche — complete
 
@@ -30,16 +30,27 @@ Detailed records: `HINDI_TRANCHE_01.md` and `HINDI_TRANCHE_02.md`
 9. Rocketry: The Nambi Effect (2022) — Mixed / Contested — reviewed; strongly India-positive but material biographical/scientific-credit claims are disputed by multiple former ISRO scientists
 10. Ram Setu (2022) — Mixed / Contested — reviewed; high sacred/civilizational alignment, but the film's archaeological certainty exceeds what government/scientific records establish
 
-## Editorial notes discovered in this tranche
+## Tamil tranche — 5/10 researched
+
+Detailed records: `TAMIL_TRANCHE_01.md`
+
+11. Lubber Pandhu (2024) — Neutral — reviewed
+12. Captain Miller (2024) — Mixed / Contested hypothesis — **provisional hold** pending stronger resolution/comparison evidence for the named plagiarism allegation
+13. Maaveeran (2023) — Neutral — reviewed
+14. Parking (2023) — Neutral — reviewed
+15. Ayothi (2023) — Mixed / Contested — reviewed; real-incident/story credit dispute recorded with subsequent acknowledgement/resolution
+
+## Editorial notes discovered so far
 
 - **Worldview alignment must not launder factual unreliability.** *The Kerala Story*, *Rocketry* and *Ram Setu* are important regression cases: a film can align with the declared India-grounded lens while still requiring Mixed/Contested because its factual or source-fidelity layer is materially disputed.
-- **A historical film may remain Certified while carrying serious Narrative Integrity flags.** *Sardar Udham* is strongly anti-colonial/civilizationally aligned, but documented source-vs-film differences around Udham Singh's presence at Jallianwala Bagh and his relationship with Bhagat Singh must be visible to users.
+- **A historical film may remain Certified while carrying serious Narrative Integrity flags.** *Sardar Udham* is strongly anti-colonial/civilizationally aligned, but documented source-vs-film differences must be visible to users.
 - **Creator intent cannot erase a representation choice.** *Animal* director Sandeep Reddy Vanga explicitly explained why Abrar was converted to Islam. The intent denial is recorded, but the religious identity choice and its narrative use are facts and belong in Narrative Integrity.
-- **Critique of patriarchy is not anti-Indic by default.** *Laapataa Ladies* is held for evidence/originality reasons, not because it critiques ghoonghat or gender norms. Kiran Rao explicitly described working from within family/marriage rather than demanding wholesale rupture.
-- **Faith and archaeology must remain separate evidence layers.** *Ram Setu* can score very highly on sacred regard/civilizational continuity while the product explicitly tells users that the film's man-made/archaeological certainty is not established fact.
-- **Patriotism and biographical accuracy are independent axes.** *Rocketry* is strongly India-positive, but former ISRO scientists' specific challenges to technical-history claims cannot be dismissed as ideological disagreement.
-- **Social-media allegations are radar.** Reddit/X/viral claims were used to find potential issues, but no verdict relies on engagement volume or an unverified post.
+- **Critique of patriarchy/caste/state failure is not anti-Indic by default.** *Lubber Pandhu*, *Maaveeran* and *Parking* reinforce this guardrail.
+- **Faith and archaeology must remain separate evidence layers.** *Ram Setu* can score very highly on sacred regard/civilizational continuity while the product explicitly tells users that archaeological certainty is not established fact.
+- **Patriotism and biographical accuracy are independent axes.** *Rocketry* is strongly India-positive, but former ISRO scientists' specific challenges cannot be dismissed as ideological disagreement.
+- **Source-credit/originality belongs in Narrative Integrity.** *Ayothi* provides a useful case where a provenance dispute has attributable reporting and a documented acknowledgement/resolution; *Captain Miller* remains provisional because the current pass has an allegation but insufficient resolution evidence.
+- **Social-media allegations are radar.** Reddit/X/viral claims are used to find potential issues, but no verdict relies on engagement volume or an unverified post.
 
 ## Next
 
-Move to Tamil tranche 01 at equivalent evidence depth. Do not merge this branch before the full 50-film human review.
+Complete Tamil tranche 02 at equivalent evidence depth, then proceed to Telugu. Do not merge this branch before the full 50-film human review.
