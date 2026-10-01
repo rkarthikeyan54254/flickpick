@@ -2,6 +2,7 @@ import React from 'react';
 import { AlertTriangle, HelpCircle, Scale, ShieldCheck } from 'lucide-react';
 import type { SanghiProfile } from '../types/sanghi';
 import { certificationLabels, topPositiveDimensions } from '../services/sanghi';
+import { isPublicationEligible } from '../services/editorialGate';
 
 interface SanghiBadgeProps {
   profile: SanghiProfile;
@@ -10,6 +11,7 @@ interface SanghiBadgeProps {
 
 export function SanghiBadge({ profile, compact = false }: SanghiBadgeProps) {
   const top = topPositiveDimensions(profile, 3);
+  const eligible = isPublicationEligible(profile);
   const Icon = profile.status === 'certified' ? ShieldCheck : profile.status === 'mixed' ? Scale : HelpCircle;
   const tone = profile.status === 'certified'
     ? 'border-orange-300/25 bg-gradient-to-br from-orange-400/[0.14] via-white/[0.03] to-transparent'
@@ -17,6 +19,7 @@ export function SanghiBadge({ profile, compact = false }: SanghiBadgeProps) {
       ? 'border-amber-200/20 bg-gradient-to-br from-amber-300/[0.10] via-white/[0.03] to-transparent'
       : 'border-white/10 bg-gradient-to-br from-white/[0.06] via-white/[0.02] to-transparent';
   const reviewLabel = profile.reviewDepth ? profile.reviewDepth.replace('-', ' ') : 'calibration pass';
+  const verdictLabel = eligible ? certificationLabels[profile.status] : `Provisional · ${certificationLabels[profile.status]}`;
 
   return (
     <div className={`rounded-[1.75rem] border ${tone} ${compact ? 'p-5' : 'p-6'} overflow-hidden`}>
@@ -29,7 +32,7 @@ export function SanghiBadge({ profile, compact = false }: SanghiBadgeProps) {
                 <Icon className="w-4 h-4" />
               </span>
               <div>
-                <p className="text-lg md:text-xl font-black tracking-tight">{certificationLabels[profile.status]}</p>
+                <p className="text-lg md:text-xl font-black tracking-tight">{verdictLabel}</p>
                 <p className="text-[10px] uppercase tracking-[0.18em] text-text-secondary font-bold">
                   {profile.confidence} confidence · {reviewLabel}
                 </p>
@@ -47,6 +50,12 @@ export function SanghiBadge({ profile, compact = false }: SanghiBadgeProps) {
             </div>
           )}
         </div>
+
+        {!eligible && (
+          <div className="rounded-2xl border border-amber-200/15 bg-amber-300/[0.06] px-4 py-3 text-xs leading-relaxed text-text-secondary">
+            Calibration record. This verdict has not yet passed the v1 editorial publication gate.
+          </div>
+        )}
 
         {compact && (
           <div className="border-t border-white/10 pt-4 space-y-3">
