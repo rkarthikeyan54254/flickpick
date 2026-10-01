@@ -6,6 +6,8 @@ export type CertificationStatus =
   | 'unrated';
 
 export type Confidence = 'high' | 'medium' | 'low';
+export type ReviewDepth = 'desk' | 'source-audit' | 'scene-audit';
+export type AuditStatus = 'provisional' | 'reviewed' | 'hardened';
 
 export interface SanghiDimensions {
   dharma: number | null;
@@ -24,6 +26,9 @@ export interface IntegrityFlag {
   type: string;
   status: 'verified' | 'supported' | 'disputed' | 'unverified' | 'contradicted';
   summary: string;
+  fact?: string;
+  interpretation?: string;
+  intent?: string;
 }
 
 export interface EvidenceItem {
@@ -42,6 +47,8 @@ export interface SanghiProfile {
   confidence: Confidence;
   methodologyVersion: string;
   reviewedAt: string;
+  reviewDepth?: ReviewDepth;
+  auditStatus?: AuditStatus;
   dimensions: SanghiDimensions;
   tags: string[];
   reasons: string[];
