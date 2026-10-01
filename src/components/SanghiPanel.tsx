@@ -2,6 +2,7 @@ import React from 'react';
 import { AlertTriangle, ExternalLink, HelpCircle, Scale, ShieldCheck } from 'lucide-react';
 import type { SanghiProfile } from '../types/sanghi';
 import { certificationLabels, dimensionLabels } from '../services/sanghi';
+import { evaluateEditorialGate } from '../services/editorialGate';
 
 interface SanghiPanelProps {
   profile: SanghiProfile;
@@ -12,6 +13,8 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
   const Icon = profile.status === 'certified' ? ShieldCheck : profile.status === 'mixed' ? Scale : HelpCircle;
   const reviewDepth = profile.reviewDepth ? profile.reviewDepth.replace('-', ' ').toUpperCase() : 'CALIBRATION PASS';
   const auditStatus = profile.auditStatus ? profile.auditStatus.toUpperCase() : 'PROVISIONAL';
+  const gate = evaluateEditorialGate(profile);
+  const verdictLabel = gate.eligible ? certificationLabels[profile.status] : `Provisional · ${certificationLabels[profile.status]}`;
 
   return (
     <section className="rounded-[2.75rem] overflow-hidden border border-white/10 bg-gradient-to-b from-white/[0.055] to-white/[0.015] shadow-2xl">
@@ -28,11 +31,18 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-4xl md:text-6xl font-black tracking-[-0.04em] leading-none">{certificationLabels[profile.status]}</h3>
+              <h3 className="text-4xl md:text-6xl font-black tracking-[-0.04em] leading-none">{verdictLabel}</h3>
               <p className="text-sm md:text-base text-text-secondary font-medium">
                 {profile.confidence.toUpperCase()} confidence · {reviewDepth} · {auditStatus}
               </p>
             </div>
+
+            {!gate.eligible && (
+              <div className="rounded-2xl border border-amber-200/15 bg-amber-300/[0.06] p-4 text-sm leading-relaxed text-text-secondary">
+                <span className="font-black text-amber-100">Publication gate pending.</span>{' '}
+                This calibration record remains provisional until the v1 editorial gate is fully documented.
+              </div>
+            )}
 
             <div className="space-y-4">
               <p className="text-[10px] font-black uppercase tracking-[0.26em] text-text-secondary">Why this result</p>
