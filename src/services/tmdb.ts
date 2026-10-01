@@ -105,6 +105,56 @@ export async function fetchMoviesByLanguage(
   }
 }
 
+/**
+ * Resolve our pre-reviewed editorial corpus into live TMDb movie objects.
+ * In certification modes the editorial corpus is the source of candidates;
+ * TMDb only hydrates those candidates with poster/provider metadata.
+ */
+export async function fetchCuratedMovies(
+  profiles: Array<{ title: string; year: number }>,
+  region: string = 'IN',
+  providerIds: number[] = [8, 119, 232]
+): Promise<Movie[]> {
+  try {
+    const resolved = await Promise.all(
+      profiles.map(async (profile) => {
+        const response = await axios.get<TMDBResponse>(`${TMDB_BASE_URL}/search/movie`, {
+          params: {
+            api_key: TMDB_API_KEY,
+            query: profile.title,
+            year: profile.year,
+            region
+          }
+        });
+
+        const exact = response.data.results.find(movie => {
+          const releaseYear = Number(movie.release_date?.slice(0, 4));
+          return releaseYear === profile.year;
+        }) || response.data.results[0];
+
+        if (!exact) return null;
+
+        const watchProviders = await fetchWatchProviders(exact.id, region);
+        const hydrated: Movie = { ...exact, watch_providers: watchProviders };
+
+        if (providerIds.length > 0) {
+          const availableOnSelectedProvider = hydrated.watch_providers?.flatrate?.some(
+            provider => providerIds.includes(provider.provider_id)
+          );
+          if (!availableOnSelectedProvider) return null;
+        }
+
+        return hydrated;
+      })
+    );
+
+    return resolved.filter((movie): movie is Movie => movie !== null);
+  } catch (error) {
+    console.error('Failed to resolve curated movie corpus', error);
+    return [];
+  }
+}
+
 export async function fetchMovieDetails(movieId: number, region: string = 'IN'): Promise<Movie | null> {
   try {
     const response = await axios.get<Movie>(`${TMDB_BASE_URL}/movie/${movieId}`, {
