@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, ExternalLink, ShieldCheck } from 'lucide-react';
+import { AlertTriangle, ExternalLink, HelpCircle, Scale, ShieldCheck } from 'lucide-react';
 import type { SanghiProfile } from '../types/sanghi';
 import { certificationLabels, dimensionLabels } from '../services/sanghi';
 
@@ -9,95 +9,168 @@ interface SanghiPanelProps {
 
 export function SanghiPanel({ profile }: SanghiPanelProps) {
   const dimensions = Object.entries(profile.dimensions).filter(([, value]) => typeof value === 'number');
+  const Icon = profile.status === 'certified' ? ShieldCheck : profile.status === 'mixed' ? Scale : HelpCircle;
 
   return (
-    <section className="chic-glass rounded-[2.5rem] p-8 md:p-10 space-y-8 border border-orange-300/20">
-      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-        <div className="space-y-3">
-          <div className="flex items-center gap-3 text-orange-300">
-            <ShieldCheck className="w-6 h-6" />
-            <p className="text-xs font-black uppercase tracking-[0.25em]">Sanghi Certified · Beta</p>
-          </div>
-          <h3 className="text-3xl md:text-4xl font-black tracking-tighter">{certificationLabels[profile.status]}</h3>
-          <p className="text-text-secondary font-medium">
-            {profile.confidence.toUpperCase()} confidence · methodology v{profile.methodologyVersion} · reviewed {profile.reviewedAt}
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {profile.tags.map(tag => (
-            <span key={tag} className="px-3 py-2 rounded-full bg-orange-400/10 text-orange-200 text-[10px] font-black uppercase tracking-widest">
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
+    <section className="rounded-[2.75rem] overflow-hidden border border-white/10 bg-gradient-to-b from-white/[0.055] to-white/[0.015] shadow-2xl">
+      <div className="p-8 md:p-12 border-b border-white/10">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14">
+          <div className="space-y-7">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-white/10 bg-black/20 text-[9px] font-black uppercase tracking-[0.24em] text-text-secondary">
+                <Icon className="w-4 h-4" /> Editorial verdict
+              </span>
+              <span className="text-[9px] uppercase tracking-[0.20em] text-text-secondary font-bold">
+                methodology v{profile.methodologyVersion} · reviewed {profile.reviewedAt}
+              </span>
+            </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        {dimensions.map(([key, rawValue]) => {
-          const value = rawValue as number;
-          const isRisk = key === 'contemptRisk';
-          return (
-            <div key={key} className="rounded-2xl bg-black/20 p-4 space-y-2">
-              <p className="text-[10px] uppercase tracking-widest text-text-secondary font-black">{dimensionLabels[key] || key}</p>
-              <div className="flex items-end gap-1">
-                <span className={`text-2xl font-black ${isRisk && value >= 3 ? 'text-orange-300' : 'text-text-primary'}`}>{value}</span>
-                <span className="text-xs text-text-secondary pb-1">/5</span>
+            <div className="space-y-3">
+              <h3 className="text-4xl md:text-6xl font-black tracking-[-0.04em] leading-none">{certificationLabels[profile.status]}</h3>
+              <p className="text-sm md:text-base text-text-secondary font-medium">
+                {profile.confidence.toUpperCase()} confidence
+                {profile.reviewDepth ? ` · ${profile.reviewDepth.replace('-', ' ').toUpperCase()}` : ''}
+                {profile.auditStatus ? ` · ${profile.auditStatus.toUpperCase()}` : ''}
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <p className="text-[10px] font-black uppercase tracking-[0.26em] text-text-secondary">Why this result</p>
+              <div className="space-y-3">
+                {profile.reasons.map((reason, index) => (
+                  <div key={reason} className="grid grid-cols-[36px_1fr] gap-3 rounded-2xl border border-white/8 bg-black/15 p-4 md:p-5">
+                    <span className="text-[10px] font-black text-text-primary/50 pt-1">0{index + 1}</span>
+                    <p className="text-base md:text-lg leading-relaxed text-text-secondary">{reason}</p>
+                  </div>
+                ))}
               </div>
             </div>
-          );
-        })}
-      </div>
+          </div>
 
-      <div className="space-y-4">
-        <h4 className="text-lg font-black uppercase tracking-widest">Why this result</h4>
-        <ul className="space-y-3 text-text-secondary text-lg leading-relaxed">
-          {profile.reasons.map(reason => <li key={reason}>• {reason}</li>)}
-        </ul>
-      </div>
-
-      {profile.integrityFlags.length > 0 && (
-        <div className="space-y-4 pt-6 border-t border-glass-border">
-          <h4 className="text-lg font-black uppercase tracking-widest flex items-center gap-2">
-            <AlertTriangle className="w-5 h-5 text-orange-300" /> Narrative integrity
-          </h4>
-          <div className="space-y-3">
-            {profile.integrityFlags.map(flag => (
-              <div key={`${flag.type}-${flag.summary}`} className="rounded-2xl bg-black/20 p-5">
-                <div className="flex flex-wrap gap-2 items-center mb-2">
-                  <span className="text-xs font-black uppercase tracking-widest">{flag.type}</span>
-                  <span className="text-[10px] uppercase tracking-widest text-orange-300 font-black">{flag.status}</span>
-                </div>
-                <p className="text-text-secondary leading-relaxed">{flag.summary}</p>
+          <div className="space-y-5">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.26em] text-text-secondary">Signal map</p>
+                <p className="mt-2 text-sm text-text-secondary">Context for the verdict, not a quality score.</p>
               </div>
-            ))}
+              <div className="flex flex-wrap gap-2 justify-end">
+                {profile.tags.slice(0, 3).map(tag => (
+                  <span key={tag} className="px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-[9px] font-black uppercase tracking-[0.16em] text-text-secondary">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-[2rem] border border-white/10 bg-black/15 p-5 md:p-6 space-y-4">
+              {dimensions.map(([key, rawValue]) => {
+                const value = rawValue as number;
+                const isRisk = key === 'contemptRisk';
+                const width = `${Math.max(0, Math.min(100, value * 20))}%`;
+                return (
+                  <div key={key} className="grid grid-cols-[120px_1fr_36px] md:grid-cols-[150px_1fr_42px] gap-3 items-center">
+                    <p className="text-[10px] uppercase tracking-[0.14em] text-text-secondary font-black">{dimensionLabels[key] || key}</p>
+                    <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
+                      <div
+                        className={`h-full rounded-full ${isRisk && value >= 3 ? 'bg-amber-300/80' : 'bg-white/70'}`}
+                        style={{ width }}
+                      />
+                    </div>
+                    <p className={`text-xs text-right font-black ${isRisk && value >= 3 ? 'text-amber-200' : 'text-text-primary'}`}>{value}/5</p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
-      )}
+      </div>
 
-      {profile.evidence.length > 0 && (
-        <details className="pt-6 border-t border-glass-border group">
-          <summary className="cursor-pointer text-sm font-black uppercase tracking-widest text-text-secondary group-open:text-text-primary">
-            Evidence notes ({profile.evidence.length})
+      <div className="p-8 md:p-12 space-y-10">
+        <div className="space-y-5">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.26em] text-text-secondary">Narrative integrity</p>
+              <h4 className="mt-2 text-2xl md:text-3xl font-black tracking-tight">What changed, what it may mean, and what we can actually prove.</h4>
+            </div>
+            {profile.integrityFlags.length > 0 && (
+              <span className="px-3 py-2 rounded-full border border-amber-200/20 bg-amber-300/[0.08] text-[9px] font-black uppercase tracking-[0.18em] text-amber-100">
+                {profile.integrityFlags.length} finding{profile.integrityFlags.length === 1 ? '' : 's'}
+              </span>
+            )}
+          </div>
+
+          {profile.integrityFlags.length === 0 ? (
+            <div className="rounded-2xl border border-white/10 bg-black/15 p-5 text-text-secondary">
+              No material narrative-integrity concern is recorded in the current review.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4">
+              {profile.integrityFlags.map(flag => (
+                <article key={`${flag.type}-${flag.summary}`} className="rounded-[2rem] border border-white/10 bg-black/15 p-5 md:p-6 space-y-5">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <AlertTriangle className="w-4 h-4 text-amber-200" />
+                    <span className="text-xs font-black uppercase tracking-[0.16em]">{flag.type.replace(/-/g, ' ')}</span>
+                    <span className="px-2.5 py-1 rounded-full bg-white/[0.05] text-[9px] uppercase tracking-[0.16em] text-text-secondary font-black">{flag.status}</span>
+                  </div>
+                  <p className="text-base md:text-lg leading-relaxed text-text-secondary">{flag.summary}</p>
+
+                  {(flag.fact || flag.interpretation || flag.intent) && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+                      {flag.fact && (
+                        <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-4">
+                          <p className="text-[9px] font-black uppercase tracking-[0.18em] text-text-secondary mb-2">Fact</p>
+                          <p className="text-sm leading-relaxed text-text-secondary">{flag.fact}</p>
+                        </div>
+                      )}
+                      {flag.interpretation && (
+                        <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-4">
+                          <p className="text-[9px] font-black uppercase tracking-[0.18em] text-text-secondary mb-2">Interpretation</p>
+                          <p className="text-sm leading-relaxed text-text-secondary">{flag.interpretation}</p>
+                        </div>
+                      )}
+                      {flag.intent && (
+                        <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-4">
+                          <p className="text-[9px] font-black uppercase tracking-[0.18em] text-text-secondary mb-2">Intent</p>
+                          <p className="text-sm leading-relaxed text-text-secondary">{flag.intent}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </article>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <details className="group rounded-[2rem] border border-white/10 bg-black/15 overflow-hidden">
+          <summary className="cursor-pointer list-none p-5 md:p-6 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.22em] text-text-secondary">Evidence trail</p>
+              <p className="mt-1 text-sm text-text-secondary">{profile.evidence.length} source note{profile.evidence.length === 1 ? '' : 's'} behind this review</p>
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-[0.16em] text-text-secondary group-open:text-text-primary">Open</span>
           </summary>
-          <div className="mt-5 space-y-4">
-            {profile.evidence.map((item, index) => (
-              <div key={`${item.source}-${index}`} className="rounded-2xl bg-black/20 p-5 space-y-2">
-                <p className="text-xs uppercase tracking-widest font-black text-orange-200">{item.kind} · {item.source}</p>
-                <p className="text-text-secondary leading-relaxed">{item.claim}</p>
+          <div className="border-t border-white/10 p-5 md:p-6 space-y-3">
+            {profile.evidence.length === 0 ? (
+              <p className="text-sm text-text-secondary">No source note is attached to this calibration record yet.</p>
+            ) : profile.evidence.map((item, index) => (
+              <div key={`${item.source}-${index}`} className="rounded-2xl border border-white/8 bg-white/[0.025] p-4 space-y-2">
+                <p className="text-[9px] uppercase tracking-[0.18em] font-black text-text-secondary">{item.kind} · {item.source}</p>
+                <p className="text-sm text-text-secondary leading-relaxed">{item.claim}</p>
                 {item.url && (
-                  <a href={item.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest hover:text-orange-200">
-                    Source <ExternalLink className="w-3 h-3" />
+                  <a href={item.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] hover:text-orange-200">
+                    View source <ExternalLink className="w-3 h-3" />
                   </a>
                 )}
               </div>
             ))}
           </div>
         </details>
-      )}
 
-      <p className="text-[11px] text-text-secondary leading-relaxed border-t border-glass-border pt-6">
-        This is a worldview/discovery signal, not a quality rating. Certification uses an explicitly India-grounded editorial methodology and separates factual findings, interpretation and inferred intent.
-      </p>
+        <p className="text-[11px] text-text-secondary leading-relaxed border-t border-white/10 pt-6">
+          This is a worldview/discovery signal, not a quality rating. The editorial method is explicitly India-grounded and requires facts, interpretation and claims about intent to be kept separate.
+        </p>
+      </div>
     </section>
   );
 }
