@@ -30,6 +30,10 @@ function getDateRangeForDecade(decade: string): { start_date: string; end_date: 
       return { start_date: '1990-01-01', end_date: '1999-12-31' };
     case '2K':
       return { start_date: '2000-01-01', end_date: '2009-12-31' };
+    case '2010s':
+      return { start_date: '2010-01-01', end_date: '2019-12-31' };
+    case '2020s':
+      return { start_date: '2020-01-01', end_date: `${currentYear}-12-31` };
     case 'Latest':
       return {
         start_date: `${currentYear - 2}-${currentMonth.toString().padStart(2, '0')}-${currentDay.toString().padStart(2, '0')}`,
@@ -58,7 +62,7 @@ export async function fetchMoviesByLanguage(
   region: string = 'IN',
   sortBy: string = 'popularity.desc',
   withGenre?: number,
-  providerIds: number[] = [8, 119, 232] // Default to all selected for IN
+  providerIds: number[] = [8, 119, 232]
 ): Promise<Movie[]> {
   try {
     const languageCode = getLanguageCode(language);
@@ -87,14 +91,13 @@ export async function fetchMoviesByLanguage(
       })
     );
 
-    // Filter to ensure the movie is available on at least one of the selected providers
-    return moviesWithProviders.filter((movie) => 
+    return moviesWithProviders.filter((movie) =>
       movie.watch_providers?.flatrate?.some(
         provider => providerIds.includes(provider.provider_id)
       )
     );
   } catch (error) {
-    const errorMessage = error instanceof AxiosError 
+    const errorMessage = error instanceof AxiosError
       ? `API Error: ${error.message}`
       : 'An unexpected error occurred';
     console.error(errorMessage);
@@ -156,20 +159,21 @@ function getLanguageCode(language: string): string {
     'English': 'en',
     'Hindi': 'hi',
     'Tamil': 'ta',
-    'Telugu': 'te'
+    'Telugu': 'te',
+    'Malayalam': 'ml',
+    'Kannada': 'kn'
   };
   return languageCodes[language] || 'en';
 }
 
 export function getDirectStreamingLink(title: string, providerId: number, region: string) {
   const encodedTitle = encodeURIComponent(title);
-  
-  // Mapping of common provider search URLs
+
   const searchUrls: Record<number, string> = {
-    8: `https://www.netflix.com/search?q=${encodedTitle}`, // Netflix
-    119: `https://www.primevideo.com/search/?phrase=${encodedTitle}`, // Prime Video IN
-    9: `https://www.amazon.com/s?k=${encodedTitle}+prime+video`, // Prime Video US
-    232: `https://www.zee5.com/search?q=${encodedTitle}` // Zee5
+    8: `https://www.netflix.com/search?q=${encodedTitle}`,
+    119: `https://www.primevideo.com/search/?phrase=${encodedTitle}`,
+    9: `https://www.amazon.com/s?k=${encodedTitle}+prime+video`,
+    232: `https://www.zee5.com/search?q=${encodedTitle}`
   };
 
   return searchUrls[providerId] || `https://www.google.com/search?q=${encodedTitle}+watch+online`;

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { 
-  ArrowLeft, Star, Calendar, Clock, 
-  ExternalLink, Play, Users, Film, Info
+import {
+  ArrowLeft, Star, Calendar, Clock,
+  ExternalLink, Play, Users, Info
 } from 'lucide-react';
 import { fetchMovieDetails, getDirectStreamingLink } from '../services/tmdb';
+import { getSanghiProfile } from '../services/sanghi';
 import { VideoPlayer } from '../components/VideoPlayer';
 import { SEO } from '../components/SEO';
+import { SanghiPanel } from '../components/SanghiPanel';
 import type { Movie } from '../types/movie';
 
 export function MovieDetail() {
@@ -45,6 +47,7 @@ export function MovieDetail() {
     );
   }
 
+  const profile = getSanghiProfile(movie);
   const trailer = movie.videos?.results.find(
     v => (v.type === 'Trailer' || v.type === 'Teaser') && v.site === 'YouTube'
   );
@@ -53,7 +56,6 @@ export function MovieDetail() {
   const posterUrl = `https://image.tmdb.org/t/p/original${movie.poster_path}`;
   const releaseYear = new Date(movie.release_date).getFullYear();
 
-  // JSON-LD Movie Schema
   const movieSchema = {
     "@context": "https://schema.org",
     "@type": "Movie",
@@ -70,14 +72,13 @@ export function MovieDetail() {
     "genre": movie.genres?.map(g => g.name)
   };
 
-  // Find the region (default to IN)
-  const region = 'IN'; 
+  const region = 'IN';
 
   return (
     <div className="space-y-12 md:space-y-20 animate-fade-in pb-20">
-      <SEO 
+      <SEO
         title={`Watch ${movie.title} (${releaseYear})`}
-        description={`FlickPick: Watch ${movie.title} trailer, view cast details, and find where to stream it on Netflix, Prime Video, or Zee5.`}
+        description={`FlickPick: Watch ${movie.title} trailer, view cast details, streaming availability and Sanghi Certified editorial context.`}
         image={backdropUrl}
         url={`https://movieselectprime.netlify.app/movie/${movie.id}`}
         type="video.movie"
@@ -95,12 +96,11 @@ export function MovieDetail() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 relative md:-mt-40 px-4 md:px-0">
-        {/* Left Column: Poster & Quick Info */}
         <div className="lg:col-span-4 space-y-10">
           <div className="rounded-[2.5rem] overflow-hidden shadow-2xl chic-glass border-0">
             <img src={posterUrl} alt={movie.title} className="w-full h-auto" />
           </div>
-          
+
           <div className="chic-glass rounded-[2rem] p-8 space-y-8">
             <div className="space-y-6">
               <h3 className="text-sm font-black uppercase tracking-widest text-text-secondary flex items-center gap-3">
@@ -139,17 +139,17 @@ export function MovieDetail() {
                 <div className="space-y-4">
                   {(movie.watch_providers.flatrate || []).map(provider => {
                     const watchUrl = getDirectStreamingLink(movie.title, provider.provider_id, region);
-                    
+
                     return (
                       <div key={provider.provider_id} className="group/provider">
-                         <a 
+                        <a
                           href={watchUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center justify-between p-4 rounded-2xl chic-glass hover:bg-white/5 transition-all group-hover/provider:scale-[1.02]"
                         >
                           <div className="flex items-center gap-3">
-                            <img 
+                            <img
                               src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
                               alt={provider.provider_name}
                               className="w-10 h-10 rounded-xl"
@@ -161,7 +161,7 @@ export function MovieDetail() {
                       </div>
                     );
                   })}
-                  
+
                   {!(movie.watch_providers.flatrate || []).length && (
                     <p className="text-xs font-bold text-text-secondary uppercase italic">
                       No direct stream available in this region.
@@ -173,8 +173,7 @@ export function MovieDetail() {
           </div>
         </div>
 
-        {/* Right Column: Main Info & Trailer */}
-        <div className="lg:col-span-8 space-y-12 lg:space-y-20">
+        <div className="lg:col-span-8 space-y-12 lg:space-y-16">
           <div className="space-y-6">
             {movie.tagline && (
               <p className="text-purple-500 font-black uppercase tracking-[0.3em] text-xs">
@@ -203,6 +202,16 @@ export function MovieDetail() {
             </div>
           </div>
 
+          {profile ? (
+            <SanghiPanel profile={profile} />
+          ) : (
+            <section className="chic-glass rounded-[2.5rem] p-8 border border-white/10 space-y-3">
+              <p className="text-xs font-black uppercase tracking-[0.25em] text-text-secondary">Sanghi Certified · Beta</p>
+              <h3 className="text-2xl font-black tracking-tighter">Not yet reviewed</h3>
+              <p className="text-text-secondary leading-relaxed">This title is outside the current 30-film editorial corpus. Unrated does not mean Not Certified.</p>
+            </section>
+          )}
+
           <div className="space-y-8">
             <h3 className="text-3xl font-black tracking-tighter">OVERVIEW.</h3>
             <p className="text-2xl lg:text-3xl leading-relaxed text-text-secondary font-medium">
@@ -229,8 +238,8 @@ export function MovieDetail() {
                   <div key={person.id} className="flex-shrink-0 w-40 space-y-4 group">
                     <div className="aspect-[4/5] rounded-[2rem] overflow-hidden shadow-xl bg-chic-gray chic-glass">
                       {person.profile_path ? (
-                        <img 
-                          src={`https://image.tmdb.org/t/p/w185${person.profile_path}`} 
+                        <img
+                          src={`https://image.tmdb.org/t/p/w185${person.profile_path}`}
                           alt={person.name}
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         />

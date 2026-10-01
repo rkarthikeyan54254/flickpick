@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { RefreshCw, Filter, Settings2 } from 'lucide-react';
+import { RefreshCw, Settings2, ShieldCheck } from 'lucide-react';
 import { LanguageSelector } from '../components/LanguageSelector';
 import { DecadeSelector } from '../components/DecadeSelector';
 import { RegionSelector } from '../components/RegionSelector';
@@ -11,7 +11,9 @@ import { MovieCard } from '../components/MovieCard';
 import { SkeletonCard } from '../components/SkeletonCard';
 import { NoResults } from '../components/NoResults';
 import { SEO } from '../components/SEO';
+import { CertificationSelector, type CertificationFilter } from '../components/CertificationSelector';
 import { fetchMoviesByLanguage, searchMovies, PROVIDERS } from '../services/tmdb';
+import { matchesCertificationFilter } from '../services/sanghi';
 import type { Movie } from '../types/movie';
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -24,24 +26,24 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 export function Home() {
-  const [selectedLanguage, setSelectedLanguage] = useState('English');
-  const [selectedDecade, setSelectedDecade] = useState('Latest');
+  const [selectedLanguage, setSelectedLanguage] = useState('Hindi');
+  const [selectedDecade, setSelectedDecade] = useState('2020s');
   const [selectedRegion, setSelectedRegion] = useState('IN');
-  const [selectedProviders, setSelectedProviders] = useState<number[]>(() => 
+  const [selectedProviders, setSelectedProviders] = useState<number[]>(() =>
     PROVIDERS['IN'].map(p => p.id)
   );
   const [selectedGenre, setSelectedGenre] = useState<number | undefined>(undefined);
   const [selectedSort, setSelectedSort] = useState('popularity.desc');
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
-  
+  const [certificationFilter, setCertificationFilter] = useState<CertificationFilter>('all');
+
   const [currentMovie, setCurrentMovie] = useState<Movie | null>(null);
   const [movies, setMovies] = useState<Movie[]>([]);
   const [unusedMovies, setUnusedMovies] = useState<Movie[]>([]);
   const [usedMovies, setUsedMovies] = useState<Set<number>>(new Set());
   const [isLoading, setIsLoading] = useState(false);
 
-  // Update providers when region changes
   useEffect(() => {
     const regionProviders = PROVIDERS[selectedRegion as keyof typeof PROVIDERS] || PROVIDERS['IN'];
     setSelectedProviders(regionProviders.map(p => p.id));
@@ -56,34 +58,38 @@ export function Home() {
 
     setIsLoading(true);
     let fetchedMovies: Movie[] = [];
-    
+
     if (searchQuery) {
       fetchedMovies = await searchMovies(searchQuery, selectedRegion);
     } else {
       fetchedMovies = await fetchMoviesByLanguage(
-        selectedLanguage, 
-        selectedDecade, 
+        selectedLanguage,
+        selectedDecade,
         selectedRegion,
         selectedSort,
         selectedGenre,
         selectedProviders
       );
     }
-    
-    setMovies(fetchedMovies);
-    setUnusedMovies(shuffleArray([...fetchedMovies]));
+
+    const visibleMovies = fetchedMovies.filter(movie =>
+      matchesCertificationFilter(movie, certificationFilter)
+    );
+
+    setMovies(visibleMovies);
+    setUnusedMovies(shuffleArray([...visibleMovies]));
     setUsedMovies(new Set());
-    
-    if (fetchedMovies.length > 0) {
-      const randomMovie = fetchedMovies[Math.floor(Math.random() * fetchedMovies.length)];
+
+    if (visibleMovies.length > 0) {
+      const randomMovie = visibleMovies[Math.floor(Math.random() * visibleMovies.length)];
       setCurrentMovie(randomMovie);
       setUsedMovies(new Set([randomMovie.id]));
     } else {
       setCurrentMovie(null);
     }
-    
+
     setIsLoading(false);
-  }, [selectedLanguage, selectedDecade, selectedRegion, selectedGenre, selectedSort, searchQuery, selectedProviders]);
+  }, [selectedLanguage, selectedDecade, selectedRegion, selectedGenre, selectedSort, searchQuery, selectedProviders, certificationFilter]);
 
   useEffect(() => {
     loadMovies();
@@ -111,20 +117,22 @@ export function Home() {
   };
 
   const toggleProvider = (id: number) => {
-    setSelectedProviders(prev => 
+    setSelectedProviders(prev =>
       prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]
     );
   };
 
   const handleBroadenSearch = () => {
-    setSelectedDecade('Latest');
+    setSelectedDecade('2020s');
     setSelectedGenre(undefined);
+    setCertificationFilter('all');
   };
 
   const handleUniversalShuffle = () => {
-    setSelectedLanguage('English');
-    setSelectedDecade('Latest');
+    setSelectedLanguage('Hindi');
+    setSelectedDecade('2020s');
     setSelectedGenre(undefined);
+    setCertificationFilter('all');
     const allProviders = PROVIDERS[selectedRegion as keyof typeof PROVIDERS].map(p => p.id);
     setSelectedProviders(allProviders);
     setSearchQuery('');
@@ -145,23 +153,25 @@ export function Home() {
   return (
     <div className="space-y-12 md:space-y-20 animate-fade-in">
       <SEO schemaData={homeSchema} />
-      
+
       <header className="max-w-5xl mx-auto text-center space-y-8 md:space-y-12 relative">
-        {/* Cinematic Hero Image */}
         <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[120%] h-[500px] pointer-events-none opacity-50 -z-10">
-          <img 
-            src="/hero.png" 
-            alt="Cinematic Discovery" 
+          <img
+            src="/hero.png"
+            alt="Cinematic Discovery"
             className="w-full h-full object-cover mask-radial"
           />
         </div>
 
         <div className="space-y-4 pt-10">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-orange-300/20 bg-orange-400/10 text-orange-200 text-[10px] font-black uppercase tracking-[0.2em]">
+            <ShieldCheck className="w-4 h-4" /> Sanghi Certified Beta · 30 reviewed films
+          </div>
           <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-none">
             FLICK<span className="text-gradient-chic italic">PICK.</span>
           </h1>
-          <p className="text-lg md:text-xl text-text-secondary max-w-xl mx-auto font-medium">
-            Curated cinema, delivered with a click.
+          <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto font-medium">
+            Indian cinema, seen from here. Shuffle by language, streaming service and worldview.
           </p>
         </div>
 
@@ -169,13 +179,18 @@ export function Home() {
           <div className="w-full md:max-w-md">
             <SearchBar onSearch={setSearchQuery} onClear={() => setSearchQuery('')} />
           </div>
-          <button 
+          <button
             onClick={() => setShowFilters(!showFilters)}
             className={`chic-btn-secondary flex items-center gap-2 ${showFilters ? 'bg-purple-500/20' : ''}`}
           >
             <Settings2 className="w-5 h-5" />
             Preferences
           </button>
+        </div>
+
+        <div className="flex flex-col items-center gap-3">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary">Worldview filter</p>
+          <CertificationSelector value={certificationFilter} onChange={setCertificationFilter} />
         </div>
 
         {showFilters && !searchQuery && (
@@ -187,10 +202,10 @@ export function Home() {
               </div>
               <div className="space-y-4">
                 <label className="text-xs font-black uppercase tracking-widest text-text-secondary">Streaming Apps</label>
-                <ProviderSelector 
-                  selectedRegion={selectedRegion} 
-                  selectedProviders={selectedProviders} 
-                  onProviderToggle={toggleProvider} 
+                <ProviderSelector
+                  selectedRegion={selectedRegion}
+                  selectedProviders={selectedProviders}
+                  onProviderToggle={toggleProvider}
                 />
               </div>
             </div>
@@ -218,7 +233,7 @@ export function Home() {
             </div>
           </div>
         )}
-        
+
         <div className="flex justify-center pt-4">
           <button
             onClick={handleShuffle}
@@ -241,7 +256,7 @@ export function Home() {
             <MovieCard movie={currentMovie} />
           </div>
         ) : (
-          <NoResults 
+          <NoResults
             selectedLanguage={selectedLanguage}
             selectedDecade={selectedDecade}
             hasProviders={selectedProviders.length > 0}
@@ -251,11 +266,10 @@ export function Home() {
         )}
       </main>
 
-      {/* Hidden SEO Text for discovery */}
       <section className="sr-only">
-        <h2>Watch Movies on Netflix, Amazon Prime Video, and Zee5</h2>
-        <p>Discover the best movies from the 70s, 80s, 90s, 2K, and latest releases in English, Tamil, Hindi, and Telugu.</p>
-        <p>FlickPick is your universal movie discovery tool for premium cinematic curation.</p>
+        <h2>Discover Indian movies across Netflix, Amazon Prime Video and Zee5</h2>
+        <p>Explore Hindi, Tamil, Telugu, Malayalam and Kannada cinema with optional Sanghi Certified editorial filtering.</p>
+        <p>FlickPick combines streaming discovery with an India-grounded worldview layer.</p>
       </section>
     </div>
   );

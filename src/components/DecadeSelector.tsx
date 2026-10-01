@@ -5,7 +5,7 @@ interface DecadeSelectorProps {
   onDecadeChange: (decade: string) => void;
 }
 
-const decades = ['70s', '80s', '90s', '2K', 'Latest'];
+const decades = ['70s', '80s', '90s', '2K', '2010s', '2020s', 'Latest'];
 
 export function DecadeSelector({ selectedDecade, onDecadeChange }: DecadeSelectorProps) {
   return (
