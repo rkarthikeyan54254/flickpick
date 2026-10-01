@@ -16,6 +16,7 @@ export function SanghiBadge({ profile, compact = false }: SanghiBadgeProps) {
     : profile.status === 'mixed'
       ? 'border-amber-200/20 bg-gradient-to-br from-amber-300/[0.10] via-white/[0.03] to-transparent'
       : 'border-white/10 bg-gradient-to-br from-white/[0.06] via-white/[0.02] to-transparent';
+  const reviewLabel = profile.reviewDepth ? profile.reviewDepth.replace('-', ' ') : 'calibration pass';
 
   return (
     <div className={`rounded-[1.75rem] border ${tone} ${compact ? 'p-5' : 'p-6'} overflow-hidden`}>
@@ -30,7 +31,7 @@ export function SanghiBadge({ profile, compact = false }: SanghiBadgeProps) {
               <div>
                 <p className="text-lg md:text-xl font-black tracking-tight">{certificationLabels[profile.status]}</p>
                 <p className="text-[10px] uppercase tracking-[0.18em] text-text-secondary font-bold">
-                  {profile.confidence} confidence{profile.reviewDepth ? ` · ${profile.reviewDepth.replace('-', ' ')}` : ''}
+                  {profile.confidence} confidence · {reviewLabel}
                 </p>
               </div>
             </div>
