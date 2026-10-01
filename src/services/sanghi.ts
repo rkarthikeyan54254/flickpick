@@ -1,4 +1,5 @@
 import { sanghiProfiles } from '../data/sanghiProfiles';
+import { sanghiProfileRevisions } from '../data/sanghiProfileRevisions';
 import type { Movie } from '../types/movie';
 import type { CertificationStatus, SanghiProfile } from '../types/sanghi';
 
@@ -8,6 +9,18 @@ function normalizeTitle(value: string) {
     .replace(/&/g, 'and')
     .replace(/[^a-z0-9]+/g, ' ')
     .trim();
+}
+
+function profileKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
+  return `${normalizeTitle(profile.title)}::${profile.year}`;
+}
+
+function currentProfiles() {
+  const revisedKeys = new Set(sanghiProfileRevisions.map(profileKey));
+  return [
+    ...sanghiProfileRevisions,
+    ...sanghiProfiles.filter(profile => !revisedKeys.has(profileKey(profile)))
+  ];
 }
 
 function movieYear(movie: Movie) {
@@ -32,7 +45,7 @@ export function getSanghiProfile(movie: Movie): SanghiProfile | undefined {
   const year = movieYear(movie);
   const normalizedMovieTitle = normalizeTitle(movie.title);
 
-  return sanghiProfiles.find(profile => {
+  return currentProfiles().find(profile => {
     if (profile.tmdbId && profile.tmdbId === movie.id) return true;
     const titleMatches = normalizeTitle(profile.title) === normalizedMovieTitle;
     return titleMatches && (!year || profile.year === year);
@@ -44,7 +57,7 @@ export function getProfilesForSelection(
   language: string,
   decade: string
 ) {
-  return sanghiProfiles.filter(profile => {
+  return currentProfiles().filter(profile => {
     if (profile.language !== language) return false;
     if (!yearMatchesDecade(profile.year, decade)) return false;
     if (filter === 'certified') return profile.status === 'certified';
