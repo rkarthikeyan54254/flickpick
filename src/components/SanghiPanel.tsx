@@ -10,6 +10,8 @@ interface SanghiPanelProps {
 export function SanghiPanel({ profile }: SanghiPanelProps) {
   const dimensions = Object.entries(profile.dimensions).filter(([, value]) => typeof value === 'number');
   const Icon = profile.status === 'certified' ? ShieldCheck : profile.status === 'mixed' ? Scale : HelpCircle;
+  const reviewDepth = profile.reviewDepth ? profile.reviewDepth.replace('-', ' ').toUpperCase() : 'CALIBRATION PASS';
+  const auditStatus = profile.auditStatus ? profile.auditStatus.toUpperCase() : 'PROVISIONAL';
 
   return (
     <section className="rounded-[2.75rem] overflow-hidden border border-white/10 bg-gradient-to-b from-white/[0.055] to-white/[0.015] shadow-2xl">
@@ -28,9 +30,7 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
             <div className="space-y-3">
               <h3 className="text-4xl md:text-6xl font-black tracking-[-0.04em] leading-none">{certificationLabels[profile.status]}</h3>
               <p className="text-sm md:text-base text-text-secondary font-medium">
-                {profile.confidence.toUpperCase()} confidence
-                {profile.reviewDepth ? ` · ${profile.reviewDepth.replace('-', ' ').toUpperCase()}` : ''}
-                {profile.auditStatus ? ` · ${profile.auditStatus.toUpperCase()}` : ''}
+                {profile.confidence.toUpperCase()} confidence · {reviewDepth} · {auditStatus}
               </p>
             </div>
 
@@ -38,7 +38,7 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
               <p className="text-[10px] font-black uppercase tracking-[0.26em] text-text-secondary">Why this result</p>
               <div className="space-y-3">
                 {profile.reasons.map((reason, index) => (
-                  <div key={reason} className="grid grid-cols-[36px_1fr] gap-3 rounded-2xl border border-white/8 bg-black/15 p-4 md:p-5">
+                  <div key={reason} className="grid grid-cols-[36px_1fr] gap-3 rounded-2xl border border-white/10 bg-black/20 p-4 md:p-5">
                     <span className="text-[10px] font-black text-text-primary/50 pt-1">0{index + 1}</span>
                     <p className="text-base md:text-lg leading-relaxed text-text-secondary">{reason}</p>
                   </div>
@@ -62,7 +62,7 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-white/10 bg-black/15 p-5 md:p-6 space-y-4">
+            <div className="rounded-[2rem] border border-white/10 bg-black/20 p-5 md:p-6 space-y-4">
               {dimensions.map(([key, rawValue]) => {
                 const value = rawValue as number;
                 const isRisk = key === 'contemptRisk';
@@ -100,13 +100,13 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
           </div>
 
           {profile.integrityFlags.length === 0 ? (
-            <div className="rounded-2xl border border-white/10 bg-black/15 p-5 text-text-secondary">
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-5 text-text-secondary">
               No material narrative-integrity concern is recorded in the current review.
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4">
               {profile.integrityFlags.map(flag => (
-                <article key={`${flag.type}-${flag.summary}`} className="rounded-[2rem] border border-white/10 bg-black/15 p-5 md:p-6 space-y-5">
+                <article key={`${flag.type}-${flag.summary}`} className="rounded-[2rem] border border-white/10 bg-black/20 p-5 md:p-6 space-y-5">
                   <div className="flex flex-wrap items-center gap-3">
                     <AlertTriangle className="w-4 h-4 text-amber-200" />
                     <span className="text-xs font-black uppercase tracking-[0.16em]">{flag.type.replace(/-/g, ' ')}</span>
@@ -117,19 +117,19 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
                   {(flag.fact || flag.interpretation || flag.intent) && (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
                       {flag.fact && (
-                        <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-4">
+                        <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
                           <p className="text-[9px] font-black uppercase tracking-[0.18em] text-text-secondary mb-2">Fact</p>
                           <p className="text-sm leading-relaxed text-text-secondary">{flag.fact}</p>
                         </div>
                       )}
                       {flag.interpretation && (
-                        <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-4">
+                        <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
                           <p className="text-[9px] font-black uppercase tracking-[0.18em] text-text-secondary mb-2">Interpretation</p>
                           <p className="text-sm leading-relaxed text-text-secondary">{flag.interpretation}</p>
                         </div>
                       )}
                       {flag.intent && (
-                        <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-4">
+                        <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
                           <p className="text-[9px] font-black uppercase tracking-[0.18em] text-text-secondary mb-2">Intent</p>
                           <p className="text-sm leading-relaxed text-text-secondary">{flag.intent}</p>
                         </div>
@@ -142,7 +142,7 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
           )}
         </div>
 
-        <details className="group rounded-[2rem] border border-white/10 bg-black/15 overflow-hidden">
+        <details className="group rounded-[2rem] border border-white/10 bg-black/20 overflow-hidden">
           <summary className="cursor-pointer list-none p-5 md:p-6 flex items-center justify-between gap-4">
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.22em] text-text-secondary">Evidence trail</p>
@@ -154,7 +154,7 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
             {profile.evidence.length === 0 ? (
               <p className="text-sm text-text-secondary">No source note is attached to this calibration record yet.</p>
             ) : profile.evidence.map((item, index) => (
-              <div key={`${item.source}-${index}`} className="rounded-2xl border border-white/8 bg-white/[0.025] p-4 space-y-2">
+              <div key={`${item.source}-${index}`} className="rounded-2xl border border-white/10 bg-white/[0.025] p-4 space-y-2">
                 <p className="text-[9px] uppercase tracking-[0.18em] font-black text-text-secondary">{item.kind} · {item.source}</p>
                 <p className="text-sm text-text-secondary leading-relaxed">{item.claim}</p>
                 {item.url && (
