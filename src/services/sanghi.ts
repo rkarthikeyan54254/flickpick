@@ -14,6 +14,20 @@ function movieYear(movie: Movie) {
   return Number(movie.release_date?.slice(0, 4)) || undefined;
 }
 
+function yearMatchesDecade(year: number, decade: string) {
+  const currentYear = new Date().getFullYear();
+  switch (decade) {
+    case '70s': return year >= 1970 && year <= 1979;
+    case '80s': return year >= 1980 && year <= 1989;
+    case '90s': return year >= 1990 && year <= 1999;
+    case '2K': return year >= 2000 && year <= 2009;
+    case '2010s': return year >= 2010 && year <= 2019;
+    case '2020s': return year >= 2020 && year <= currentYear;
+    case 'Latest': return year >= currentYear - 2 && year <= currentYear;
+    default: return true;
+  }
+}
+
 export function getSanghiProfile(movie: Movie): SanghiProfile | undefined {
   const year = movieYear(movie);
   const normalizedMovieTitle = normalizeTitle(movie.title);
@@ -22,6 +36,19 @@ export function getSanghiProfile(movie: Movie): SanghiProfile | undefined {
     if (profile.tmdbId && profile.tmdbId === movie.id) return true;
     const titleMatches = normalizeTitle(profile.title) === normalizedMovieTitle;
     return titleMatches && (!year || profile.year === year);
+  });
+}
+
+export function getProfilesForSelection(
+  filter: 'certified' | 'reviewed',
+  language: string,
+  decade: string
+) {
+  return sanghiProfiles.filter(profile => {
+    if (profile.language !== language) return false;
+    if (!yearMatchesDecade(profile.year, decade)) return false;
+    if (filter === 'certified') return profile.status === 'certified';
+    return profile.status !== 'unrated';
   });
 }
 
