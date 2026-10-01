@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, CircleHelp, Scale } from 'lucide-react';
+import { ShieldCheck, HelpCircle, Scale } from 'lucide-react';
 import type { SanghiProfile } from '../types/sanghi';
 import { certificationLabels, topPositiveDimensions } from '../services/sanghi';
 
@@ -10,7 +10,7 @@ interface SanghiBadgeProps {
 
 export function SanghiBadge({ profile, compact = false }: SanghiBadgeProps) {
   const top = topPositiveDimensions(profile, 3);
-  const Icon = profile.status === 'certified' ? ShieldCheck : profile.status === 'mixed' ? Scale : CircleHelp;
+  const Icon = profile.status === 'certified' ? ShieldCheck : profile.status === 'mixed' ? Scale : HelpCircle;
 
   return (
     <div className={`rounded-2xl border border-orange-300/20 bg-orange-400/10 ${compact ? 'p-4' : 'p-5'} space-y-3`}>
