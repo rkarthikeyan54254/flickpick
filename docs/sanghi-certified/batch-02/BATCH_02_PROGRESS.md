@@ -9,11 +9,11 @@
 | Language | Target | Researched | Gate-passed | Provisional |
 |---|---:|---:|---:|---:|
 | Hindi | 10 | 10 | 9 | 1 |
-| Tamil | 10 | 5 | 4 | 1 |
+| Tamil | 10 | 10 | 9 | 1 |
 | Telugu | 10 | 0 | 0 | 0 |
 | Malayalam | 10 | 0 | 0 | 0 |
 | Kannada | 10 | 0 | 0 | 0 |
-| **Total** | **50** | **15** | **13** | **2** |
+| **Total** | **50** | **20** | **18** | **2** |
 
 ## Hindi tranche — complete
 
@@ -30,27 +30,34 @@ Detailed records: `HINDI_TRANCHE_01.md` and `HINDI_TRANCHE_02.md`
 9. Rocketry: The Nambi Effect (2022) — Mixed / Contested — reviewed; strongly India-positive but material biographical/scientific-credit claims are disputed by multiple former ISRO scientists
 10. Ram Setu (2022) — Mixed / Contested — reviewed; high sacred/civilizational alignment, but the film's archaeological certainty exceeds what government/scientific records establish
 
-## Tamil tranche — 5/10 researched
+## Tamil tranche — complete
 
-Detailed records: `TAMIL_TRANCHE_01.md`
+Detailed records: `TAMIL_TRANCHE_01.md` and `TAMIL_TRANCHE_02.md`
 
 11. Lubber Pandhu (2024) — Neutral — reviewed
 12. Captain Miller (2024) — Mixed / Contested hypothesis — **provisional hold** pending stronger resolution/comparison evidence for the named plagiarism allegation
 13. Maaveeran (2023) — Neutral — reviewed
 14. Parking (2023) — Neutral — reviewed
 15. Ayothi (2023) — Mixed / Contested — reviewed; real-incident/story credit dispute recorded with subsequent acknowledgement/resolution
+16. Meiyazhagan (2024) — Certified — reviewed; caste-omission critique retained as a representation caveat rather than hidden
+17. Vaazhai (2024) — Mixed / Contested — reviewed; autobiographical basis plus disputed similarity to Cho Dharman's earlier `Vaazhaiyadi` recorded without declaring plagiarism proven
+18. Kottukkaali (2024) — Mixed / Contested — reviewed; creator-confirmed lived-incident basis and explicit critique of coercive exorcism/caste patriarchy
+19. Aranmanai 4 (2024) — Neutral — reviewed; Assamese Baak folklore borrowing recorded as a cultural-adaptation finding
+20. Raayan (2024) — Neutral — reviewed
 
 ## Editorial notes discovered so far
 
-- **Worldview alignment must not launder factual unreliability.** *The Kerala Story*, *Rocketry* and *Ram Setu* are important regression cases: a film can align with the declared India-grounded lens while still requiring Mixed/Contested because its factual or source-fidelity layer is materially disputed.
-- **A historical film may remain Certified while carrying serious Narrative Integrity flags.** *Sardar Udham* is strongly anti-colonial/civilizationally aligned, but documented source-vs-film differences must be visible to users.
-- **Creator intent cannot erase a representation choice.** *Animal* director Sandeep Reddy Vanga explicitly explained why Abrar was converted to Islam. The intent denial is recorded, but the religious identity choice and its narrative use are facts and belong in Narrative Integrity.
-- **Critique of patriarchy/caste/state failure is not anti-Indic by default.** *Lubber Pandhu*, *Maaveeran* and *Parking* reinforce this guardrail.
-- **Faith and archaeology must remain separate evidence layers.** *Ram Setu* can score very highly on sacred regard/civilizational continuity while the product explicitly tells users that archaeological certainty is not established fact.
-- **Patriotism and biographical accuracy are independent axes.** *Rocketry* is strongly India-positive, but former ISRO scientists' specific challenges cannot be dismissed as ideological disagreement.
-- **Source-credit/originality belongs in Narrative Integrity.** *Ayothi* provides a useful case where a provenance dispute has attributable reporting and a documented acknowledgement/resolution; *Captain Miller* remains provisional because the current pass has an allegation but insufficient resolution evidence.
-- **Social-media allegations are radar.** Reddit/X/viral claims are used to find potential issues, but no verdict relies on engagement volume or an unverified post.
+- **Worldview alignment must not launder factual unreliability.** *The Kerala Story*, *Rocketry* and *Ram Setu* remain regression cases: alignment and factual/source fidelity are independent layers.
+- **A historical film may remain Certified while carrying serious Narrative Integrity flags.** *Sardar Udham* demonstrates why flags must remain visible even when the worldview verdict is positive.
+- **Creator intent cannot erase a representation choice.** *Animal* records the religious identity choice separately from Vanga's explanation of intent.
+- **Critique of patriarchy/caste/state failure is not anti-Indic by default.** *Lubber Pandhu*, *Maaveeran*, *Parking*, *Vaazhai* and *Kottukkaali* reinforce this guardrail.
+- **Positive rootedness is not immunity from adversarial critique.** *Meiyazhagan* scores strongly on Tamil rootedness while retaining a sourced criticism that its nostalgic village gaze can understate caste exclusion.
+- **Cross-regional folklore borrowing belongs in Narrative Integrity when culturally material.** *Aranmanai 4* uses Assamese Baak folklore; the source is acknowledged, while criticism that the borrowing is shallow is retained.
+- **Faith and archaeology must remain separate evidence layers.** *Ram Setu* can score highly on sacred regard while archaeological certainty is separately challenged.
+- **Patriotism and biographical accuracy are independent axes.** *Rocketry* is India-positive but disputed technical-history claims remain visible.
+- **Source-credit/originality belongs in Narrative Integrity.** *Ayothi* has a documented acknowledgement/resolution; *Captain Miller* remains provisional; *Vaazhai* records the attributable literary-similarity dispute without overclaiming.
+- **Social-media allegations are radar.** No verdict relies on engagement volume or an unverified post.
 
 ## Next
 
-Complete Tamil tranche 02 at equivalent evidence depth, then proceed to Telugu. Do not merge this branch before the full 50-film human review.
+Proceed to the Telugu tranche at equivalent evidence depth. Do not merge this branch before the full 50-film human review.
