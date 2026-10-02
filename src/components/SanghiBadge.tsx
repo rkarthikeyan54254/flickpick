@@ -3,6 +3,7 @@ import { AlertTriangle, HelpCircle, Scale, ShieldCheck } from 'lucide-react';
 import type { SanghiProfile } from '../types/sanghi';
 import { certificationLabels, topPositiveDimensions } from '../services/sanghi';
 import { isPublicationEligible } from '../services/editorialGate';
+import { getCertificationVisual } from './certificationVisuals';
 
 interface SanghiBadgeProps {
   profile: SanghiProfile;
@@ -13,26 +14,27 @@ export function SanghiBadge({ profile, compact = false }: SanghiBadgeProps) {
   const top = topPositiveDimensions(profile, 3);
   const eligible = isPublicationEligible(profile);
   const Icon = profile.status === 'certified' ? ShieldCheck : profile.status === 'mixed' ? Scale : HelpCircle;
-  const tone = profile.status === 'certified'
-    ? 'border-orange-300/25 bg-gradient-to-br from-orange-400/[0.14] via-white/[0.03] to-transparent'
-    : profile.status === 'mixed'
-      ? 'border-amber-200/20 bg-gradient-to-br from-amber-300/[0.10] via-white/[0.03] to-transparent'
-      : 'border-white/10 bg-gradient-to-br from-white/[0.06] via-white/[0.02] to-transparent';
+  const visual = getCertificationVisual(profile.status);
   const reviewLabel = profile.reviewDepth ? profile.reviewDepth.replace('-', ' ') : 'calibration pass';
   const verdictLabel = eligible ? certificationLabels[profile.status] : `Provisional · ${certificationLabels[profile.status]}`;
 
   return (
-    <div className={`rounded-[1.75rem] border ${tone} ${compact ? 'p-5' : 'p-6'} overflow-hidden`}>
+    <div className={`relative rounded-[1.75rem] border ${visual.panel} ${compact ? 'p-5' : 'p-6'} overflow-hidden`}>
+      <div className={`absolute inset-y-0 left-0 w-1.5 ${visual.accentDot}`} aria-hidden="true" />
       <div className="flex flex-col gap-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-2">
             <p className="text-[9px] font-black uppercase tracking-[0.28em] text-text-secondary">Culture Check verdict</p>
             <div className="flex items-center gap-3">
-              <span className="w-9 h-9 rounded-full border border-white/10 bg-black/20 flex items-center justify-center">
-                <Icon className="w-4 h-4" />
+              <span className={`w-11 h-11 rounded-full border flex items-center justify-center ${visual.icon}`}>
+                {profile.status === 'certified' && eligible ? (
+                  <span className="text-xl leading-none" aria-hidden="true">🪷</span>
+                ) : (
+                  <Icon className="w-4 h-4" />
+                )}
               </span>
               <div>
-                <p className="text-lg md:text-xl font-black tracking-tight">{verdictLabel}</p>
+                <p className={`text-xl md:text-2xl font-black tracking-tight ${visual.heading}`}>{verdictLabel}</p>
                 {profile.status === 'certified' && eligible && (
                   <p className="text-[10px] font-bold text-orange-200 mt-0.5">Called an insult. Worn as a badge.</p>
                 )}
