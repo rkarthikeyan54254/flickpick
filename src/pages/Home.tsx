@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { CalendarDays, ExternalLink, RefreshCw, Settings2, ShieldCheck, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { BookOpenCheck, RefreshCw, Settings2, ShieldCheck } from 'lucide-react';
 import { LanguageSelector } from '../components/LanguageSelector';
 import { DecadeSelector } from '../components/DecadeSelector';
 import { RegionSelector } from '../components/RegionSelector';
@@ -12,6 +13,7 @@ import { SkeletonCard } from '../components/SkeletonCard';
 import { NoResults } from '../components/NoResults';
 import { SEO } from '../components/SEO';
 import { CertificationSelector, type CertificationFilter } from '../components/CertificationSelector';
+import { OttReleaseCard } from '../components/OttReleaseCard';
 import { fetchCuratedMovies, fetchMoviesByLanguage, searchMovies, PROVIDERS } from '../services/tmdb';
 import { fetchIndiaStreamingProviders, type StreamingProviderOption } from '../services/providerRegistry';
 import { getCorpusStats, getProfilesForSelection, matchesCertificationFilter } from '../services/sanghi';
@@ -92,7 +94,6 @@ export function Home() {
     }
 
     let visibleMovies = fetchedMovies.filter(movie => matchesCertificationFilter(movie, certificationFilter));
-
     if (certificationFilter !== 'all' && selectedGenre !== undefined) {
       visibleMovies = visibleMovies.filter(movie => movie.genres?.some(genre => genre.id === selectedGenre) ?? true);
     }
@@ -156,9 +157,9 @@ export function Home() {
   const homeSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "FlickPick",
+    "name": "Culture Check",
     "url": "https://justflickpick.netlify.app/",
-    "description": "Indian cinema discovery with India streaming availability and a Bharatiya editorial lens.",
+    "description": "Every film held up to Bharat's values: Indian cinema discovery, OTT availability and evidence-backed Bharatiya editorial analysis.",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://justflickpick.netlify.app/?q={search_term_string}",
@@ -167,24 +168,34 @@ export function Home() {
   };
 
   return (
-    <div className="space-y-12 md:space-y-20 animate-fade-in">
-      <SEO schemaData={homeSchema} />
+    <div className="space-y-14 md:space-y-24 animate-fade-in">
+      <SEO
+        title="Culture Check — Every film held up to Bharat's values."
+        description="Discover Indian films across major OTT platforms and read an evidence-backed Bharatiya cultural assessment before you watch."
+        schemaData={homeSchema}
+      />
 
       <header className="max-w-6xl mx-auto text-center space-y-8 md:space-y-10 relative">
-        <div className="absolute top-[-90px] left-1/2 -translate-x-1/2 w-[120%] h-[480px] pointer-events-none opacity-25 -z-10">
-          <img src="/hero.png" alt="Indian cinema" className="w-full h-full object-cover mask-radial grayscale-[20%]" />
+        <div className="absolute top-[-90px] left-1/2 -translate-x-1/2 w-[120%] h-[500px] pointer-events-none opacity-20 -z-10">
+          <img src="/hero.png" alt="Indian cinema" className="w-full h-full object-cover mask-radial grayscale-[35%]" />
         </div>
 
-        <div className="space-y-5 pt-12">
+        <div className="space-y-6 pt-14 md:pt-20">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-orange-300/20 bg-orange-400/10 text-orange-200 text-[10px] font-black uppercase tracking-[0.2em]">
             <ShieldCheck className="w-4 h-4" /> {corpusStats.batch02Published} reviewed · {corpusStats.batch02Provisional} held for more evidence
           </div>
-          <h1 className="text-5xl md:text-8xl font-black tracking-[-0.05em] leading-[0.92]">
-            INDIAN CINEMA.<br /><span className="text-orange-200 italic">READ FROM HERE.</span>
-          </h1>
+          <div>
+            <p className="text-[11px] md:text-xs font-black uppercase tracking-[0.38em] text-orange-300">Culture Check</p>
+            <h1 className="mt-4 text-5xl md:text-8xl font-black tracking-[-0.055em] leading-[0.9]">
+              EVERY FILM.<br /><span className="text-orange-200 italic">HELD UP TO BHARAT'S VALUES.</span>
+            </h1>
+          </div>
           <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto font-medium leading-relaxed">
-            Find what is streaming across India, then see the film through a declared Bharatiya lens: cultural memory, national integrity, sacred regard, local roots and evidence-backed representation review.
+            Know what a film affirms, distorts or dismisses before you press play — across culture, civilization, national integrity, sacred traditions, regional roots and historical memory.
           </p>
+          <Link to="/methodology" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-text-secondary hover:text-orange-200 transition-colors">
+            <BookOpenCheck className="w-4 h-4" /> Read the methodology
+          </Link>
         </div>
 
         <div className="flex flex-col md:flex-row items-center gap-4 justify-center">
@@ -197,7 +208,10 @@ export function Home() {
         </div>
 
         <div className="flex flex-col items-center gap-3">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary">Bharatiya editorial lens</p>
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary">🪷 Sanghi Certified</p>
+            <p className="text-xs font-bold text-orange-200 mt-1">Called an insult. Worn as a badge.</p>
+          </div>
           <CertificationSelector value={certificationFilter} onChange={setCertificationFilter} />
         </div>
 
@@ -246,30 +260,17 @@ export function Home() {
         </div>
       </header>
 
-      <section className="max-w-6xl mx-auto space-y-5">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
+      <section className="max-w-6xl mx-auto space-y-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-orange-300 flex items-center gap-2"><CalendarDays className="w-4 h-4" /> New on Indian OTT</p>
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight mt-2">Arriving now, queued for review.</h2>
+            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-orange-300">New on Indian OTT</p>
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight mt-2">What is arriving next.</h2>
           </div>
-          <p className="text-xs text-text-secondary max-w-md">Release dates carry source confidence. An upcoming title is never certified from a trailer alone.</p>
+          <p className="text-sm text-text-secondary max-w-lg leading-relaxed">Poster art is resolved from TMDb. Release claims retain their source confidence, and an unseen title stays review-pending until it can actually be audited.</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
           {latestOttReleases.map((item) => (
-            <article key={`${item.title}-${item.releaseDate}`} className="rounded-[1.75rem] border border-white/10 bg-white/[0.025] p-5 space-y-4">
-              <div className="flex justify-between gap-3 items-start">
-                <span className="text-[9px] font-black uppercase tracking-[0.18em] text-orange-200">{item.platform}</span>
-                <span className="text-[9px] font-black uppercase tracking-[0.14em] text-text-secondary">{item.confidence}</span>
-              </div>
-              <div>
-                <h3 className="text-lg font-black tracking-tight">{item.title}</h3>
-                <p className="text-xs text-text-secondary mt-1">{item.language} · {new Date(`${item.releaseDate}T00:00:00`).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</p>
-              </div>
-              <div className="flex items-center justify-between gap-3 pt-1">
-                <span className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-wider text-text-secondary"><Sparkles className="w-3 h-3" /> Review pending</span>
-                <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider hover:text-orange-200">Source <ExternalLink className="w-3 h-3" /></a>
-              </div>
-            </article>
+            <OttReleaseCard key={`${item.title}-${item.releaseDate}`} item={item} />
           ))}
         </div>
       </section>
@@ -285,8 +286,8 @@ export function Home() {
       </main>
 
       <section className="sr-only">
-        <h2>Discover Indian movies across Netflix, Prime Video, JioHotstar, SonyLIV, ZEE5, Sun NXT and regional streaming services</h2>
-        <p>Explore Hindi, Tamil, Telugu, Malayalam and Kannada cinema with a source-audited Bharatiya editorial layer.</p>
+        <h2>Culture Check: Indian cinema across Netflix, Prime Video, JioHotstar, SonyLIV, ZEE5, Sun NXT and regional streaming services</h2>
+        <p>Explore Hindi, Tamil, Telugu, Malayalam and Kannada cinema with a source-audited Bharatiya editorial framework.</p>
       </section>
     </div>
   );
