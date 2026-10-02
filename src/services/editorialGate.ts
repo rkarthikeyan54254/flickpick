@@ -1,21 +1,48 @@
-import type { SanghiProfile } from '../types/sanghi';
+import type { IntegrityFlag, SanghiProfile } from '../types/sanghi';
+import { editorialEscalations } from '../data/editorialEscalations';
+import { editorialApprovals } from '../data/editorialApprovals';
+
+export type PublicationLane = 'auto-publish' | 'provisional-hold' | 'human-review';
 
 export interface EditorialGateResult {
+  /** True only when this record may publish without a pending human exception review. */
   eligible: boolean;
+  /** True when the evidence/process gate passed even if an exception review is required. */
+  gatePassed: boolean;
   failures: string[];
+  lane: PublicationLane;
+  escalationReasons: string[];
+  approvalApplied: boolean;
+}
+
+const HIGH_RISK_INTEGRITY_TYPES = new Set([
+  'identity-asymmetry',
+  'identity-substitution',
+  'ideological-substitution',
+  'source-fidelity',
+  'adaptation-delta',
+  'quantitative-claim',
+  'biographical-credit',
+  'historical-claim',
+]);
+
+function isHighRiskIntegrityFlag(flag: IntegrityFlag) {
+  return (
+    HIGH_RISK_INTEGRITY_TYPES.has(flag.type) &&
+    ['verified', 'supported', 'disputed'].includes(flag.status)
+  );
+}
+
+function escalationKey(profile: SanghiProfile) {
+  return `${profile.title.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, ' ').trim()}::${profile.year}`;
 }
 
 export function evaluateEditorialGate(profile: SanghiProfile): EditorialGateResult {
   const failures: string[] = [];
+  const escalationReasons: string[] = [];
 
-  if (!profile.auditStatus || !['reviewed', 'hardened'].includes(profile.auditStatus)) {
-    failures.push('audit-status');
-  }
-
-  if (!profile.reviewDepth || profile.reviewDepth === 'desk') {
-    failures.push('review-depth');
-  }
-
+  if (!profile.auditStatus || !['reviewed', 'hardened'].includes(profile.auditStatus)) failures.push('audit-status');
+  if (!profile.reviewDepth || profile.reviewDepth === 'desk') failures.push('review-depth');
   if (profile.reasons.length < 2) failures.push('reasons');
   if (profile.evidence.length < 1) failures.push('evidence');
 
@@ -33,9 +60,58 @@ export function evaluateEditorialGate(profile: SanghiProfile): EditorialGateResu
     if (!gate.selfFalsificationPass) failures.push('self-falsification-pass');
   }
 
-  return { eligible: failures.length === 0, failures };
+  const unverifiedIntegrity = profile.integrityFlags.filter((flag) => flag.status === 'unverified');
+  if (unverifiedIntegrity.length > 0) failures.push('unverified-integrity-finding');
+
+  const gatePassed = failures.length === 0;
+  if (!gatePassed) {
+    return {
+      eligible: false,
+      gatePassed: false,
+      failures,
+      lane: 'provisional-hold',
+      escalationReasons,
+      approvalApplied: false,
+    };
+  }
+
+  const highRiskFindings = profile.integrityFlags.filter(isHighRiskIntegrityFlag);
+  if (highRiskFindings.length > 0) {
+    escalationReasons.push(...highRiskFindings.map((flag) => `high-risk-integrity:${flag.type}:${flag.status}`));
+  }
+
+  const key = escalationKey(profile);
+  const calibrated = editorialEscalations[key] || [];
+  escalationReasons.push(...calibrated.map((reason) => `calibration:${reason}`));
+
+  if (profile.confidence !== 'high') escalationReasons.push(`confidence:${profile.confidence}`);
+
+  const approvalApplied = Boolean(editorialApprovals[key]);
+  if (escalationReasons.length > 0 && !approvalApplied) {
+    return {
+      eligible: false,
+      gatePassed: true,
+      failures,
+      lane: 'human-review',
+      escalationReasons,
+      approvalApplied: false,
+    };
+  }
+
+  return {
+    eligible: true,
+    gatePassed: true,
+    failures,
+    lane: 'auto-publish',
+    escalationReasons,
+    approvalApplied,
+  };
 }
 
 export function isPublicationEligible(profile: SanghiProfile) {
   return evaluateEditorialGate(profile).eligible;
+}
+
+export function publicationLane(profile: SanghiProfile) {
+  return evaluateEditorialGate(profile).lane;
 }

@@ -226,5 +226,6 @@ export function getDirectStreamingLink(title: string, providerId: number, region
     232: `https://www.zee5.com/search?q=${encodedTitle}`
   };
 
-  return searchUrls[providerId] || `https://www.google.com/search?q=${encodedTitle}+watch+online`;
+  const encodedRegion = encodeURIComponent(region);
+  return searchUrls[providerId] || `https://www.google.com/search?q=${encodedTitle}+watch+online+${encodedRegion}`;
 }
