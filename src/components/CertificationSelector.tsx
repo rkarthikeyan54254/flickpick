@@ -12,8 +12,8 @@ interface CertificationSelectorProps {
 
 const options: Array<{ value: CertificationFilter; label: string; activeClass: string }> = [
   { value: 'all', label: 'All movies', activeClass: 'border-white/25 bg-white/10 text-text-primary' },
-  { value: 'certified', label: '🪷 Sanghi Certified', activeClass: 'border-orange-300/70 bg-orange-400/25 text-orange-50 shadow-lg shadow-orange-500/15' },
-  { value: 'reviewed', label: 'Reviewed only', activeClass: 'border-sky-300/35 bg-sky-300/10 text-sky-100' }
+  { value: 'certified', label: '🪷 Sanghi Certified', activeClass: 'border-orange-300/70 bg-orange-400/25 text-orange-50 shadow-lg shadow-orange-500/20' },
+  { value: 'reviewed', label: 'Reviewed only', activeClass: 'border-sky-300/30 bg-sky-300/10 text-sky-100' }
 ];
 
 const verdictKey: CertificationStatus[] = ['certified', 'mixed', 'neutral', 'not-certified'];
