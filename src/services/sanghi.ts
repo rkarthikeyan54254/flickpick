@@ -4,6 +4,10 @@ import { batch02Profiles } from '../data/batch02Profiles';
 import { chakDeIndiaRevision } from '../data/chakDeIndiaRevision';
 import { rangDeBasantiRevision } from '../data/rangDeBasantiRevision';
 import { editorialIntegrityRevisions } from '../data/editorialIntegrityRevisions';
+import { fullRecertificationV2Batch01 } from '../data/fullRecertificationV2Batch01';
+import { fullRecertificationV2Batch02 } from '../data/fullRecertificationV2Batch02';
+import { fullRecertificationV2OwnerExceptions } from '../data/fullRecertificationV2OwnerExceptions';
+import { fullRecertificationV2Overrides } from '../data/fullRecertificationV2Overrides';
 import { corpusExpansion01 } from '../data/corpusExpansion01';
 import { corpusExpansion02 } from '../data/corpusExpansion02';
 import { corpusExpansionIntegrityRevisions } from '../data/corpusExpansionIntegrityRevisions';
@@ -33,8 +37,15 @@ function profileKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
 
 function allProfileVersions() {
   const latestProfiles = [...latestCertificationProfilesExtra, ...latestCertificationProfiles];
+  const migrationProfiles = [
+    ...fullRecertificationV2Overrides,
+    ...fullRecertificationV2OwnerExceptions,
+    ...fullRecertificationV2Batch02,
+    ...fullRecertificationV2Batch01,
+  ];
   const hardenedNextTitles = new Set(
     [
+      ...migrationProfiles,
       ...editorialIntegrityRevisions,
       ...latestProfiles,
       ...hardenedCorpus50C,
@@ -53,7 +64,8 @@ function allProfileVersions() {
   );
 
   return [
-    ...editorialIntegrityRevisions,
+    ...migrationProfiles,
+    ...editorialIntegrityRevisions.filter((profile) => !hardenedNextTitles.has(normalizeTitle(profile.title))),
     chakDeIndiaRevision,
     rangDeBasantiRevision,
     ...latestProfiles,
@@ -171,6 +183,11 @@ export function getCorpusStats() {
         !profile.methodologyVersion.startsWith('2.0') &&
         !isPublicationEligible(profile)
     ).length,
+    migratedV2Profiles:
+      fullRecertificationV2Overrides.length +
+      fullRecertificationV2OwnerExceptions.length +
+      fullRecertificationV2Batch02.length +
+      fullRecertificationV2Batch01.length,
     batch02Total: batch.length,
     batch02GatePassed: results.filter((result) => result.gatePassed).length,
     batch02Published: results.filter((result) => result.eligible).length,
