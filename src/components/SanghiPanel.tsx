@@ -3,6 +3,7 @@ import { AlertTriangle, ExternalLink, HelpCircle, Scale, ShieldCheck } from 'luc
 import type { SanghiProfile } from '../types/sanghi';
 import { certificationLabels, dimensionLabels } from '../services/sanghi';
 import { evaluateEditorialGate } from '../services/editorialGate';
+import { getCertificationVisual } from './certificationVisuals';
 
 interface SanghiPanelProps {
   profile: SanghiProfile;
@@ -15,15 +16,22 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
   const auditStatus = profile.auditStatus ? profile.auditStatus.toUpperCase() : 'PROVISIONAL';
   const gate = evaluateEditorialGate(profile);
   const verdictLabel = gate.eligible ? certificationLabels[profile.status] : `Provisional · ${certificationLabels[profile.status]}`;
+  const visual = getCertificationVisual(profile.status);
 
   return (
-    <section className="rounded-[2.75rem] overflow-hidden border border-white/10 bg-gradient-to-b from-white/[0.055] to-white/[0.015] shadow-2xl">
+    <section className={`relative rounded-[2.75rem] overflow-hidden border ${visual.panel}`}>
+      <div className={`h-1.5 w-full ${visual.accentDot}`} aria-hidden="true" />
       <div className="p-8 md:p-12 border-b border-white/10">
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14">
           <div className="space-y-7">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-white/10 bg-black/20 text-[9px] font-black uppercase tracking-[0.24em] text-text-secondary">
-                <Icon className="w-4 h-4" /> Culture Check verdict
+              <span className={`inline-flex items-center gap-2 px-3 py-2 rounded-full border text-[9px] font-black uppercase tracking-[0.24em] ${visual.pill}`}>
+                {profile.status === 'certified' && gate.eligible ? (
+                  <span aria-hidden="true">🪷</span>
+                ) : (
+                  <Icon className="w-4 h-4" />
+                )}
+                Culture Check verdict
               </span>
               <span className="text-[9px] uppercase tracking-[0.20em] text-text-secondary font-bold">
                 methodology v{profile.methodologyVersion} · reviewed {profile.reviewedAt}
@@ -31,7 +39,7 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-4xl md:text-6xl font-black tracking-[-0.04em] leading-none">{verdictLabel}</h3>
+              <h3 className={`text-4xl md:text-6xl font-black tracking-[-0.04em] leading-none ${visual.heading}`}>{verdictLabel}</h3>
               {profile.status === 'certified' && gate.eligible && (
                 <p className="text-sm font-black text-orange-200">Called an insult. Worn as a badge.</p>
               )}
