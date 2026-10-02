@@ -1,13 +1,14 @@
 import type { IntegrityFlag, SanghiProfile } from '../types/sanghi';
 import { editorialEscalations } from '../data/editorialEscalations';
 import { editorialApprovals } from '../data/editorialApprovals';
+import { evaluateResearchReadiness } from './researchDossier';
 
 export type PublicationLane = 'auto-publish' | 'provisional-hold' | 'human-review';
 
 export interface EditorialGateResult {
   /** True only when this record may publish without a pending human exception review. */
   eligible: boolean;
-  /** True when the evidence/process gate passed even if an exception review is required. */
+  /** True when research/process is complete even if a genuine ambiguity requires adjudication. */
   gatePassed: boolean;
   failures: string[];
   lane: PublicationLane;
@@ -37,16 +38,21 @@ function escalationKey(profile: SanghiProfile) {
   return `${profile.title.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, ' ').trim()}::${profile.year}`;
 }
 
-export function evaluateEditorialGate(profile: SanghiProfile): EditorialGateResult {
+function baseFailures(profile: SanghiProfile) {
   const failures: string[] = [];
-  const escalationReasons: string[] = [];
-
   if (!profile.auditStatus || !['reviewed', 'hardened'].includes(profile.auditStatus)) failures.push('audit-status');
   if (!profile.reviewDepth || profile.reviewDepth === 'desk') failures.push('review-depth');
   if (profile.reasons.length < 2) failures.push('reasons');
   if (profile.evidence.length < 1) failures.push('evidence');
+  if (profile.integrityFlags.some((flag) => flag.status === 'unverified')) failures.push('unverified-integrity-finding');
+  return failures;
+}
 
+function evaluateLegacyV1(profile: SanghiProfile): EditorialGateResult {
+  const failures = baseFailures(profile);
+  const escalationReasons: string[] = [];
   const gate = profile.publicationGate;
+
   if (!gate) {
     failures.push('publication-gate');
   } else {
@@ -60,52 +66,57 @@ export function evaluateEditorialGate(profile: SanghiProfile): EditorialGateResu
     if (!gate.selfFalsificationPass) failures.push('self-falsification-pass');
   }
 
-  const unverifiedIntegrity = profile.integrityFlags.filter((flag) => flag.status === 'unverified');
-  if (unverifiedIntegrity.length > 0) failures.push('unverified-integrity-finding');
-
-  const gatePassed = failures.length === 0;
-  if (!gatePassed) {
-    return {
-      eligible: false,
-      gatePassed: false,
-      failures,
-      lane: 'provisional-hold',
-      escalationReasons,
-      approvalApplied: false,
-    };
+  if (failures.length > 0) {
+    return { eligible: false, gatePassed: false, failures, lane: 'provisional-hold', escalationReasons, approvalApplied: false };
   }
 
   const highRiskFindings = profile.integrityFlags.filter(isHighRiskIntegrityFlag);
-  if (highRiskFindings.length > 0) {
-    escalationReasons.push(...highRiskFindings.map((flag) => `high-risk-integrity:${flag.type}:${flag.status}`));
-  }
+  escalationReasons.push(...highRiskFindings.map((flag) => `high-risk-integrity:${flag.type}:${flag.status}`));
 
   const key = escalationKey(profile);
-  const calibrated = editorialEscalations[key] || [];
-  escalationReasons.push(...calibrated.map((reason) => `calibration:${reason}`));
-
+  escalationReasons.push(...(editorialEscalations[key] || []).map((reason) => `calibration:${reason}`));
   if (profile.confidence !== 'high') escalationReasons.push(`confidence:${profile.confidence}`);
 
   const approvalApplied = Boolean(editorialApprovals[key]);
   if (escalationReasons.length > 0 && !approvalApplied) {
-    return {
-      eligible: false,
-      gatePassed: true,
-      failures,
-      lane: 'human-review',
-      escalationReasons,
-      approvalApplied: false,
-    };
+    return { eligible: false, gatePassed: true, failures, lane: 'human-review', escalationReasons, approvalApplied: false };
   }
 
-  return {
-    eligible: true,
-    gatePassed: true,
-    failures,
-    lane: 'auto-publish',
-    escalationReasons,
-    approvalApplied,
-  };
+  return { eligible: true, gatePassed: true, failures, lane: 'auto-publish', escalationReasons, approvalApplied };
+}
+
+function evaluateEvidenceDerivedV2(profile: SanghiProfile): EditorialGateResult {
+  const failures = baseFailures(profile);
+  const readiness = evaluateResearchReadiness(profile);
+  failures.push(...readiness.failures);
+  const escalationReasons: string[] = [];
+
+  // Research incomplete means provisional hold. Human review is never used as a substitute for unfinished research.
+  if (failures.length > 0) {
+    return { eligible: false, gatePassed: false, failures, lane: 'provisional-hold', escalationReasons, approvalApplied: false };
+  }
+
+  escalationReasons.push(...readiness.ambiguousHighRisk.map((id) => `research-ambiguity:${id}`));
+
+  const highRiskFindings = profile.integrityFlags.filter(isHighRiskIntegrityFlag);
+  escalationReasons.push(...highRiskFindings.map((flag) => `high-risk-integrity:${flag.type}:${flag.status}`));
+
+  const key = escalationKey(profile);
+  escalationReasons.push(...(editorialEscalations[key] || []).map((reason) => `calibration:${reason}`));
+
+  const approvalApplied = Boolean(editorialApprovals[key]);
+  if (escalationReasons.length > 0 && !approvalApplied) {
+    return { eligible: false, gatePassed: true, failures, lane: 'human-review', escalationReasons, approvalApplied: false };
+  }
+
+  return { eligible: true, gatePassed: true, failures, lane: 'auto-publish', escalationReasons, approvalApplied };
+}
+
+export function evaluateEditorialGate(profile: SanghiProfile): EditorialGateResult {
+  if (profile.researchDossier || profile.methodologyVersion.startsWith('2.0')) {
+    return evaluateEvidenceDerivedV2(profile);
+  }
+  return evaluateLegacyV1(profile);
 }
 
 export function isPublicationEligible(profile: SanghiProfile) {
