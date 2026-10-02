@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://justflickpick.netlify.app/sitemap.xml
+Sitemap: https://culturechk.netlify.app/sitemap.xml
