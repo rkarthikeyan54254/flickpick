@@ -11,6 +11,7 @@ import { hardenedCorpusNextA } from '../data/hardenedCorpusNextA';
 import { hardenedCorpusNextB } from '../data/hardenedCorpusNextB';
 import { hardenedCorpus50 } from '../data/hardenedCorpus50';
 import { hardenedCorpus50B } from '../data/hardenedCorpus50B';
+import { hardenedCorpus50C } from '../data/hardenedCorpus50C';
 import { latestCertificationProfiles } from '../data/latestCertificationProfiles';
 import { latestCertificationProfilesExtra } from '../data/latestCertificationProfilesExtra';
 import type { Movie } from '../types/movie';
@@ -32,8 +33,14 @@ function profileKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
 function allProfileVersions() {
   const latestProfiles = [...latestCertificationProfilesExtra, ...latestCertificationProfiles];
   const hardenedNextTitles = new Set(
-    [...latestProfiles, ...hardenedCorpus50B, ...hardenedCorpus50, ...hardenedCorpusNextA, ...hardenedCorpusNextB]
-      .map((profile) => normalizeTitle(profile.title))
+    [
+      ...latestProfiles,
+      ...hardenedCorpus50C,
+      ...hardenedCorpus50B,
+      ...hardenedCorpus50,
+      ...hardenedCorpusNextA,
+      ...hardenedCorpusNextB,
+    ].map((profile) => normalizeTitle(profile.title))
   );
   const focusedExpansionTitles = new Set(
     [
@@ -47,6 +54,7 @@ function allProfileVersions() {
     chakDeIndiaRevision,
     rangDeBasantiRevision,
     ...latestProfiles,
+    ...hardenedCorpus50C,
     ...hardenedCorpus50B,
     ...hardenedCorpus50,
     ...hardenedCorpusNextA,
@@ -145,7 +153,8 @@ export function getCorpusStats() {
     batch02AutoPublish: results.filter((result) => result.lane === 'auto-publish').length,
     batch02HumanReview: results.filter((result) => result.lane === 'human-review').length,
     batch02Provisional: results.filter((result) => result.lane === 'provisional-hold').length,
-    nextHardenedBatchTotal: hardenedCorpus50B.length,
+    nextHardenedBatchTotal: hardenedCorpus50C.length,
+    previousHardenedBatchTotal: hardenedCorpus50B.length,
     latestCertifiedOrReviewed: latestCertificationProfiles.length + latestCertificationProfilesExtra.length,
   };
 }

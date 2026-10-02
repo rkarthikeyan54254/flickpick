@@ -1,4 +1,4 @@
-import type { IntegrityFlag, SanghiProfile } from '../types/sanghi';
+import type { IntegrityFlag, ResearchProbe, SanghiProfile } from '../types/sanghi';
 import { editorialEscalations } from '../data/editorialEscalations';
 import { editorialApprovals } from '../data/editorialApprovals';
 import { evaluateResearchReadiness } from './researchDossier';
@@ -21,6 +21,7 @@ const HIGH_RISK_INTEGRITY_TYPES = new Set([
   'identity-substitution',
   'ideological-substitution',
   'community-contempt',
+  'sacred-religious-valence',
   'source-fidelity',
   'adaptation-delta',
   'quantitative-claim',
@@ -51,6 +52,24 @@ function baseFailures(profile: SanghiProfile) {
   if (profile.evidence.length < 1) failures.push('evidence');
   if (profile.integrityFlags.some((flag) => flag.status === 'unverified')) failures.push('unverified-integrity-finding');
   return failures;
+}
+
+function shouldEscalateNegativeValence(profile: SanghiProfile, probe: ResearchProbe) {
+  if (!['finding', 'ambiguous'].includes(probe.status)) return false;
+  if (!['medium', 'high'].includes(probe.materiality)) return false;
+
+  // Ambiguity at high materiality always needs adjudication, whatever the proposed verdict.
+  if (probe.status === 'ambiguous' && probe.materiality === 'high') return true;
+
+  // Certified cannot silently coexist with a material contempt/sacred-valence concern.
+  if (profile.status === 'certified') return true;
+
+  // A neutral verdict should not conceal a high negative-valence finding.
+  if (profile.status === 'neutral' && probe.materiality === 'high') return true;
+
+  // Confirmed negative-valence evidence may itself justify Mixed / Contested or Not Certified.
+  // Those verdicts already surface the concern, so a redundant exception review is unnecessary.
+  return false;
 }
 
 function evaluateLegacyV1(profile: SanghiProfile): EditorialGateResult {
@@ -103,12 +122,11 @@ function evaluateEvidenceDerivedV2(profile: SanghiProfile): EditorialGateResult 
 
   escalationReasons.push(...readiness.ambiguousHighRisk.map((id) => `research-ambiguity:${id}`));
 
-  const communityContempt = profile.researchDossier?.riskProbes.find((probe) => probe.id === 'community-contempt');
-  if (communityContempt && ['finding', 'ambiguous'].includes(communityContempt.status)) {
-    const material = ['medium', 'high'].includes(communityContempt.materiality);
-    if ((profile.status === 'certified' && material) || communityContempt.materiality === 'high') {
+  for (const probeId of ['community-contempt', 'sacred-religious-valence'] as const) {
+    const probe = profile.researchDossier?.riskProbes.find((candidate) => candidate.id === probeId);
+    if (probe && shouldEscalateNegativeValence(profile, probe)) {
       escalationReasons.push(
-        `community-contempt:${profile.status}:${communityContempt.status}:${communityContempt.materiality}`,
+        `${probeId}:${profile.status}:${probe.status}:${probe.materiality}`,
       );
     }
   }
