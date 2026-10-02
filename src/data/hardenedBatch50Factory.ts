@@ -44,7 +44,10 @@ function discoveryQueries(spec: HardenedFilmSpec) {
   return [
     `${spec.title} ${spec.researchFocus} source adaptation based on true story biopic`,
     `${spec.title} religion caste community identity substitution representation`,
-    `${spec.title} Brahmin Dalit Adivasi Hindu Muslim Sikh Christian Jain Buddhist caste regional linguistic community insult slur stereotype ridicule contempt representation controversy`,
+    `${spec.title} Brahmin Dalit Adivasi Hindu Muslim Sikh Christian Jain Buddhist caste regional linguistic community insult slur stereotype ridicule contempt bashing representation controversy`,
+    `${spec.title} Hindu deity goddess temple puja priest Veda Ramayana Mahabharata sacred symbol ritual ridicule desecration inversion mockery anti-Hindu`,
+    `${spec.title} Hindutva politics versus Hindu religion distinction sacred figure allegory symbolism`,
+    `${spec.title} criticism of individual practice institution versus generalized community contempt stereotype`,
     `${spec.title} history accuracy factual dispute controversy criticism`,
     `${spec.title} director writer actor interview ${spec.researchFocus}`,
     `${spec.title} regional context audience criticism social media controversy`,
