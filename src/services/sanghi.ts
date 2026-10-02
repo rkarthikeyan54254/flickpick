@@ -1,6 +1,7 @@
 import { sanghiProfiles } from '../data/sanghiProfiles';
 import { sanghiProfileRevisions } from '../data/sanghiProfileRevisions';
 import { batch02Profiles } from '../data/batch02Profiles';
+import { corpusExpansion01 } from '../data/corpusExpansion01';
 import type { Movie } from '../types/movie';
 import type { CertificationStatus, SanghiProfile } from '../types/sanghi';
 import { evaluateEditorialGate, isPublicationEligible } from './editorialGate';
@@ -20,6 +21,7 @@ function profileKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
 function allProfileVersions() {
   return [
     ...sanghiProfileRevisions,
+    ...corpusExpansion01,
     ...batch02Profiles,
     ...sanghiProfiles,
   ];
