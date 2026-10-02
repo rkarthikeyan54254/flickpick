@@ -26,7 +26,17 @@ Tanhaji: The Unsung Warrior; Kesari; Kadaisi Vivasayi; Ponniyin Selvan: Part II;
 
 Farzand; Fatteshikast; Mallesham; Harishchandrachi Factory; Kothanodi; Kaalapani; Bharathi; Manikarnika: The Queen of Jhansi; The Vaccine War; Nayika Devi: The Warrior Queen; Rangasthalam; Ganga Maiyya Tohe Piyari Chadhaibo.
 
-The two focused files therefore contain 30 researched records. Their publication router outcome is 22 auto-publish and 8 human-review, with no provisional holds. The human-review set is Tanhaji, Sye Raa Narasimha Reddy, Gautamiputra Satakarni, Marakkar, Kasoombo, Manikarnika, The Vaccine War and Nayika Devi, all because the evidence/process gate passes but medium confidence and/or a high-risk historicity/source-fidelity finding requires an exception decision.
+The two focused files therefore contain 30 researched records. A deeper historical-integrity pass then revised Kesari, Pathonpatham Noottandu, Krantiveera Sangolli Rayanna, Pawankhind and Subhedar in `src/data/corpusExpansionIntegrityRevisions.ts`.
+
+### Focused publication-router outcome
+
+- **19 auto-publish**
+- **11 human-review**
+- **0 provisional-hold**
+
+The 11 human-review titles are: Tanhaji: The Unsung Warrior; Kesari; Sye Raa Narasimha Reddy; Gautamiputra Satakarni; Marakkar: Arabikadalinte Simham; Pathonpatham Noottandu; Krantiveera Sangolli Rayanna; Kasoombo; Manikarnika: The Queen of Jhansi; The Vaccine War; Nayika Devi: The Warrior Queen.
+
+Pawankhind and Subhedar retain visible historical-fiction caveats but remain auto-publish because those findings document dramatization without triggering the current high-risk historical-claim/source-fidelity exception rule.
 
 ## Concurrent continuous-worker contribution
 
@@ -34,6 +44,18 @@ While the focused session was in progress, the continuous corpus worker also com
 
 Five of those overlap the focused audit by normalized title: Kadaisi Vivasayi, Harishchandrachi Factory, Village Rockstars, Daman/DAMaN and Ganga Maiyya Tohe Piyari Chadhaibo. The resolver now suppresses the concurrent variant for any title owned by a focused audit, so release-year discrepancies cannot create duplicate cards.
 
-This leaves **45 unique new titles** represented by this branch: 30 from the focused source-audit work plus 15 non-overlapping continuous-worker records. The number is an internal curation metric only; the consumer UI does not market corpus totals.
+This leaves **45 unique new titles** represented by this branch: 30 from the focused source-audit work plus 15 non-overlapping continuous-worker records.
 
-Machine-readable records live in `src/data/corpusExpansion01.ts`, `src/data/corpusExpansion02.ts` and `src/data/continuousCorpusProfiles.ts`, and are wired into the current-profile resolver through `src/services/sanghi.ts`.
+### Combined branch outcome
+
+- **45 unique new titles**
+- **42 Sanghi Certified verdicts**
+- **3 Reviewed · Neutral controls**
+- **34 auto-publish records**
+- **11 human-review records**
+- **0 provisional holds**
+- coverage spans Hindi, Tamil, Telugu, Malayalam, Kannada, Marathi, Bengali, Punjabi, Gujarati, Odia, Assamese and Bhojpuri
+
+The number is an internal curation metric only; the consumer UI does not market corpus totals.
+
+Machine-readable records live in `src/data/corpusExpansion01.ts`, `src/data/corpusExpansion02.ts`, `src/data/corpusExpansionIntegrityRevisions.ts` and `src/data/continuousCorpusProfiles.ts`, and are wired into the current-profile resolver through `src/services/sanghi.ts`.
