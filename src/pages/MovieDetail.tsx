@@ -9,6 +9,7 @@ import { getSanghiProfile } from '../services/sanghi';
 import { VideoPlayer } from '../components/VideoPlayer';
 import { SEO } from '../components/SEO';
 import { SanghiPanel } from '../components/SanghiPanel';
+import { CertificationChallenge } from '../components/CertificationChallenge';
 import type { Movie } from '../types/movie';
 
 export function MovieDetail() {
@@ -32,8 +33,8 @@ export function MovieDetail() {
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] space-y-8 animate-fade-in">
-        <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin shadow-2xl shadow-purple-500/20" />
-        <p className="text-xl font-bold tracking-tighter uppercase opacity-50">Curating Exhibit...</p>
+        <div className="w-16 h-16 border-4 border-orange-400 border-t-transparent rounded-full animate-spin shadow-2xl shadow-orange-500/20" />
+        <p className="text-xl font-bold tracking-tighter uppercase opacity-50">Opening the editorial dossier…</p>
       </div>
     );
   }
@@ -41,7 +42,7 @@ export function MovieDetail() {
   if (!movie) {
     return (
       <div className="text-center py-32 chic-glass rounded-[3rem] max-w-2xl mx-auto">
-        <h2 className="text-3xl font-black mb-6">COLLECTION ERROR.</h2>
+        <h2 className="text-3xl font-black mb-6">FILM NOT FOUND.</h2>
         <Link to="/" className="chic-btn-primary px-8">Return Home</Link>
       </div>
     );
@@ -77,17 +78,17 @@ export function MovieDetail() {
   return (
     <div className="space-y-12 md:space-y-20 animate-fade-in pb-20">
       <SEO
-        title={`Watch ${movie.title} (${releaseYear})`}
-        description={`FlickPick: Watch ${movie.title} trailer, view cast details, streaming availability and Sanghi Certified editorial context.`}
+        title={`${movie.title} (${releaseYear}) · Bharatiya review`}
+        description={`Watch ${movie.title} trailer, view India streaming availability, Sanghi Certified context, Narrative Integrity notes and evidence.`}
         image={backdropUrl}
-        url={`https://movieselectprime.netlify.app/movie/${movie.id}`}
+        url={`https://justflickpick.netlify.app/movie/${movie.id}`}
         type="video.movie"
         schemaData={movieSchema}
       />
 
       <Link to="/" className="chic-btn-secondary inline-flex items-center gap-3">
         <ArrowLeft className="w-5 h-5" />
-        Back to Exhibit
+        Back to discovery
       </Link>
 
       <div className="relative rounded-[3rem] overflow-hidden shadow-2xl bg-chic-gray aspect-[21/9] hidden md:block">
@@ -105,7 +106,7 @@ export function MovieDetail() {
             <div className="space-y-6">
               <h3 className="text-sm font-black uppercase tracking-widest text-text-secondary flex items-center gap-3">
                 <Info className="w-5 h-5" />
-                Metadata
+                Film details
               </h3>
               <div className="grid grid-cols-2 gap-8 text-sm">
                 <div className="space-y-1">
@@ -134,7 +135,7 @@ export function MovieDetail() {
               <div className="space-y-8 pt-8 border-t border-glass-border">
                 <h3 className="text-sm font-black uppercase tracking-widest text-text-secondary flex items-center gap-3">
                   <Play className="w-5 h-5" />
-                  Streaming Hub
+                  Streaming in India
                 </h3>
                 <div className="space-y-4">
                   {(movie.watch_providers.flatrate || []).map(provider => {
@@ -164,7 +165,7 @@ export function MovieDetail() {
 
                   {!(movie.watch_providers.flatrate || []).length && (
                     <p className="text-xs font-bold text-text-secondary uppercase italic">
-                      No direct stream available in this region.
+                      No subscription stream listed in this region.
                     </p>
                   )}
                 </div>
@@ -176,7 +177,7 @@ export function MovieDetail() {
         <div className="lg:col-span-8 space-y-12 lg:space-y-16">
           <div className="space-y-6">
             {movie.tagline && (
-              <p className="text-purple-500 font-black uppercase tracking-[0.3em] text-xs">
+              <p className="text-orange-300 font-black uppercase tracking-[0.3em] text-xs">
                 {movie.tagline}
               </p>
             )}
@@ -203,17 +204,20 @@ export function MovieDetail() {
           </div>
 
           {profile ? (
-            <SanghiPanel profile={profile} />
+            <div className="space-y-6">
+              <SanghiPanel profile={profile} />
+              <CertificationChallenge profile={profile} />
+            </div>
           ) : (
             <section className="chic-glass rounded-[2.5rem] p-8 border border-white/10 space-y-3">
-              <p className="text-xs font-black uppercase tracking-[0.25em] text-text-secondary">Sanghi Certified · Beta</p>
+              <p className="text-xs font-black uppercase tracking-[0.25em] text-text-secondary">Bharatiya editorial review</p>
               <h3 className="text-2xl font-black tracking-tighter">Not yet reviewed</h3>
-              <p className="text-text-secondary leading-relaxed">This title is outside the current 30-film editorial corpus. Unrated does not mean Not Certified.</p>
+              <p className="text-text-secondary leading-relaxed">This title is outside the reviewed corpus. Unrated does not mean Not Certified.</p>
             </section>
           )}
 
           <div className="space-y-8">
-            <h3 className="text-3xl font-black tracking-tighter">OVERVIEW.</h3>
+            <h3 className="text-3xl font-black tracking-tighter">THE FILM.</h3>
             <p className="text-2xl lg:text-3xl leading-relaxed text-text-secondary font-medium">
               {movie.overview}
             </p>
@@ -221,7 +225,7 @@ export function MovieDetail() {
 
           {trailer && (
             <div className="space-y-10">
-              <h3 className="text-3xl font-black tracking-tighter">THE PREVIEW.</h3>
+              <h3 className="text-3xl font-black tracking-tighter">TRAILER.</h3>
               <div className="rounded-[3rem] overflow-hidden shadow-2xl border border-glass-border">
                 <VideoPlayer videoKey={trailer.key} />
               </div>
@@ -230,9 +234,7 @@ export function MovieDetail() {
 
           {movie.credits && (
             <div className="space-y-10">
-              <h3 className="text-3xl font-black tracking-tighter flex items-center gap-4">
-                CAST EXHIBIT.
-              </h3>
+              <h3 className="text-3xl font-black tracking-tighter flex items-center gap-4">CAST.</h3>
               <div className="flex overflow-x-auto pb-10 gap-8 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
                 {movie.credits.cast.slice(0, 8).map(person => (
                   <div key={person.id} className="flex-shrink-0 w-40 space-y-4 group">
