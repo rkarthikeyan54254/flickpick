@@ -1,7 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { CalendarDays, ExternalLink, ImageOff, Sparkles } from 'lucide-react';
+import { CalendarDays, CheckCircle2, Clock3, ImageOff, Sparkles } from 'lucide-react';
 import type { OttReleaseItem } from '../data/latestOtt';
 import { fetchOttArtwork, type OttArtwork } from '../services/tmdb';
+
+function editorialLabel(item: OttReleaseItem) {
+  switch (item.editorialState) {
+    case 'sanghi-certified': return '🪷 Sanghi Certified';
+    case 'pre-release-check': return 'Pre-release check';
+    default: return 'Review pending';
+  }
+}
+
+function releaseLabel(releaseDate: string) {
+  const now = new Date();
+  const release = new Date(`${releaseDate}T00:00:00+05:30`);
+  const diffDays = Math.round((release.getTime() - now.getTime()) / (24 * 60 * 60 * 1000));
+  if (diffDays < 0 && diffDays >= -7) return 'New this week';
+  if (diffDays === 0) return 'Today';
+  if (diffDays > 0) return 'Coming soon';
+  return 'Streaming';
+}
+
+function verificationLabel(lastVerifiedAt: string) {
+  const ageHours = Math.max(0, Math.floor((Date.now() - new Date(lastVerifiedAt).getTime()) / (60 * 60 * 1000)));
+  if (ageHours < 2) return 'Verified recently';
+  if (ageHours < 24) return `Verified ${ageHours}h ago`;
+  return 'Verified within 72h';
+}
 
 export function OttReleaseCard({ item }: { item: OttReleaseItem }) {
   const [artwork, setArtwork] = useState<OttArtwork | null>(null);
@@ -46,7 +71,7 @@ export function OttReleaseCard({ item }: { item: OttReleaseItem }) {
         <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black via-black/65 to-transparent" />
         <div className="absolute top-3 left-3 right-3 flex items-start justify-between gap-2">
           <span className="rounded-full border border-white/15 bg-black/60 backdrop-blur-md px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.13em] text-white">{item.platform}</span>
-          <span className="rounded-full border border-white/15 bg-black/60 backdrop-blur-md px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.13em] text-white/80">{item.confidence}</span>
+          <span className="rounded-full border border-white/15 bg-black/60 backdrop-blur-md px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.13em] text-white/80">{releaseLabel(item.releaseDate)}</span>
         </div>
       </div>
 
@@ -59,19 +84,14 @@ export function OttReleaseCard({ item }: { item: OttReleaseItem }) {
           </p>
         </div>
 
-        <div className="flex items-center justify-between gap-3 border-t border-white/10 pt-4">
+        <div className="space-y-2 border-t border-white/10 pt-4">
           <span className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-wider text-orange-200">
-            <Sparkles className="w-3 h-3" /> {item.editorialState === 'reviewed' ? 'Review ready' : 'Review pending'}
+            <Sparkles className="w-3 h-3" /> {editorialLabel(item)}
           </span>
-          <a
-            href={item.sourceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            title={item.sourceName}
-            className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider text-text-secondary hover:text-orange-200"
-          >
-            Source <ExternalLink className="w-3 h-3" />
-          </a>
+          <div className="flex items-center justify-between gap-3 text-[9px] font-black uppercase tracking-wider text-text-secondary">
+            <span className="inline-flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> {item.confidence}</span>
+            <span className="inline-flex items-center gap-1"><Clock3 className="w-3 h-3" /> {verificationLabel(item.lastVerifiedAt)}</span>
+          </div>
         </div>
       </div>
     </article>
