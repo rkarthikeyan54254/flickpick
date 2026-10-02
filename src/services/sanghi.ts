@@ -90,11 +90,14 @@ export function getCorpusStats() {
   const profiles = currentProfiles();
   const batch = batch02Profiles;
   const results = batch.map(evaluateEditorialGate);
+  const gatePassed = results.filter((result) => result.gatePassed).length;
   return {
     totalProfiles: profiles.length,
     batch02Total: batch.length,
-    batch02GatePassed: results.filter((result) => result.gatePassed).length,
-    batch02Published: results.filter((result) => result.lane === 'auto-publish').length,
+    batch02GatePassed: gatePassed,
+    // Kept for the home-page wording: "reviewed" means gate-passed, not necessarily auto-published.
+    batch02Published: gatePassed,
+    batch02AutoPublish: results.filter((result) => result.lane === 'auto-publish').length,
     batch02HumanReview: results.filter((result) => result.lane === 'human-review').length,
     batch02Provisional: results.filter((result) => result.lane === 'provisional-hold').length,
   };
