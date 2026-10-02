@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   ArrowLeft, Star, Calendar, Clock,
-  ExternalLink, Play, Users, Info
+  ExternalLink, Play, Users, Info, BookOpenCheck
 } from 'lucide-react';
 import { fetchMovieDetails, getDirectStreamingLink } from '../services/tmdb';
 import { getSanghiProfile } from '../services/sanghi';
@@ -34,7 +34,7 @@ export function MovieDetail() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[70vh] space-y-8 animate-fade-in">
         <div className="w-16 h-16 border-4 border-orange-400 border-t-transparent rounded-full animate-spin shadow-2xl shadow-orange-500/20" />
-        <p className="text-xl font-bold tracking-tighter uppercase opacity-50">Opening the editorial dossier…</p>
+        <p className="text-xl font-bold tracking-tighter uppercase opacity-50">Opening the Culture Check dossier…</p>
       </div>
     );
   }
@@ -78,18 +78,23 @@ export function MovieDetail() {
   return (
     <div className="space-y-12 md:space-y-20 animate-fade-in pb-20">
       <SEO
-        title={`${movie.title} (${releaseYear}) · Bharatiya review`}
-        description={`Watch ${movie.title} trailer, view India streaming availability, Sanghi Certified context, Narrative Integrity notes and evidence.`}
+        title={`${movie.title} (${releaseYear}) · Culture Check`}
+        description={`Culture Check for ${movie.title}: India streaming availability, Sanghi Certified context, Narrative Integrity findings and evidence.`}
         image={backdropUrl}
         url={`https://justflickpick.netlify.app/movie/${movie.id}`}
         type="video.movie"
         schemaData={movieSchema}
       />
 
-      <Link to="/" className="chic-btn-secondary inline-flex items-center gap-3">
-        <ArrowLeft className="w-5 h-5" />
-        Back to discovery
-      </Link>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <Link to="/" className="chic-btn-secondary inline-flex items-center gap-3">
+          <ArrowLeft className="w-5 h-5" />
+          Back to discovery
+        </Link>
+        <Link to="/methodology" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-text-secondary hover:text-orange-200 transition-colors">
+          <BookOpenCheck className="w-4 h-4" /> How Culture Check works
+        </Link>
+      </div>
 
       <div className="relative rounded-[3rem] overflow-hidden shadow-2xl bg-chic-gray aspect-[21/9] hidden md:block">
         <img src={backdropUrl} alt="" className="w-full h-full object-cover opacity-60 scale-105" />
@@ -122,7 +127,7 @@ export function MovieDetail() {
                   <p className="font-black text-lg">{movie.runtime} min</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-text-secondary font-bold uppercase tracking-tighter">Rating</p>
+                  <p className="text-text-secondary font-bold uppercase tracking-tighter">TMDb rating</p>
                   <div className="flex items-center gap-2 font-black text-lg">
                     <Star className="w-5 h-5 text-yellow-500 fill-current" />
                     {Math.round(movie.vote_average * 10) / 10}
@@ -210,7 +215,7 @@ export function MovieDetail() {
             </div>
           ) : (
             <section className="chic-glass rounded-[2.5rem] p-8 border border-white/10 space-y-3">
-              <p className="text-xs font-black uppercase tracking-[0.25em] text-text-secondary">Bharatiya editorial review</p>
+              <p className="text-xs font-black uppercase tracking-[0.25em] text-text-secondary">Culture Check review</p>
               <h3 className="text-2xl font-black tracking-tighter">Not yet reviewed</h3>
               <p className="text-text-secondary leading-relaxed">This title is outside the reviewed corpus. Unrated does not mean Not Certified.</p>
             </section>
