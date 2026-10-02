@@ -47,7 +47,7 @@ export function OttReleaseCard({ item }: { item: OttReleaseItem }) {
   const imageUrl = artwork?.posterUrl || artwork?.backdropUrl;
 
   return (
-    <article className="group w-[210px] sm:w-[220px] shrink-0 snap-start overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.025] shadow-xl">
+    <article className="group w-[210px] sm:w-[220px] lg:w-[calc((100%_-_2.25rem)/4)] xl:w-[calc((100%_-_3rem)/5)] shrink-0 snap-start overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.025] shadow-xl">
       <div className="relative aspect-[2/3] overflow-hidden bg-gradient-to-br from-orange-500/10 via-black to-black">
         {imageUrl ? (
           <img

@@ -70,6 +70,7 @@ export const rangDeBasantiRevision: SanghiProfile = hardenedProfile({
     filmUnderstanding: 'A fictional contemporary political drama that deliberately intercuts Indian anti-colonial revolutionaries with young citizens who respond to corruption, a friend’s death and failed protest by assassinating a minister and broadcasting a confession.',
     discoveryQueries: [
       'Rang De Basanti Rakeysh Omprakash Mehra armed revolution youth interview',
+      'Rang De Basanti religion caste community identity representation',
       'Rang De Basanti Bhagat Singh history contemporary parallel source adaptation',
       'Rang De Basanti vigilante violence assassination minister criticism',
       'Rang De Basanti patriotism nationalism propaganda political framing',
