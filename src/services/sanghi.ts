@@ -3,7 +3,7 @@ import { sanghiProfileRevisions } from '../data/sanghiProfileRevisions';
 import { batch02Profiles } from '../data/batch02Profiles';
 import type { Movie } from '../types/movie';
 import type { CertificationStatus, SanghiProfile } from '../types/sanghi';
-import { isPublicationEligible } from './editorialGate';
+import { evaluateEditorialGate, isPublicationEligible } from './editorialGate';
 
 function normalizeTitle(value: string) {
   return value
@@ -89,11 +89,14 @@ export function getProfilesForSelection(
 export function getCorpusStats() {
   const profiles = currentProfiles();
   const batch = batch02Profiles;
+  const results = batch.map(evaluateEditorialGate);
   return {
     totalProfiles: profiles.length,
     batch02Total: batch.length,
-    batch02Published: batch.filter(isPublicationEligible).length,
-    batch02Provisional: batch.filter((profile) => !isPublicationEligible(profile)).length,
+    batch02GatePassed: results.filter((result) => result.gatePassed).length,
+    batch02Published: results.filter((result) => result.lane === 'auto-publish').length,
+    batch02HumanReview: results.filter((result) => result.lane === 'human-review').length,
+    batch02Provisional: results.filter((result) => result.lane === 'provisional-hold').length,
   };
 }
 
