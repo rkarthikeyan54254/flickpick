@@ -3,16 +3,15 @@ import { CalendarDays, CheckCircle2, Clock3, ImageOff, Sparkles } from 'lucide-r
 import type { OttReleaseItem } from '../data/latestOtt';
 import { certificationLabels, getPublishedSanghiProfileByTitle } from '../services/sanghi';
 import { fetchOttArtwork, type OttArtwork } from '../services/tmdb';
+import { getCertificationVisual } from './certificationVisuals';
+import type { CertificationStatus } from '../types/sanghi';
 
 function editorialLabel(item: OttReleaseItem) {
   const profile = getPublishedSanghiProfileByTitle(item.title);
-  if (profile) {
-    const label = certificationLabels[profile.status];
-    return profile.status === 'certified' ? `🪷 ${label}` : label;
-  }
+  if (profile) return certificationLabels[profile.status];
 
   switch (item.editorialState) {
-    case 'sanghi-certified': return '🪷 Sanghi Certified';
+    case 'sanghi-certified': return 'Sanghi Certified';
     case 'pre-release-check': return 'Pre-release check';
     default: return 'Review pending';
   }
@@ -42,7 +41,9 @@ function verificationLabel(lastVerifiedAt: string) {
 export function OttReleaseCard({ item }: { item: OttReleaseItem }) {
   const [artwork, setArtwork] = useState<OttArtwork | null>(null);
   const [loaded, setLoaded] = useState(false);
-  const hasVerdict = Boolean(getPublishedSanghiProfileByTitle(item.title));
+  const profile = getPublishedSanghiProfileByTitle(item.title);
+  const status: CertificationStatus = profile?.status || (item.editorialState === 'sanghi-certified' ? 'certified' : 'unrated');
+  const visual = getCertificationVisual(status);
 
   useEffect(() => {
     let cancelled = false;
@@ -59,7 +60,7 @@ export function OttReleaseCard({ item }: { item: OttReleaseItem }) {
   const imageUrl = artwork?.posterUrl || artwork?.backdropUrl;
 
   return (
-    <article className="group w-[210px] sm:w-[220px] lg:w-[calc((100%_-_2.25rem)/4)] xl:w-[calc((100%_-_3rem)/5)] shrink-0 snap-start overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.025] shadow-xl">
+    <article className={`group w-[210px] sm:w-[220px] lg:w-[calc((100%_-_2.25rem)/4)] xl:w-[calc((100%_-_3rem)/5)] shrink-0 snap-start overflow-hidden rounded-[1.6rem] border bg-white/[0.025] shadow-xl transition-all duration-300 ${visual.card}`}>
       <div className="relative aspect-[2/3] overflow-hidden bg-gradient-to-br from-orange-500/10 via-black to-black">
         {imageUrl ? (
           <img
@@ -97,8 +98,9 @@ export function OttReleaseCard({ item }: { item: OttReleaseItem }) {
         </div>
 
         <div className="space-y-2.5 border-t border-white/10 pt-3.5">
-          <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ${hasVerdict ? 'border-orange-300/25 bg-orange-400/10 text-orange-200' : 'border-white/10 text-text-secondary'}`}>
-            <Sparkles className="w-3 h-3" /> {editorialLabel(item)}
+          <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ${visual.pill}`}>
+            {status === 'certified' ? <span aria-hidden="true">🪷</span> : <Sparkles className="w-3 h-3" />}
+            {editorialLabel(item)}
           </span>
           <div className="flex items-center justify-between gap-2 text-[9px] font-black uppercase tracking-wider text-text-secondary">
             <span className="inline-flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> {editorialConfidence(item)}</span>
