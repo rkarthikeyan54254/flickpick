@@ -11,13 +11,11 @@
 | Hindi | 10 | 10 | 9 | 1 |
 | Tamil | 10 | 10 | 9 | 1 |
 | Telugu | 10 | 10 | 9 | 1 |
-| Malayalam | 10 | 0 | 0 | 0 |
+| Malayalam | 10 | 10 | 10 | 0 |
 | Kannada | 10 | 0 | 0 | 0 |
-| **Total** | **50** | **30** | **27** | **3** |
+| **Total** | **50** | **40** | **37** | **3** |
 
 ## Hindi tranche — complete
-
-Detailed records: `HINDI_TRANCHE_01.md`, `HINDI_TRANCHE_02.md`.
 
 1. 12th Fail — Neutral — reviewed
 2. Shershaah — Certified — reviewed
@@ -32,8 +30,6 @@ Detailed records: `HINDI_TRANCHE_01.md`, `HINDI_TRANCHE_02.md`.
 
 ## Tamil tranche — complete
 
-Detailed records: `TAMIL_TRANCHE_01.md`, `TAMIL_TRANCHE_02.md`.
-
 11. Lubber Pandhu — Neutral — reviewed
 12. Captain Miller — **provisional hold**
 13. Maaveeran — Neutral — reviewed
@@ -47,32 +43,45 @@ Detailed records: `TAMIL_TRANCHE_01.md`, `TAMIL_TRANCHE_02.md`.
 
 ## Telugu tranche — complete
 
-Detailed records: `TELUGU_TRANCHE_01.md`, `TELUGU_TRANCHE_02.md`.
+21. Balagam — Certified — reviewed
+22. Virupaksha — Mixed / Contested — reviewed
+23. Dasara — Mixed / Contested — reviewed
+24. Major — Certified — reviewed
+25. Sita Ramam — Mixed / Contested — reviewed
+26. Akhanda — Certified — reviewed
+27. Bimbisara — Certified — reviewed
+28. GodFather — Neutral — reviewed
+29. Mangalavaaram — **provisional hold**
+30. Hi Nanna — Neutral — reviewed
 
-21. Balagam — Certified — reviewed; Telangana death ritual and family reconciliation are central; story-origin dispute retained as disputed
-22. Virupaksha — Mixed / Contested — reviewed; sacred village setting and critique/validation of occult belief create genuinely mixed signal
-23. Dasara — Mixed / Contested — reviewed; strongly Telangana-rooted with explicit caste-exclusion critique
-24. Major — Certified — reviewed; family-sourced biopic with disclosed composites/dramatized final moments and military-staging caveat
-25. Sita Ramam — Mixed / Contested — reviewed; India-positive soldier narrative plus cross-border humanity, with military-procedure fiction caveat
-26. Akhanda — Certified — reviewed; strongly affirmative Shaiva/Aghora frame, with sacred-violence fusion caveat
-27. Bimbisara — Certified — reviewed; ancient/fantasy redemption frame; historical-name/fantasy distinction recorded
-28. GodFather — Neutral — reviewed; political-remake adaptation, low worldview signal
-29. Mangalavaaram — **provisional hold**; insufficient regional/scene-level evidence to harden belief-system interpretation
-30. Hi Nanna — Neutral — reviewed; audited low-signal family drama
+## Malayalam tranche — complete
+
+31. Aattam — Neutral — reviewed; gender/social critique audited without inverse-bias shortcut
+32. Bramayugam — Mixed / Contested — reviewed; folk cosmology + caste/power critique; pre-release Potti/Illam name dispute recorded
+33. Aadujeevitham / The Goat Life — Mixed / Contested — reviewed; real Najeeb → novel → film adaptation distance explicitly audited
+34. Premalu — Neutral — reviewed; female agency not treated as anti-traditional signal
+35. Manjummel Boys — Neutral — reviewed; real rescue + set reconstruction; atheist character checked without inferring sacred contempt
+36. Kaathal – The Core — Mixed / Contested — reviewed; queer/traditional-marriage tension separated from claims of religious hostility
+37. Neru — Neutral — reviewed; survivor/legal-justice focus; screenplay plagiarism allegation kept separate from worldview
+38. Aavesham — Neutral — reviewed; culturally rooted gangster comedy with low certification signal
+39. Kannur Squad — Mixed / Contested — reviewed; real police unit + openly fictional/commercial composites
+40. Jana Gana Mana — Mixed / Contested — reviewed; political/caste/state critique + verified multi-event collage
 
 ## Editorial notes discovered so far
 
-- **Worldview alignment must not launder factual unreliability.** The Kerala Story, Rocketry and Ram Setu remain regression cases.
-- **Historical/biographical certification can coexist with visible fidelity flags.** Sardar Udham and Major demonstrate this.
-- **Creator intent cannot erase a representation choice.** Animal remains the regression case.
-- **Critique of patriarchy/caste/state failure is not anti-Indic by default.** Tamil tranche plus Dasara reinforce the guardrail.
-- **Positive rootedness is not immunity from adversarial critique.** Meiyazhagan and Balagam retain sourced caveats/disputes.
-- **Faith and empirical/historical claims remain separate layers.** Ram Setu, Akhanda and Bimbisara reinforce this distinction.
-- **Patriotism and biographical accuracy are independent axes.** Rocketry and Major make this especially clear.
-- **Genre supernaturalism can create a real mixed signal.** Virupaksha critiques lethal superstition while making occult causation real inside its horror world; the classifier must describe that tension rather than flatten it.
-- **Neutral is an audited conclusion, not absence of research.** GodFather and Hi Nanna are controls; Mangalavaaram is held because evidence is not yet sufficient.
-- **Social-media allegations remain radar only.** No durable verdict relies on engagement volume or an unverified post.
+- Worldview alignment must not launder factual unreliability; Kerala Story, Rocketry and Ram Setu remain regression cases.
+- Historical/biographical certification can coexist with visible fidelity flags; Sardar Udham and Major demonstrate this.
+- Creator intent cannot erase a representation choice; Animal remains the regression case.
+- Critique of patriarchy/caste/state failure is not anti-Indic by default; Tamil tranche, Dasara, Aattam and Jana Gana Mana reinforce the guardrail.
+- Positive rootedness is not immunity from adversarial critique; Meiyazhagan, Balagam and Bramayugam retain sourced caveats/disputes.
+- Faith and empirical/historical claims remain separate layers; Ram Setu, Akhanda, Bimbisara and Manjummel Boys reinforce this distinction.
+- Patriotism and biographical accuracy are independent axes; Rocketry, Major and Kannur Squad make this especially clear.
+- Genre supernaturalism can create a real mixed signal; Virupaksha and Bramayugam require the classifier to describe the tension rather than flatten it.
+- Neutral is an audited conclusion, not absence of research; GodFather, Hi Nanna, Premalu, Aattam, Neru and Aavesham are controls.
+- Queer representation or female agency is not itself anti-traditional/anti-Indic; Kaathal and Premalu are explicit regression checks against inverse-bias classification.
+- Real-event films need adaptation-level labels: literal reconstruction, composite, literary adaptation, inspired-by, and fictional collage should not be treated as interchangeable.
+- Social-media allegations remain radar only. No durable verdict relies on engagement volume or an unverified post.
 
 ## Next
 
-Proceed to the Malayalam tranche at equivalent evidence depth, then Kannada. Do not merge before the full 50-film human review.
+Proceed to the Kannada tranche at equivalent evidence depth. Do not merge before the full 50-film human review.
