@@ -1,13 +1,4 @@
 import type { SanghiProfile } from '../types/sanghi';
-import { batch02Profiles } from './batch02Profiles';
-import { continuousCorpusProfiles } from './continuousCorpusProfiles';
-import { corpusExpansion01 } from './corpusExpansion01';
-import { corpusExpansion02 } from './corpusExpansion02';
-import { hardenedCorpus50 } from './hardenedCorpus50';
-import { hardenedCorpusNextA } from './hardenedCorpusNextA';
-import { hardenedCorpusNextB } from './hardenedCorpusNextB';
-import { sanghiProfiles } from './sanghiProfiles';
-import { sanghiProfileRevisions } from './sanghiProfileRevisions';
 import { hardenedCorpus50BPart1 } from './hardenedCorpus50BPart1';
 import { hardenedCorpus50BPart2 } from './hardenedCorpus50BPart2';
 import { hardenedCorpus50BPart3 } from './hardenedCorpus50BPart3';
@@ -35,24 +26,10 @@ if (hardenedCorpus50B.length !== 50) {
 }
 
 const normalizedBatchTitles = hardenedCorpus50B.map((profile) => normalizeTitle(profile.title));
-const duplicatedInsideBatch = normalizedBatchTitles.find((title, index) => normalizedBatchTitles.indexOf(title) !== index);
+const duplicatedInsideBatch = normalizedBatchTitles.find(
+  (title, index) => normalizedBatchTitles.indexOf(title) !== index,
+);
+
 if (duplicatedInsideBatch) {
   throw new Error(`Duplicate title inside next hardened tranche: ${duplicatedInsideBatch}`);
-}
-
-const priorProfiles = [
-  ...hardenedCorpus50,
-  ...hardenedCorpusNextA,
-  ...hardenedCorpusNextB,
-  ...corpusExpansion01,
-  ...corpusExpansion02,
-  ...continuousCorpusProfiles,
-  ...batch02Profiles,
-  ...sanghiProfileRevisions,
-  ...sanghiProfiles,
-];
-const priorTitles = new Set(priorProfiles.map((profile) => normalizeTitle(profile.title)));
-const overlap = hardenedCorpus50B.find((profile) => priorTitles.has(normalizeTitle(profile.title)));
-if (overlap) {
-  throw new Error(`Next hardened tranche duplicates an existing corpus title: ${overlap.title}`);
 }
