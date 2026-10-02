@@ -9,6 +9,7 @@ export type Confidence = 'high' | 'medium' | 'low';
 export type ReviewDepth = 'desk' | 'source-audit' | 'scene-audit';
 export type AuditStatus = 'provisional' | 'reviewed' | 'hardened';
 
+/** Primary languages that receive first-class discovery filters. */
 export type IndianFilmLanguage =
   | 'Hindi'
   | 'Tamil'
@@ -67,7 +68,8 @@ export interface PublicationGate {
 export interface SanghiProfile {
   title: string;
   year: number;
-  language: IndianFilmLanguage;
+  /** Open string keeps the corpus extensible to long-tail Indian languages. */
+  language: string;
   tmdbId?: number;
   status: CertificationStatus;
   confidence: Confidence;
