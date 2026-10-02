@@ -2,6 +2,7 @@ import { sanghiProfiles } from '../data/sanghiProfiles';
 import { sanghiProfileRevisions } from '../data/sanghiProfileRevisions';
 import { batch02Profiles } from '../data/batch02Profiles';
 import { chakDeIndiaRevision } from '../data/chakDeIndiaRevision';
+import { rangDeBasantiRevision } from '../data/rangDeBasantiRevision';
 import { corpusExpansion01 } from '../data/corpusExpansion01';
 import { corpusExpansion02 } from '../data/corpusExpansion02';
 import { corpusExpansionIntegrityRevisions } from '../data/corpusExpansionIntegrityRevisions';
@@ -39,6 +40,7 @@ function allProfileVersions() {
 
   return [
     chakDeIndiaRevision,
+    rangDeBasantiRevision,
     ...hardenedCorpus50,
     ...hardenedCorpusNextA,
     ...hardenedCorpusNextB,
