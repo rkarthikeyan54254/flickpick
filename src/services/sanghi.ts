@@ -8,6 +8,7 @@ import { corpusExpansionIntegrityRevisions } from '../data/corpusExpansionIntegr
 import { continuousCorpusProfiles } from '../data/continuousCorpusProfiles';
 import { hardenedCorpusNextA } from '../data/hardenedCorpusNextA';
 import { hardenedCorpusNextB } from '../data/hardenedCorpusNextB';
+import { hardenedCorpus50 } from '../data/hardenedCorpus50';
 import type { Movie } from '../types/movie';
 import type { CertificationStatus, SanghiProfile } from '../types/sanghi';
 import { evaluateEditorialGate, isPublicationEligible } from './editorialGate';
@@ -26,7 +27,7 @@ function profileKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
 
 function allProfileVersions() {
   const hardenedNextTitles = new Set(
-    [...hardenedCorpusNextA, ...hardenedCorpusNextB].map((profile) => normalizeTitle(profile.title))
+    [...hardenedCorpus50, ...hardenedCorpusNextA, ...hardenedCorpusNextB].map((profile) => normalizeTitle(profile.title))
   );
   const focusedExpansionTitles = new Set(
     [
@@ -38,6 +39,7 @@ function allProfileVersions() {
 
   return [
     chakDeIndiaRevision,
+    ...hardenedCorpus50,
     ...hardenedCorpusNextA,
     ...hardenedCorpusNextB,
     ...sanghiProfileRevisions.filter((profile) => !hardenedNextTitles.has(normalizeTitle(profile.title))),
