@@ -3,6 +3,7 @@ import { sanghiProfileRevisions } from '../data/sanghiProfileRevisions';
 import { batch02Profiles } from '../data/batch02Profiles';
 import { chakDeIndiaRevision } from '../data/chakDeIndiaRevision';
 import { rangDeBasantiRevision } from '../data/rangDeBasantiRevision';
+import { editorialIntegrityRevisions } from '../data/editorialIntegrityRevisions';
 import { corpusExpansion01 } from '../data/corpusExpansion01';
 import { corpusExpansion02 } from '../data/corpusExpansion02';
 import { corpusExpansionIntegrityRevisions } from '../data/corpusExpansionIntegrityRevisions';
@@ -34,6 +35,7 @@ function allProfileVersions() {
   const latestProfiles = [...latestCertificationProfilesExtra, ...latestCertificationProfiles];
   const hardenedNextTitles = new Set(
     [
+      ...editorialIntegrityRevisions,
       ...latestProfiles,
       ...hardenedCorpus50C,
       ...hardenedCorpus50B,
@@ -51,6 +53,7 @@ function allProfileVersions() {
   );
 
   return [
+    ...editorialIntegrityRevisions,
     chakDeIndiaRevision,
     rangDeBasantiRevision,
     ...latestProfiles,
@@ -102,7 +105,7 @@ function yearMatchesDecade(year: number, decade: string) {
   }
 }
 
-export function getSanghiProfile(movie: Movie): SanghiProfile | undefined {
+function getCurrentProfile(movie: Movie): SanghiProfile | undefined {
   const year = movieYear(movie);
   const normalizedMovieTitle = normalizeTitle(movie.title);
 
@@ -111,6 +114,20 @@ export function getSanghiProfile(movie: Movie): SanghiProfile | undefined {
     const titleMatches = normalizeTitle(profile.title) === normalizedMovieTitle;
     return titleMatches && (!year || profile.year === year);
   });
+}
+
+/**
+ * Public-facing profile lookup. A record that is held by the editorial gate must never
+ * leak a stale verdict into cards or detail pages.
+ */
+export function getSanghiProfile(movie: Movie): SanghiProfile | undefined {
+  const profile = getCurrentProfile(movie);
+  return profile && isPublicationEligible(profile) ? profile : undefined;
+}
+
+/** Internal/audit lookup that preserves held legacy records for revision history and migration work. */
+export function getSanghiProfileForAudit(movie: Movie): SanghiProfile | undefined {
+  return getCurrentProfile(movie);
 }
 
 export function getPublishedSanghiProfileByTitle(title: string): SanghiProfile | undefined {
@@ -147,6 +164,13 @@ export function getCorpusStats() {
   const results = batch.map(evaluateEditorialGate);
   return {
     totalProfiles: profiles.length,
+    publishedProfiles: profiles.filter(isPublicationEligible).length,
+    legacyProfilesHeld: profiles.filter(
+      (profile) =>
+        !profile.researchDossier &&
+        !profile.methodologyVersion.startsWith('2.0') &&
+        !isPublicationEligible(profile)
+    ).length,
     batch02Total: batch.length,
     batch02GatePassed: results.filter((result) => result.gatePassed).length,
     batch02Published: results.filter((result) => result.eligible).length,
@@ -160,8 +184,7 @@ export function getCorpusStats() {
 }
 
 export function isReviewed(movie: Movie) {
-  const profile = getSanghiProfile(movie);
-  return Boolean(profile && isPublicationEligible(profile));
+  return Boolean(getSanghiProfile(movie));
 }
 
 export function matchesCertificationFilter(
@@ -170,7 +193,7 @@ export function matchesCertificationFilter(
 ) {
   if (filter === 'all') return true;
   const profile = getSanghiProfile(movie);
-  if (!profile || !isPublicationEligible(profile)) return false;
+  if (!profile) return false;
   if (filter === 'reviewed') return true;
   return profile.status === 'certified';
 }
