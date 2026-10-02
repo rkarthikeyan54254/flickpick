@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpenCheck, RefreshCw, Settings2, ShieldCheck } from 'lucide-react';
+import { BookOpenCheck, ChevronLeft, ChevronRight, RefreshCw, Settings2, ShieldCheck } from 'lucide-react';
 import { LanguageSelector } from '../components/LanguageSelector';
 import { DecadeSelector } from '../components/DecadeSelector';
 import { RegionSelector } from '../components/RegionSelector';
@@ -52,6 +52,7 @@ export function Home() {
   const [unusedMovies, setUnusedMovies] = useState<Movie[]>([]);
   const [usedMovies, setUsedMovies] = useState<Set<number>>(new Set());
   const [isLoading, setIsLoading] = useState(false);
+  const latestRailRef = useRef<HTMLDivElement>(null);
   const freshOttReleases = getFreshOttReleases();
 
   useEffect(() => {
@@ -140,6 +141,15 @@ export function Home() {
       setUsedMovies(new Set([...usedMovies, nextMovie.id]));
       scrollToPickedFilm();
     }
+  };
+
+  const scrollLatest = (direction: -1 | 1) => {
+    const rail = latestRailRef.current;
+    if (!rail) return;
+    rail.scrollBy({
+      left: direction * Math.max(320, rail.clientWidth * 0.82),
+      behavior: 'smooth',
+    });
   };
 
   const toggleProvider = (id: number) => {
@@ -274,12 +284,24 @@ export function Home() {
             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-orange-300">Indian cinema · live release watch</p>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mt-2">Now and coming next.</h2>
           </div>
-          <p className="text-sm text-text-secondary max-w-xl leading-relaxed lg:text-right">
-            The release feed is re-verified throughout the day across theatrical and streaming releases. Films already public enter full Culture Check immediately; genuinely unreleased films can carry a clearly labeled pre-release assessment, never a trailer-only final verdict.
-          </p>
+          <div className="flex flex-col lg:items-end gap-3">
+            <p className="text-sm text-text-secondary max-w-xl leading-relaxed lg:text-right">
+              The release feed is re-verified throughout the day across theatrical and streaming releases. Films already public enter full Culture Check immediately; genuinely unreleased films can carry a clearly labeled pre-release assessment, never a trailer-only final verdict.
+            </p>
+            {freshOttReleases.length > 1 && (
+              <div className="hidden md:flex items-center gap-2" aria-label="Latest release navigation">
+                <button onClick={() => scrollLatest(-1)} className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.025] inline-flex items-center justify-center text-text-secondary hover:text-orange-200 hover:border-orange-300/20 transition-colors" aria-label="Previous releases">
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button onClick={() => scrollLatest(1)} className="w-9 h-9 rounded-full border border-white/10 bg-white/[0.025] inline-flex items-center justify-center text-text-secondary hover:text-orange-200 hover:border-orange-300/20 transition-colors" aria-label="Next releases">
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
         {freshOttReleases.length > 0 ? (
-          <div className="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide overscroll-x-contain">
+          <div ref={latestRailRef} className="flex gap-3 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide overscroll-x-contain scroll-smooth">
             {freshOttReleases.map((item) => (
               <OttReleaseCard key={`${item.title}-${item.releaseDate}`} item={item} />
             ))}
