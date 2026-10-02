@@ -3,6 +3,7 @@ import type { ResearchDossier, ResearchProbeId, SanghiProfile } from '../types/s
 export const REQUIRED_RESEARCH_PROBES: ResearchProbeId[] = [
   'source-adaptation',
   'identity-substitution',
+  'community-contempt',
   'historical-claims',
   'quantitative-claims',
   'real-person-attribution',
@@ -45,6 +46,8 @@ function validateDossier(profile: SanghiProfile, dossier: ResearchDossier): Rese
   // Durable search log prevents a reviewer from claiming an adversarial pass without doing the probes.
   if (dossier.discoveryQueries.length < 4) failures.push('discovery-query-count');
   if (!hasQuery(dossier, /identity|religion|caste|community/i)) failures.push('discovery-query-identity');
+  if (!hasQuery(dossier, /community|caste|brahmin|dalit|adivasi|hindu|muslim|sikh|christian|jain|buddhist|regional|linguistic/i)) failures.push('discovery-query-community');
+  if (!hasQuery(dossier, /contempt|ridicule|stereotype|insult|slur|bashing|representation/i)) failures.push('discovery-query-community-treatment');
   if (!hasQuery(dossier, /source|adaptation|based on|true story|biopic/i)) failures.push('discovery-query-source');
   if (!hasQuery(dossier, /controvers|criticism|accuracy|factual|dispute/i)) failures.push('discovery-query-adversarial');
 

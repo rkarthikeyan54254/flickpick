@@ -12,6 +12,7 @@ import { REQUIRED_RESEARCH_PROBES } from '../services/researchDossier';
 const DEFAULT_PROBE_SUMMARIES: Record<ResearchProbeId, string> = {
   'source-adaptation': 'Source, adaptation and true-story status were explicitly checked before adjudication.',
   'identity-substitution': 'Religion, caste, community, regional and other identity substitutions were explicitly searched for before adjudication.',
+  'community-contempt': 'Caste, religious, regional and linguistic communities were screened for generalized derogation, recurring stereotyping, slurs, ridicule or asymmetric contempt; criticism of a specific person, practice or institution is not treated as community contempt by itself.',
   'historical-claims': 'Material historical claims and chronology were checked when applicable; no unresolved issue is asserted by this default clearance.',
   'quantitative-claims': 'Material numerical or scale claims were checked when applicable; no unresolved issue is asserted by this default clearance.',
   'real-person-attribution': 'Real-person inspiration, credit and attribution were checked when applicable.',

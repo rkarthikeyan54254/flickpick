@@ -10,6 +10,9 @@ import { continuousCorpusProfiles } from '../data/continuousCorpusProfiles';
 import { hardenedCorpusNextA } from '../data/hardenedCorpusNextA';
 import { hardenedCorpusNextB } from '../data/hardenedCorpusNextB';
 import { hardenedCorpus50 } from '../data/hardenedCorpus50';
+import { hardenedCorpus50B } from '../data/hardenedCorpus50B';
+import { latestCertificationProfiles } from '../data/latestCertificationProfiles';
+import { latestCertificationProfilesExtra } from '../data/latestCertificationProfilesExtra';
 import type { Movie } from '../types/movie';
 import type { CertificationStatus, SanghiProfile } from '../types/sanghi';
 import { evaluateEditorialGate, isPublicationEligible } from './editorialGate';
@@ -27,8 +30,10 @@ function profileKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
 }
 
 function allProfileVersions() {
+  const latestProfiles = [...latestCertificationProfilesExtra, ...latestCertificationProfiles];
   const hardenedNextTitles = new Set(
-    [...hardenedCorpus50, ...hardenedCorpusNextA, ...hardenedCorpusNextB].map((profile) => normalizeTitle(profile.title))
+    [...latestProfiles, ...hardenedCorpus50B, ...hardenedCorpus50, ...hardenedCorpusNextA, ...hardenedCorpusNextB]
+      .map((profile) => normalizeTitle(profile.title))
   );
   const focusedExpansionTitles = new Set(
     [
@@ -41,6 +46,8 @@ function allProfileVersions() {
   return [
     chakDeIndiaRevision,
     rangDeBasantiRevision,
+    ...latestProfiles,
+    ...hardenedCorpus50B,
     ...hardenedCorpus50,
     ...hardenedCorpusNextA,
     ...hardenedCorpusNextB,
@@ -98,6 +105,13 @@ export function getSanghiProfile(movie: Movie): SanghiProfile | undefined {
   });
 }
 
+export function getPublishedSanghiProfileByTitle(title: string): SanghiProfile | undefined {
+  const normalizedTitle = normalizeTitle(title);
+  return currentProfiles().find(
+    (profile) => normalizeTitle(profile.title) === normalizedTitle && isPublicationEligible(profile)
+  );
+}
+
 export function getProfileRevisionHistory(profile: Pick<SanghiProfile, 'title' | 'year'>) {
   const key = profileKey(profile);
   return allProfileVersions()
@@ -131,6 +145,8 @@ export function getCorpusStats() {
     batch02AutoPublish: results.filter((result) => result.lane === 'auto-publish').length,
     batch02HumanReview: results.filter((result) => result.lane === 'human-review').length,
     batch02Provisional: results.filter((result) => result.lane === 'provisional-hold').length,
+    nextHardenedBatchTotal: hardenedCorpus50B.length,
+    latestCertifiedOrReviewed: latestCertificationProfiles.length + latestCertificationProfilesExtra.length,
   };
 }
 

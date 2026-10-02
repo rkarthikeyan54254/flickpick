@@ -1,14 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { CalendarDays, CheckCircle2, Clock3, ImageOff, Sparkles } from 'lucide-react';
 import type { OttReleaseItem } from '../data/latestOtt';
+import { certificationLabels, getPublishedSanghiProfileByTitle } from '../services/sanghi';
 import { fetchOttArtwork, type OttArtwork } from '../services/tmdb';
 
 function editorialLabel(item: OttReleaseItem) {
+  const profile = getPublishedSanghiProfileByTitle(item.title);
+  if (profile) {
+    const label = certificationLabels[profile.status];
+    return profile.status === 'certified' ? `🪷 ${label}` : label;
+  }
+
   switch (item.editorialState) {
     case 'sanghi-certified': return '🪷 Sanghi Certified';
     case 'pre-release-check': return 'Pre-release check';
     default: return 'Review pending';
   }
+}
+
+function editorialConfidence(item: OttReleaseItem) {
+  return getPublishedSanghiProfileByTitle(item.title)?.confidence || item.confidence;
 }
 
 function releaseLabel(releaseDate: string) {
@@ -31,6 +42,7 @@ function verificationLabel(lastVerifiedAt: string) {
 export function OttReleaseCard({ item }: { item: OttReleaseItem }) {
   const [artwork, setArtwork] = useState<OttArtwork | null>(null);
   const [loaded, setLoaded] = useState(false);
+  const hasVerdict = Boolean(getPublishedSanghiProfileByTitle(item.title));
 
   useEffect(() => {
     let cancelled = false;
@@ -70,26 +82,26 @@ export function OttReleaseCard({ item }: { item: OttReleaseItem }) {
         )}
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black via-black/65 to-transparent" />
         <div className="absolute top-3 left-3 right-3 flex items-start justify-between gap-2">
-          <span className="rounded-full border border-white/15 bg-black/60 backdrop-blur-md px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.13em] text-white">{item.platform}</span>
-          <span className="rounded-full border border-white/15 bg-black/60 backdrop-blur-md px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.13em] text-white/80">{releaseLabel(item.releaseDate)}</span>
+          <span className="rounded-full border border-white/15 bg-black/60 backdrop-blur-md px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.11em] text-white">{item.platform}</span>
+          <span className="rounded-full border border-white/15 bg-black/60 backdrop-blur-md px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.11em] text-white/80">{releaseLabel(item.releaseDate)}</span>
         </div>
       </div>
 
       <div className="p-4 space-y-3.5">
         <div>
           <h3 className="text-base font-black tracking-tight leading-tight min-h-[2.5rem]">{item.title}</h3>
-          <p className="mt-2 flex items-center gap-2 text-[10px] font-bold text-text-secondary">
+          <p className="mt-2 flex items-center gap-2 text-[11px] font-bold text-text-secondary">
             <CalendarDays className="w-3.5 h-3.5" />
             {item.language} · {new Date(`${item.releaseDate}T00:00:00`).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
           </p>
         </div>
 
-        <div className="space-y-2 border-t border-white/10 pt-3.5">
-          <span className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-wider text-orange-200">
+        <div className="space-y-2.5 border-t border-white/10 pt-3.5">
+          <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ${hasVerdict ? 'border-orange-300/25 bg-orange-400/10 text-orange-200' : 'border-white/10 text-text-secondary'}`}>
             <Sparkles className="w-3 h-3" /> {editorialLabel(item)}
           </span>
-          <div className="flex items-center justify-between gap-2 text-[8px] font-black uppercase tracking-wider text-text-secondary">
-            <span className="inline-flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> {item.confidence}</span>
+          <div className="flex items-center justify-between gap-2 text-[9px] font-black uppercase tracking-wider text-text-secondary">
+            <span className="inline-flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> {editorialConfidence(item)}</span>
             <span className="inline-flex items-center gap-1 text-right"><Clock3 className="w-3 h-3" /> {verificationLabel(item.lastVerifiedAt)}</span>
           </div>
         </div>

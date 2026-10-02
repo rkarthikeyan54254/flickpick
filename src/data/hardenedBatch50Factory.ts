@@ -44,6 +44,7 @@ function discoveryQueries(spec: HardenedFilmSpec) {
   return [
     `${spec.title} ${spec.researchFocus} source adaptation based on true story biopic`,
     `${spec.title} religion caste community identity substitution representation`,
+    `${spec.title} Brahmin Dalit Adivasi Hindu Muslim Sikh Christian Jain Buddhist caste regional linguistic community insult slur stereotype ridicule contempt representation controversy`,
     `${spec.title} history accuracy factual dispute controversy criticism`,
     `${spec.title} director writer actor interview ${spec.researchFocus}`,
     `${spec.title} regional context audience criticism social media controversy`,
