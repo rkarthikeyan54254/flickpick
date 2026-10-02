@@ -6,8 +6,17 @@ import { rangDeBasantiRevision } from '../data/rangDeBasantiRevision';
 import { editorialIntegrityRevisions } from '../data/editorialIntegrityRevisions';
 import { fullRecertificationV2Batch01 } from '../data/fullRecertificationV2Batch01';
 import { fullRecertificationV2Batch02 } from '../data/fullRecertificationV2Batch02';
+import { fullRecertificationV2Batch03 } from '../data/fullRecertificationV2Batch03';
+import { fullRecertificationV2Batch04 } from '../data/fullRecertificationV2Batch04';
+import { fullRecertificationV2Batch05 } from '../data/fullRecertificationV2Batch05';
 import { fullRecertificationV2OwnerExceptions } from '../data/fullRecertificationV2OwnerExceptions';
 import { fullRecertificationV2Overrides } from '../data/fullRecertificationV2Overrides';
+import { fullRecertificationV2Worker2Batch01 } from '../data/fullRecertificationV2Worker2Batch01';
+import { fullRecertificationV2Worker3Batch01 } from '../data/fullRecertificationV2Worker3Batch01';
+import { fullRecertificationV2Worker3Batch02 } from '../data/fullRecertificationV2Worker3Batch02';
+import { fullRecertificationV2Worker4Batch01 } from '../data/fullRecertificationV2Worker4Batch01';
+import { fullRecertificationV2Worker4Batch02 } from '../data/fullRecertificationV2Worker4Batch02';
+import { fullRecertificationV2Worker4Batch03 } from '../data/fullRecertificationV2Worker4Batch03';
 import { corpusExpansion01 } from '../data/corpusExpansion01';
 import { corpusExpansion02 } from '../data/corpusExpansion02';
 import { corpusExpansionIntegrityRevisions } from '../data/corpusExpansionIntegrityRevisions';
@@ -38,8 +47,24 @@ function profileKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
 function allProfileVersions() {
   const latestProfiles = [...latestCertificationProfilesExtra, ...latestCertificationProfiles];
   const migrationProfiles = [
+    // Explicit calibration overrides always win.
     ...fullRecertificationV2Overrides,
     ...fullRecertificationV2OwnerExceptions,
+
+    // Parallel worker shards are the deepest title-specific re-audits and therefore
+    // take precedence over overlapping integration batches created while workers ran.
+    ...fullRecertificationV2Worker2Batch01,
+    ...fullRecertificationV2Worker3Batch02,
+    ...fullRecertificationV2Worker3Batch01,
+    ...fullRecertificationV2Worker4Batch03,
+    ...fullRecertificationV2Worker4Batch02,
+    ...fullRecertificationV2Worker4Batch01,
+
+    // Integration-lane batches remain revision history and cover titles outside the
+    // worker shards. Earlier entries win for an exact title/year duplicate.
+    ...fullRecertificationV2Batch05,
+    ...fullRecertificationV2Batch04,
+    ...fullRecertificationV2Batch03,
     ...fullRecertificationV2Batch02,
     ...fullRecertificationV2Batch01,
   ];
@@ -180,13 +205,21 @@ export function getCorpusStats() {
     publishedProfiles: profiles.filter(isPublicationEligible).length,
     legacyProfilesHeld: profiles.filter(
       (profile) =>
-        !profile.researchDossier &&
-        !profile.methodologyVersion.startsWith('2.0') &&
+        (!profile.researchDossier || !profile.methodologyVersion.startsWith('2.0')) &&
         !isPublicationEligible(profile)
     ).length,
     migratedV2Profiles:
       fullRecertificationV2Overrides.length +
       fullRecertificationV2OwnerExceptions.length +
+      fullRecertificationV2Worker2Batch01.length +
+      fullRecertificationV2Worker3Batch01.length +
+      fullRecertificationV2Worker3Batch02.length +
+      fullRecertificationV2Worker4Batch01.length +
+      fullRecertificationV2Worker4Batch02.length +
+      fullRecertificationV2Worker4Batch03.length +
+      fullRecertificationV2Batch05.length +
+      fullRecertificationV2Batch04.length +
+      fullRecertificationV2Batch03.length +
       fullRecertificationV2Batch02.length +
       fullRecertificationV2Batch01.length,
     batch02Total: batch.length,
