@@ -2,6 +2,7 @@ import { sanghiProfiles } from '../data/sanghiProfiles';
 import { sanghiProfileRevisions } from '../data/sanghiProfileRevisions';
 import { batch02Profiles } from '../data/batch02Profiles';
 import { corpusExpansion01 } from '../data/corpusExpansion01';
+import { corpusExpansion02 } from '../data/corpusExpansion02';
 import { continuousCorpusProfiles } from '../data/continuousCorpusProfiles';
 import type { Movie } from '../types/movie';
 import type { CertificationStatus, SanghiProfile } from '../types/sanghi';
@@ -22,6 +23,7 @@ function profileKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
 function allProfileVersions() {
   return [
     ...sanghiProfileRevisions,
+    ...corpusExpansion02,
     ...corpusExpansion01,
     // Expansion 01 owns Kadaisi Vivasayi's canonical 2022 public-release record.
     // Excluding the earlier festival/premiere-year variant prevents a duplicate title in discovery.
