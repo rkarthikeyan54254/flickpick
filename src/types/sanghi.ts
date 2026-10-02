@@ -78,6 +78,7 @@ export type ResearchSourceBasis =
 export type ResearchProbeId =
   | 'source-adaptation'
   | 'identity-substitution'
+  | 'community-contempt'
   | 'historical-claims'
   | 'quantitative-claims'
   | 'real-person-attribution'
