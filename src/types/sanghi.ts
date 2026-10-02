@@ -9,6 +9,20 @@ export type Confidence = 'high' | 'medium' | 'low';
 export type ReviewDepth = 'desk' | 'source-audit' | 'scene-audit';
 export type AuditStatus = 'provisional' | 'reviewed' | 'hardened';
 
+export type IndianFilmLanguage =
+  | 'Hindi'
+  | 'Tamil'
+  | 'Telugu'
+  | 'Kannada'
+  | 'Malayalam'
+  | 'Bengali'
+  | 'Marathi'
+  | 'Punjabi'
+  | 'Gujarati'
+  | 'Assamese'
+  | 'Odia'
+  | 'Bhojpuri';
+
 export interface SanghiDimensions {
   dharma: number | null;
   civilizationalContinuity: number | null;
@@ -53,7 +67,7 @@ export interface PublicationGate {
 export interface SanghiProfile {
   title: string;
   year: number;
-  language: 'Hindi' | 'Tamil' | 'Telugu' | 'Kannada' | 'Malayalam';
+  language: IndianFilmLanguage;
   tmdbId?: number;
   status: CertificationStatus;
   confidence: Confidence;
