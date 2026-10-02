@@ -4,7 +4,10 @@ import { editorialEscalations } from '../data/editorialEscalations';
 export type PublicationLane = 'auto-publish' | 'provisional-hold' | 'human-review';
 
 export interface EditorialGateResult {
+  /** True only when this record may publish without a human exception review. */
   eligible: boolean;
+  /** True when the evidence/process gate passed even if an exception review is required. */
+  gatePassed: boolean;
   failures: string[];
   lane: PublicationLane;
   escalationReasons: string[];
@@ -36,14 +39,8 @@ export function evaluateEditorialGate(profile: SanghiProfile): EditorialGateResu
   const failures: string[] = [];
   const escalationReasons: string[] = [];
 
-  if (!profile.auditStatus || !['reviewed', 'hardened'].includes(profile.auditStatus)) {
-    failures.push('audit-status');
-  }
-
-  if (!profile.reviewDepth || profile.reviewDepth === 'desk') {
-    failures.push('review-depth');
-  }
-
+  if (!profile.auditStatus || !['reviewed', 'hardened'].includes(profile.auditStatus)) failures.push('audit-status');
+  if (!profile.reviewDepth || profile.reviewDepth === 'desk') failures.push('review-depth');
   if (profile.reasons.length < 2) failures.push('reasons');
   if (profile.evidence.length < 1) failures.push('evidence');
 
@@ -64,9 +61,15 @@ export function evaluateEditorialGate(profile: SanghiProfile): EditorialGateResu
   const unverifiedIntegrity = profile.integrityFlags.filter((flag) => flag.status === 'unverified');
   if (unverifiedIntegrity.length > 0) failures.push('unverified-integrity-finding');
 
-  const eligible = failures.length === 0;
-  if (!eligible) {
-    return { eligible, failures, lane: 'provisional-hold', escalationReasons };
+  const gatePassed = failures.length === 0;
+  if (!gatePassed) {
+    return {
+      eligible: false,
+      gatePassed: false,
+      failures,
+      lane: 'provisional-hold',
+      escalationReasons,
+    };
   }
 
   const highRiskFindings = profile.integrityFlags.filter(isHighRiskIntegrityFlag);
@@ -80,10 +83,22 @@ export function evaluateEditorialGate(profile: SanghiProfile): EditorialGateResu
   if (profile.confidence !== 'high') escalationReasons.push(`confidence:${profile.confidence}`);
 
   if (escalationReasons.length > 0) {
-    return { eligible, failures, lane: 'human-review', escalationReasons };
+    return {
+      eligible: false,
+      gatePassed: true,
+      failures,
+      lane: 'human-review',
+      escalationReasons,
+    };
   }
 
-  return { eligible, failures, lane: 'auto-publish', escalationReasons };
+  return {
+    eligible: true,
+    gatePassed: true,
+    failures,
+    lane: 'auto-publish',
+    escalationReasons,
+  };
 }
 
 export function isPublicationEligible(profile: SanghiProfile) {
