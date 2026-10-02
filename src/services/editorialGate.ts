@@ -1,12 +1,35 @@
-import type { SanghiProfile } from '../types/sanghi';
+import type { IntegrityFlag, SanghiProfile } from '../types/sanghi';
+
+export type PublicationLane = 'auto-publish' | 'provisional-hold' | 'human-review';
 
 export interface EditorialGateResult {
   eligible: boolean;
   failures: string[];
+  lane: PublicationLane;
+  escalationReasons: string[];
+}
+
+const HIGH_RISK_INTEGRITY_TYPES = new Set([
+  'identity-asymmetry',
+  'identity-substitution',
+  'ideological-substitution',
+  'source-fidelity',
+  'adaptation-delta',
+  'quantitative-claim',
+  'biographical-credit',
+  'historical-claim',
+]);
+
+function isHighRiskIntegrityFlag(flag: IntegrityFlag) {
+  return (
+    HIGH_RISK_INTEGRITY_TYPES.has(flag.type) &&
+    ['verified', 'supported', 'disputed'].includes(flag.status)
+  );
 }
 
 export function evaluateEditorialGate(profile: SanghiProfile): EditorialGateResult {
   const failures: string[] = [];
+  const escalationReasons: string[] = [];
 
   if (!profile.auditStatus || !['reviewed', 'hardened'].includes(profile.auditStatus)) {
     failures.push('audit-status');
@@ -33,9 +56,54 @@ export function evaluateEditorialGate(profile: SanghiProfile): EditorialGateResu
     if (!gate.selfFalsificationPass) failures.push('self-falsification-pass');
   }
 
-  return { eligible: failures.length === 0, failures };
+  const unverifiedIntegrity = profile.integrityFlags.filter((flag) => flag.status === 'unverified');
+  if (unverifiedIntegrity.length > 0) {
+    failures.push('unverified-integrity-finding');
+  }
+
+  const eligible = failures.length === 0;
+
+  if (!eligible) {
+    return {
+      eligible,
+      failures,
+      lane: 'provisional-hold',
+      escalationReasons,
+    };
+  }
+
+  const highRiskFindings = profile.integrityFlags.filter(isHighRiskIntegrityFlag);
+  if (highRiskFindings.length > 0) {
+    escalationReasons.push(
+      ...highRiskFindings.map((flag) => `high-risk-integrity:${flag.type}:${flag.status}`),
+    );
+  }
+
+  if (profile.confidence !== 'high') {
+    escalationReasons.push(`confidence:${profile.confidence}`);
+  }
+
+  if (escalationReasons.length > 0) {
+    return {
+      eligible,
+      failures,
+      lane: 'human-review',
+      escalationReasons,
+    };
+  }
+
+  return {
+    eligible,
+    failures,
+    lane: 'auto-publish',
+    escalationReasons,
+  };
 }
 
 export function isPublicationEligible(profile: SanghiProfile) {
   return evaluateEditorialGate(profile).eligible;
+}
+
+export function publicationLane(profile: SanghiProfile) {
+  return evaluateEditorialGate(profile).lane;
 }
