@@ -171,7 +171,7 @@ export function Home() {
     <div className="space-y-14 md:space-y-24 animate-fade-in">
       <SEO
         title="Culture Check — Every film held up to Bharat's values."
-        description="Discover Indian films across major OTT platforms and read an evidence-backed Bharatiya cultural assessment before you watch."
+        description="Discover Indian films across cinemas and major OTT platforms, then read an evidence-backed Bharatiya cultural assessment before you watch."
         schemaData={homeSchema}
       />
 
@@ -263,11 +263,11 @@ export function Home() {
       <section className="max-w-6xl mx-auto space-y-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-orange-300">Indian OTT · live release watch</p>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight mt-2">What is arriving next.</h2>
+            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-orange-300">Indian cinema · live release watch</p>
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight mt-2">Now and coming next.</h2>
           </div>
           <p className="text-sm text-text-secondary max-w-lg leading-relaxed">
-            The release feed is re-verified throughout the day. Films already available theatrically enter full Culture Check immediately; unreleased films can carry a clearly labeled pre-release assessment, never a trailer-only final verdict.
+            The release feed is re-verified throughout the day across theatrical and streaming releases. Films already public enter full Culture Check immediately; genuinely unreleased films can carry a clearly labeled pre-release assessment, never a trailer-only final verdict.
           </p>
         </div>
         {freshOttReleases.length > 0 ? (
@@ -294,8 +294,8 @@ export function Home() {
       </main>
 
       <section className="sr-only">
-        <h2>Culture Check: Indian cinema across Netflix, Prime Video, JioHotstar, SonyLIV, ZEE5, Sun NXT and regional streaming services</h2>
-        <p>Explore Hindi, Tamil, Telugu, Malayalam and Kannada cinema with a source-audited Bharatiya editorial framework.</p>
+        <h2>Culture Check: Indian cinema across theatres, Netflix, Prime Video, JioHotstar, SonyLIV, ZEE5, Sun NXT and regional streaming services</h2>
+        <p>Explore Indian cinema across languages with a source-audited Bharatiya editorial framework.</p>
       </section>
     </div>
   );
