@@ -16,8 +16,8 @@ import { CertificationSelector, type CertificationFilter } from '../components/C
 import { OttReleaseCard } from '../components/OttReleaseCard';
 import { fetchCuratedMovies, fetchMoviesByLanguage, searchMovies, PROVIDERS } from '../services/tmdb';
 import { fetchIndiaStreamingProviders, type StreamingProviderOption } from '../services/providerRegistry';
-import { getCorpusStats, getProfilesForSelection, matchesCertificationFilter } from '../services/sanghi';
-import { latestOttReleases } from '../data/latestOtt';
+import { getProfilesForSelection, matchesCertificationFilter } from '../services/sanghi';
+import { getFreshOttReleases } from '../data/latestOtt';
 import type { Movie } from '../types/movie';
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -39,14 +39,14 @@ export function Home() {
   const [selectedSort, setSelectedSort] = useState('popularity.desc');
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
-  const [certificationFilter, setCertificationFilter] = useState<CertificationFilter>('all');
+  const [certificationFilter, setCertificationFilter] = useState<CertificationFilter>('certified');
 
   const [currentMovie, setCurrentMovie] = useState<Movie | null>(null);
   const [movies, setMovies] = useState<Movie[]>([]);
   const [unusedMovies, setUnusedMovies] = useState<Movie[]>([]);
   const [usedMovies, setUsedMovies] = useState<Set<number>>(new Set());
   const [isLoading, setIsLoading] = useState(false);
-  const corpusStats = getCorpusStats();
+  const freshOttReleases = getFreshOttReleases();
 
   useEffect(() => {
     let cancelled = false;
@@ -182,7 +182,7 @@ export function Home() {
 
         <div className="space-y-6 pt-14 md:pt-20">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-orange-300/20 bg-orange-400/10 text-orange-200 text-[10px] font-black uppercase tracking-[0.2em]">
-            <ShieldCheck className="w-4 h-4" /> {corpusStats.batch02Published} reviewed · {corpusStats.batch02Provisional} held for more evidence
+            <ShieldCheck className="w-4 h-4" /> Continuously audited · freshness monitored
           </div>
           <div>
             <p className="text-[11px] md:text-xs font-black uppercase tracking-[0.38em] text-orange-300">Culture Check</p>
@@ -263,16 +263,24 @@ export function Home() {
       <section className="max-w-6xl mx-auto space-y-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-orange-300">New on Indian OTT</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.24em] text-orange-300">Indian OTT · live release watch</p>
             <h2 className="text-3xl md:text-5xl font-black tracking-tight mt-2">What is arriving next.</h2>
           </div>
-          <p className="text-sm text-text-secondary max-w-lg leading-relaxed">Poster art is resolved from TMDb. Release claims retain their source confidence, and an unseen title stays review-pending until it can actually be audited.</p>
+          <p className="text-sm text-text-secondary max-w-lg leading-relaxed">
+            The release feed is re-verified throughout the day. Films already available theatrically enter full Culture Check immediately; unreleased films can carry a clearly labeled pre-release assessment, never a trailer-only final verdict.
+          </p>
         </div>
-        <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
-          {latestOttReleases.map((item) => (
-            <OttReleaseCard key={`${item.title}-${item.releaseDate}`} item={item} />
-          ))}
-        </div>
+        {freshOttReleases.length > 0 ? (
+          <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+            {freshOttReleases.map((item) => (
+              <OttReleaseCard key={`${item.title}-${item.releaseDate}`} item={item} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-[1.8rem] border border-white/10 bg-white/[0.025] p-8 text-sm text-text-secondary">
+            Release feed is refreshing. Stale records are hidden rather than left on the site.
+          </div>
+        )}
       </section>
 
       <main className="max-w-6xl mx-auto pb-20">
