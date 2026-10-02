@@ -17,12 +17,16 @@ function profileKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
   return `${normalizeTitle(profile.title)}::${profile.year}`;
 }
 
-function currentProfiles() {
-  const ordered = [
+function allProfileVersions() {
+  return [
     ...sanghiProfileRevisions,
     ...batch02Profiles,
     ...sanghiProfiles,
   ];
+}
+
+function currentProfiles() {
+  const ordered = allProfileVersions();
   const seen = new Set<string>();
   return ordered.filter((profile) => {
     const key = profileKey(profile);
@@ -59,6 +63,13 @@ export function getSanghiProfile(movie: Movie): SanghiProfile | undefined {
     const titleMatches = normalizeTitle(profile.title) === normalizedMovieTitle;
     return titleMatches && (!year || profile.year === year);
   });
+}
+
+export function getProfileRevisionHistory(profile: Pick<SanghiProfile, 'title' | 'year'>) {
+  const key = profileKey(profile);
+  return allProfileVersions()
+    .filter((candidate) => profileKey(candidate) === key)
+    .sort((a, b) => b.reviewedAt.localeCompare(a.reviewedAt));
 }
 
 export function getProfilesForSelection(
