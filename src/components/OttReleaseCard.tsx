@@ -47,7 +47,7 @@ export function OttReleaseCard({ item }: { item: OttReleaseItem }) {
   const imageUrl = artwork?.posterUrl || artwork?.backdropUrl;
 
   return (
-    <article className="group min-w-[220px] max-w-[240px] snap-start overflow-hidden rounded-[1.8rem] border border-white/10 bg-white/[0.025] shadow-xl">
+    <article className="group w-[210px] sm:w-[220px] shrink-0 snap-start overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.025] shadow-xl">
       <div className="relative aspect-[2/3] overflow-hidden bg-gradient-to-br from-orange-500/10 via-black to-black">
         {imageUrl ? (
           <img
@@ -68,29 +68,29 @@ export function OttReleaseCard({ item }: { item: OttReleaseItem }) {
             )}
           </div>
         )}
-        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black via-black/65 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black via-black/65 to-transparent" />
         <div className="absolute top-3 left-3 right-3 flex items-start justify-between gap-2">
           <span className="rounded-full border border-white/15 bg-black/60 backdrop-blur-md px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.13em] text-white">{item.platform}</span>
           <span className="rounded-full border border-white/15 bg-black/60 backdrop-blur-md px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.13em] text-white/80">{releaseLabel(item.releaseDate)}</span>
         </div>
       </div>
 
-      <div className="p-5 space-y-4">
+      <div className="p-4 space-y-3.5">
         <div>
-          <h3 className="text-lg font-black tracking-tight leading-tight">{item.title}</h3>
-          <p className="mt-2 flex items-center gap-2 text-[11px] font-bold text-text-secondary">
+          <h3 className="text-base font-black tracking-tight leading-tight min-h-[2.5rem]">{item.title}</h3>
+          <p className="mt-2 flex items-center gap-2 text-[10px] font-bold text-text-secondary">
             <CalendarDays className="w-3.5 h-3.5" />
             {item.language} · {new Date(`${item.releaseDate}T00:00:00`).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
           </p>
         </div>
 
-        <div className="space-y-2 border-t border-white/10 pt-4">
+        <div className="space-y-2 border-t border-white/10 pt-3.5">
           <span className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-wider text-orange-200">
             <Sparkles className="w-3 h-3" /> {editorialLabel(item)}
           </span>
-          <div className="flex items-center justify-between gap-3 text-[9px] font-black uppercase tracking-wider text-text-secondary">
+          <div className="flex items-center justify-between gap-2 text-[8px] font-black uppercase tracking-wider text-text-secondary">
             <span className="inline-flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> {item.confidence}</span>
-            <span className="inline-flex items-center gap-1"><Clock3 className="w-3 h-3" /> {verificationLabel(item.lastVerifiedAt)}</span>
+            <span className="inline-flex items-center gap-1 text-right"><Clock3 className="w-3 h-3" /> {verificationLabel(item.lastVerifiedAt)}</span>
           </div>
         </div>
       </div>
