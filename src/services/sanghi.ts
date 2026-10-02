@@ -1,6 +1,10 @@
 import { sanghiProfiles } from '../data/sanghiProfiles';
 import { sanghiProfileRevisions } from '../data/sanghiProfileRevisions';
 import { batch02Profiles } from '../data/batch02Profiles';
+import { corpusExpansion01 } from '../data/corpusExpansion01';
+import { corpusExpansion02 } from '../data/corpusExpansion02';
+import { corpusExpansionIntegrityRevisions } from '../data/corpusExpansionIntegrityRevisions';
+import { continuousCorpusProfiles } from '../data/continuousCorpusProfiles';
 import type { Movie } from '../types/movie';
 import type { CertificationStatus, SanghiProfile } from '../types/sanghi';
 import { evaluateEditorialGate, isPublicationEligible } from './editorialGate';
@@ -18,8 +22,24 @@ function profileKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
 }
 
 function allProfileVersions() {
+  // A focused source-audit record should own a title over a concurrent worker draft,
+  // even when historical databases disagree on the film's release year.
+  const focusedExpansionTitles = new Set(
+    [
+      ...corpusExpansionIntegrityRevisions,
+      ...corpusExpansion02,
+      ...corpusExpansion01,
+    ].map((profile) => normalizeTitle(profile.title))
+  );
+
   return [
     ...sanghiProfileRevisions,
+    ...corpusExpansionIntegrityRevisions,
+    ...corpusExpansion02,
+    ...corpusExpansion01,
+    ...continuousCorpusProfiles.filter(
+      (profile) => !focusedExpansionTitles.has(normalizeTitle(profile.title))
+    ),
     ...batch02Profiles,
     ...sanghiProfiles,
   ];
@@ -95,7 +115,7 @@ export function getCorpusStats() {
     totalProfiles: profiles.length,
     batch02Total: batch.length,
     batch02GatePassed: gatePassed,
-    // Kept for the home-page wording: "reviewed" means gate-passed, not necessarily auto-published.
+    // Internal/admin metric only; consumer UI intentionally does not market corpus counts.
     batch02Published: gatePassed,
     batch02AutoPublish: results.filter((result) => result.lane === 'auto-publish').length,
     batch02HumanReview: results.filter((result) => result.lane === 'human-review').length,
