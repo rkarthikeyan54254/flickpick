@@ -6,6 +6,8 @@ import { corpusExpansion01 } from '../data/corpusExpansion01';
 import { corpusExpansion02 } from '../data/corpusExpansion02';
 import { corpusExpansionIntegrityRevisions } from '../data/corpusExpansionIntegrityRevisions';
 import { continuousCorpusProfiles } from '../data/continuousCorpusProfiles';
+import { hardenedCorpusNextA } from '../data/hardenedCorpusNextA';
+import { hardenedCorpusNextB } from '../data/hardenedCorpusNextB';
 import type { Movie } from '../types/movie';
 import type { CertificationStatus, SanghiProfile } from '../types/sanghi';
 import { evaluateEditorialGate, isPublicationEligible } from './editorialGate';
@@ -23,6 +25,9 @@ function profileKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
 }
 
 function allProfileVersions() {
+  const hardenedNextTitles = new Set(
+    [...hardenedCorpusNextA, ...hardenedCorpusNextB].map((profile) => normalizeTitle(profile.title))
+  );
   const focusedExpansionTitles = new Set(
     [
       ...corpusExpansionIntegrityRevisions,
@@ -33,15 +38,19 @@ function allProfileVersions() {
 
   return [
     chakDeIndiaRevision,
-    ...sanghiProfileRevisions,
-    ...corpusExpansionIntegrityRevisions,
-    ...corpusExpansion02,
-    ...corpusExpansion01,
+    ...hardenedCorpusNextA,
+    ...hardenedCorpusNextB,
+    ...sanghiProfileRevisions.filter((profile) => !hardenedNextTitles.has(normalizeTitle(profile.title))),
+    ...corpusExpansionIntegrityRevisions.filter((profile) => !hardenedNextTitles.has(normalizeTitle(profile.title))),
+    ...corpusExpansion02.filter((profile) => !hardenedNextTitles.has(normalizeTitle(profile.title))),
+    ...corpusExpansion01.filter((profile) => !hardenedNextTitles.has(normalizeTitle(profile.title))),
     ...continuousCorpusProfiles.filter(
-      (profile) => !focusedExpansionTitles.has(normalizeTitle(profile.title))
+      (profile) =>
+        !hardenedNextTitles.has(normalizeTitle(profile.title)) &&
+        !focusedExpansionTitles.has(normalizeTitle(profile.title))
     ),
-    ...batch02Profiles,
-    ...sanghiProfiles,
+    ...batch02Profiles.filter((profile) => !hardenedNextTitles.has(normalizeTitle(profile.title))),
+    ...sanghiProfiles.filter((profile) => !hardenedNextTitles.has(normalizeTitle(profile.title))),
   ];
 }
 
@@ -110,12 +119,11 @@ export function getCorpusStats() {
   const profiles = currentProfiles();
   const batch = batch02Profiles;
   const results = batch.map(evaluateEditorialGate);
-  const gatePassed = results.filter((result) => result.gatePassed).length;
   return {
     totalProfiles: profiles.length,
     batch02Total: batch.length,
-    batch02GatePassed: gatePassed,
-    batch02Published: gatePassed,
+    batch02GatePassed: results.filter((result) => result.gatePassed).length,
+    batch02Published: results.filter((result) => result.eligible).length,
     batch02AutoPublish: results.filter((result) => result.lane === 'auto-publish').length,
     batch02HumanReview: results.filter((result) => result.lane === 'human-review').length,
     batch02Provisional: results.filter((result) => result.lane === 'provisional-hold').length,
