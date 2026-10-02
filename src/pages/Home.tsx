@@ -29,6 +29,12 @@ function shuffleArray<T>(array: T[]): T[] {
   return newArray;
 }
 
+function scrollToPickedFilm() {
+  window.setTimeout(() => {
+    document.getElementById('picked-film')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 0);
+}
+
 export function Home() {
   const [selectedLanguage, setSelectedLanguage] = useState('Hindi');
   const [selectedDecade, setSelectedDecade] = useState('2020s');
@@ -124,6 +130,7 @@ export function Home() {
       const first = shuffled[0];
       setCurrentMovie(first);
       setUsedMovies(new Set([first.id]));
+      scrollToPickedFilm();
       return;
     }
     const availableMovies = unusedMovies.filter(movie => !usedMovies.has(movie.id));
@@ -131,6 +138,7 @@ export function Home() {
       const nextMovie = availableMovies[0];
       setCurrentMovie(nextMovie);
       setUsedMovies(new Set([...usedMovies, nextMovie.id]));
+      scrollToPickedFilm();
     }
   };
 
@@ -260,7 +268,7 @@ export function Home() {
         </div>
       </header>
 
-      <section className="max-w-6xl mx-auto space-y-5">
+      <section id="latest" className="max-w-6xl mx-auto space-y-5 scroll-mt-24">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 lg:gap-8">
           <div className="shrink-0">
             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-orange-300">Indian cinema · live release watch</p>
@@ -283,7 +291,7 @@ export function Home() {
         )}
       </section>
 
-      <main className="max-w-6xl mx-auto pb-14">
+      <main id="picked-film" className="max-w-6xl mx-auto pb-14 scroll-mt-24">
         {isLoading ? (
           <div className="space-y-8"><SkeletonCard /></div>
         ) : currentMovie ? (
