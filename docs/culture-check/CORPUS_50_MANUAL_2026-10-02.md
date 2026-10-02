@@ -4,8 +4,8 @@ This tranche contains exactly 50 unique Indian feature films curated under the `
 
 ## Verdict summary
 
-- Sanghi Certified: 27
-- Mixed / Contested: 8
+- Sanghi Certified: 26
+- Mixed / Contested: 9
 - Reviewed · Neutral: 15
 - Total: 50
 
@@ -29,7 +29,7 @@ This tranche contains exactly 50 unique Indian feature films curated under the `
 | # | Film | Year | Language | Verdict |
 |---:|---|---:|---|---|
 | 1 | Border | 1997 | Hindi | Sanghi Certified |
-| 2 | Rang De Basanti | 2006 | Hindi | Sanghi Certified |
+| 2 | Rang De Basanti | 2006 | Hindi | Mixed / Contested |
 | 3 | Airlift | 2016 | Hindi | Sanghi Certified |
 | 4 | Neerja | 2016 | Hindi | Sanghi Certified |
 | 5 | Bhaag Milkha Bhaag | 2013 | Hindi | Sanghi Certified |
@@ -81,4 +81,6 @@ This tranche contains exactly 50 unique Indian feature films curated under the `
 
 ## High-risk Narrative Integrity notes retained
 
-The tranche retains explicit evidence-derived caveats for real-history/true-story/adaptation cases such as Border, Airlift, Neerja, Bhaag Milkha Bhaag, Parmanu, Bombay, Asuran, Take Off, Harishchandrachi Factory, Chaar Sahibzaade, Sala Budha and DAMaN. These caveats do not automatically reverse the Bharatiya verdict unless the evidence materially changes the film's Bharatiya meaning.
+The tranche retains explicit evidence-derived caveats for real-history/true-story/adaptation cases such as Border, Rang De Basanti, Airlift, Neerja, Bhaag Milkha Bhaag, Parmanu, Bombay, Asuran, Take Off, Harishchandrachi Factory, Chaar Sahibzaade, Sala Budha and DAMaN. These caveats do not automatically reverse the Bharatiya verdict unless the evidence materially changes the film's Bharatiya meaning.
+
+Rang De Basanti was specifically recalibrated from Sanghi Certified to Mixed / Contested after a deeper adversarial pass. Its reverence for freedom-fighter memory and civic responsibility remains a positive signal, but the deliberate structural analogy between anti-colonial armed revolution and assassination inside independent constitutional India is material enough to block certification.
