@@ -7,10 +7,10 @@ interface CertificationSelectorProps {
   onChange: (value: CertificationFilter) => void;
 }
 
-const options: Array<{ value: CertificationFilter; label: string }> = [
-  { value: 'all', label: 'All movies' },
-  { value: 'certified', label: 'Sanghi Certified' },
-  { value: 'reviewed', label: 'Reviewed only' }
+const options: Array<{ value: CertificationFilter; label: string; activeClass: string }> = [
+  { value: 'all', label: 'All movies', activeClass: 'border-white/25 bg-white/10 text-text-primary' },
+  { value: 'certified', label: '🪷 Sanghi Certified', activeClass: 'border-orange-300/70 bg-orange-400/25 text-orange-50 shadow-lg shadow-orange-500/15' },
+  { value: 'reviewed', label: 'Reviewed only', activeClass: 'border-sky-300/35 bg-sky-300/10 text-sky-100' }
 ];
 
 export function CertificationSelector({ value, onChange }: CertificationSelectorProps) {
@@ -20,10 +20,10 @@ export function CertificationSelector({ value, onChange }: CertificationSelector
         <button
           key={option.value}
           onClick={() => onChange(option.value)}
-          className={`px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 ${
+          className={`border px-5 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 ${
             value === option.value
-              ? 'bg-orange-400 text-black shadow-lg shadow-orange-400/10'
-              : 'chic-glass text-text-secondary hover:bg-white/5'
+              ? option.activeClass
+              : 'border-white/10 chic-glass text-text-secondary hover:bg-white/5'
           }`}
         >
           {option.label}
