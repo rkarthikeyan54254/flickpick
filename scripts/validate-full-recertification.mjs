@@ -8,7 +8,7 @@ async function findEntry(dir) {
     if (entry.isDirectory()) {
       const nested = await findEntry(path);
       if (nested) return nested;
-    } else if (/^sanghi(?:-[A-Za-z0-9_-]+)?\.(?:m?js)$/.test(entry.name)) {
+    } else if (/^fullRecertificationAudit(?:-[A-Za-z0-9_-]+)?\.(?:m?js)$/.test(entry.name)) {
       return path;
     }
   }
@@ -18,18 +18,32 @@ async function findEntry(dir) {
 const auditDir = resolve('.recert-audit');
 const entry = await findEntry(auditDir);
 if (!entry) {
-  throw new Error('Unable to locate the SSR-built sanghi audit entry.');
+  throw new Error('Unable to locate the SSR-built full re-certification audit entry.');
 }
 
-const { getCorpusStats } = await import(pathToFileURL(entry).href);
-const stats = getCorpusStats();
+const { getFullRecertificationAudit } = await import(pathToFileURL(entry).href);
+const audit = getFullRecertificationAudit();
 
 console.log(
-  `Full re-certification audit: total=${stats.totalProfiles}, published=${stats.publishedProfiles}, migrated-v2=${stats.migratedV2Profiles}, legacy-held=${stats.legacyProfilesHeld}`
+  `Full re-certification audit: total=${audit.totalProfiles}, published=${audit.publishedProfiles}, migrated-v2=${audit.migratedV2Profiles}, legacy-held=${audit.legacyProfilesHeld}`
 );
 
-if (stats.legacyProfilesHeld !== 0) {
+if (audit.legacyHeld.length) {
+  console.error('Current legacy profiles still held:');
+  for (const profile of audit.legacyHeld) {
+    console.error(`- ${profile.title} (${profile.year}, ${profile.language}) — ${profile.methodologyVersion}`);
+  }
+}
+
+if (audit.legacyPublished.length) {
+  console.error('ERROR: legacy profiles are publication eligible:');
+  for (const profile of audit.legacyPublished) {
+    console.error(`- ${profile.title} (${profile.year}, ${profile.language}) — ${profile.methodologyVersion}`);
+  }
+}
+
+if (audit.legacyHeld.length !== 0 || audit.legacyPublished.length !== 0) {
   throw new Error(
-    `Full re-certification is incomplete: ${stats.legacyProfilesHeld} current legacy profile(s) still require evidence-derived v2 replacement or an explicit v2 evidence hold.`
+    `Full re-certification is incomplete: ${audit.legacyHeld.length} legacy held and ${audit.legacyPublished.length} legacy published profile(s) remain.`
   );
 }
