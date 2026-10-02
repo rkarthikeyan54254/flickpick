@@ -28,6 +28,10 @@ function evidenceUrls(profile: SanghiProfile) {
   return new Set(profile.evidence.map((item) => item.url).filter((url): url is string => Boolean(url)));
 }
 
+function hasQuery(dossier: ResearchDossier, pattern: RegExp) {
+  return dossier.discoveryQueries.some((query) => pattern.test(query));
+}
+
 function validateDossier(profile: SanghiProfile, dossier: ResearchDossier): ResearchReadiness {
   const failures: string[] = [];
   const ambiguousHighRisk: string[] = [];
@@ -38,6 +42,12 @@ function validateDossier(profile: SanghiProfile, dossier: ResearchDossier): Rese
   if (!hasText(dossier.filmUnderstanding)) failures.push('film-understanding');
   if (!dossier.completedAt) failures.push('dossier-completed-at');
 
+  // Durable search log prevents a reviewer from claiming an adversarial pass without doing the probes.
+  if (dossier.discoveryQueries.length < 4) failures.push('discovery-query-count');
+  if (!hasQuery(dossier, /identity|religion|caste|community/i)) failures.push('discovery-query-identity');
+  if (!hasQuery(dossier, /source|adaptation|based on|true story|biopic/i)) failures.push('discovery-query-source');
+  if (!hasQuery(dossier, /controvers|criticism|accuracy|factual|dispute/i)) failures.push('discovery-query-adversarial');
+
   const byId = new Map(dossier.riskProbes.map((probe) => [probe.id, probe]));
   for (const id of REQUIRED_RESEARCH_PROBES) {
     const probe = byId.get(id);
@@ -46,7 +56,7 @@ function validateDossier(profile: SanghiProfile, dossier: ResearchDossier): Rese
       continue;
     }
     if (!hasText(probe.summary)) failures.push(`probe-summary:${id}`);
-    if (probe.status !== 'not-applicable' && probe.evidenceUrls.length === 0) {
+    if (['finding', 'ambiguous'].includes(probe.status) && probe.evidenceUrls.length === 0) {
       failures.push(`probe-evidence:${id}`);
     }
     for (const url of probe.evidenceUrls) {
@@ -63,6 +73,9 @@ function validateDossier(profile: SanghiProfile, dossier: ResearchDossier): Rese
   if (!dossier.redTeam.completed) failures.push('red-team-incomplete');
   if (!hasText(dossier.redTeam.strongestChallenge)) failures.push('red-team-challenge');
   if (!hasText(dossier.redTeam.verdictImpact)) failures.push('red-team-impact');
+  if (dossier.redTeam.outcome !== 'cleared' && dossier.redTeam.evidenceUrls.length === 0) {
+    failures.push('red-team-evidence');
+  }
   for (const url of dossier.redTeam.evidenceUrls) {
     if (!urls.has(url)) failures.push('red-team-evidence-not-in-profile');
   }
@@ -83,12 +96,7 @@ function validateDossier(profile: SanghiProfile, dossier: ResearchDossier): Rese
     failures.push('counter-evidence-required');
   }
 
-  return {
-    complete: failures.length === 0,
-    failures,
-    ambiguousHighRisk,
-    materialFindings,
-  };
+  return { complete: failures.length === 0, failures, ambiguousHighRisk, materialFindings };
 }
 
 export function evaluateResearchReadiness(profile: SanghiProfile): ResearchReadiness {
