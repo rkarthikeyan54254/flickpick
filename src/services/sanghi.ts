@@ -3,6 +3,7 @@ import { sanghiProfileRevisions } from '../data/sanghiProfileRevisions';
 import { batch02Profiles } from '../data/batch02Profiles';
 import { corpusExpansion01 } from '../data/corpusExpansion01';
 import { corpusExpansion02 } from '../data/corpusExpansion02';
+import { corpusExpansionIntegrityRevisions } from '../data/corpusExpansionIntegrityRevisions';
 import { continuousCorpusProfiles } from '../data/continuousCorpusProfiles';
 import type { Movie } from '../types/movie';
 import type { CertificationStatus, SanghiProfile } from '../types/sanghi';
@@ -24,11 +25,16 @@ function allProfileVersions() {
   // A focused source-audit record should own a title over a concurrent worker draft,
   // even when historical databases disagree on the film's release year.
   const focusedExpansionTitles = new Set(
-    [...corpusExpansion02, ...corpusExpansion01].map((profile) => normalizeTitle(profile.title))
+    [
+      ...corpusExpansionIntegrityRevisions,
+      ...corpusExpansion02,
+      ...corpusExpansion01,
+    ].map((profile) => normalizeTitle(profile.title))
   );
 
   return [
     ...sanghiProfileRevisions,
+    ...corpusExpansionIntegrityRevisions,
     ...corpusExpansion02,
     ...corpusExpansion01,
     ...continuousCorpusProfiles.filter(
