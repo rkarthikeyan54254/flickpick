@@ -95,7 +95,7 @@ export interface ResearchProbe {
   status: ResearchProbeStatus;
   materiality: ResearchMateriality;
   summary: string;
-  /** URLs from the profile evidence list that substantiate this probe. */
+  /** URLs from the profile evidence list that substantiate material findings. */
   evidenceUrls: string[];
 }
 
@@ -120,6 +120,8 @@ export interface ResearchDossier {
   complete: boolean;
   sourceBasis: ResearchSourceBasis;
   filmUnderstanding: string;
+  /** Search log that proves adversarial/identity/source queries were actually attempted. */
+  discoveryQueries: string[];
   riskProbes: ResearchProbe[];
   strongestCounterEvidence: EvidenceItem[];
   redTeam: ResearchRedTeam;
