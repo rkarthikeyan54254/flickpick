@@ -7,6 +7,8 @@ import { Methodology } from './pages/Methodology';
 import { ThemeToggle } from './components/ThemeToggle';
 import { CultureCheckMark } from './components/CultureCheckMark';
 
+const navClass = 'hidden md:inline-flex items-center px-3 py-2 rounded-full text-[10px] font-black uppercase tracking-widest text-text-secondary hover:text-orange-200 hover:bg-white/[0.025] transition-colors';
+
 export default function App() {
   return (
     <div className="min-h-screen bg-bg-primary text-text-primary transition-colors duration-500 overflow-x-hidden">
@@ -21,14 +23,16 @@ export default function App() {
           <Link to="/" className="group">
             <CultureCheckMark />
           </Link>
-          <div className="flex items-center gap-2 md:gap-3">
+          <div className="flex items-center gap-1 md:gap-2">
+            <Link to="/" className={navClass}>Discover</Link>
+            <a href="/#latest" className={navClass}>Latest</a>
             <Link
               to="/methodology"
               className="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-full border border-white/10 bg-white/[0.025] text-[10px] font-black uppercase tracking-widest text-text-secondary hover:text-orange-200 hover:border-orange-300/20 transition-colors"
             >
               <BookOpenCheck className="w-3.5 h-3.5" /> Methodology
             </Link>
-            <div className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-full border border-orange-300/15 bg-orange-400/5 text-[10px] font-black uppercase tracking-widest text-text-secondary">
+            <div className="hidden xl:flex items-center gap-2 px-3 py-2 rounded-full border border-orange-300/15 bg-orange-400/5 text-[10px] font-black uppercase tracking-widest text-text-secondary">
               <ShieldCheck className="w-3.5 h-3.5 text-orange-300" /> Evidence before verdict
             </div>
             <ThemeToggle />
