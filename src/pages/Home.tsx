@@ -35,6 +35,12 @@ function scrollToPickedFilm() {
   }, 0);
 }
 
+function scrollToDiscoveryControls() {
+  window.setTimeout(() => {
+    document.getElementById('discovery-controls')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 0);
+}
+
 export function Home() {
   const [selectedLanguage, setSelectedLanguage] = useState('Hindi');
   const [selectedDecade, setSelectedDecade] = useState('2020s');
@@ -54,6 +60,7 @@ export function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const latestRailRef = useRef<HTMLDivElement>(null);
   const freshOttReleases = getFreshOttReleases();
+  const pickDisabled = isLoading || (movies.length === 0 && selectedProviders.length > 0);
 
   useEffect(() => {
     let cancelled = false;
@@ -143,6 +150,11 @@ export function Home() {
     }
   };
 
+  const handleEditPreferences = () => {
+    setShowFilters(true);
+    scrollToDiscoveryControls();
+  };
+
   const scrollLatest = (direction: -1 | 1) => {
     const rail = latestRailRef.current;
     if (!rail) return;
@@ -193,7 +205,7 @@ export function Home() {
         schemaData={homeSchema}
       />
 
-      <header className="max-w-6xl mx-auto text-center space-y-6 relative">
+      <header id="discovery-controls" className="max-w-6xl mx-auto text-center space-y-6 relative scroll-mt-24">
         <div className="absolute top-[-70px] left-1/2 -translate-x-1/2 w-[112%] h-[400px] pointer-events-none opacity-[0.16] -z-10">
           <img src="/hero.png" alt="Indian cinema" className="w-full h-full object-cover mask-radial grayscale-[35%]" />
         </div>
@@ -271,7 +283,7 @@ export function Home() {
         )}
 
         <div className="flex justify-center pt-0.5">
-          <button onClick={handleShuffle} disabled={isLoading || (movies.length === 0 && selectedProviders.length > 0)} className="chic-btn-primary px-9 py-3.5 text-base flex items-center gap-2.5 animate-breath group">
+          <button onClick={handleShuffle} disabled={pickDisabled} className="chic-btn-primary px-9 py-3.5 text-base flex items-center gap-2.5 animate-breath group">
             <RefreshCw className={`w-5 h-5 group-hover:rotate-180 transition-transform duration-500 ${isLoading ? 'animate-spin' : ''}`} />
             {isLoading ? 'Scanning India…' : 'Pick a film'}
           </button>
@@ -313,15 +325,46 @@ export function Home() {
         )}
       </section>
 
-      <main id="picked-film" className="max-w-6xl mx-auto pb-14 scroll-mt-24">
+      <main id="picked-film" className="max-w-6xl mx-auto pb-28 md:pb-14 scroll-mt-24">
         {isLoading ? (
           <div className="space-y-8"><SkeletonCard /></div>
         ) : currentMovie ? (
-          <div className="spotlight-reveal"><MovieCard movie={currentMovie} /></div>
+          <div className="space-y-4">
+            <div className="hidden md:flex sticky top-20 z-30 items-center justify-between gap-5 rounded-[1.5rem] border border-orange-300/20 bg-bg-primary/90 backdrop-blur-xl px-5 py-4 shadow-2xl shadow-black/20">
+              <div className="min-w-0 text-left">
+                <p className="text-[9px] font-black uppercase tracking-[0.22em] text-orange-300">Your current pick</p>
+                <p className="text-sm font-bold text-text-secondary mt-1">Keep exploring from here — no trip back to the top.</p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button onClick={handleEditPreferences} className="chic-btn-secondary px-4 py-2.5 flex items-center gap-2 text-sm">
+                  <Settings2 className="w-4 h-4" /> Preferences
+                </button>
+                <button onClick={handleShuffle} disabled={pickDisabled} className="chic-btn-primary px-5 py-2.5 flex items-center gap-2 text-sm group">
+                  <RefreshCw className={`w-4 h-4 group-hover:rotate-180 transition-transform duration-500 ${isLoading ? 'animate-spin' : ''}`} />
+                  Pick another
+                </button>
+              </div>
+            </div>
+            <div className="spotlight-reveal"><MovieCard movie={currentMovie} /></div>
+          </div>
         ) : (
           <NoResults selectedLanguage={selectedLanguage} selectedDecade={selectedDecade} hasProviders={selectedProviders.length > 0} onBroadenSearch={handleBroadenSearch} onUniversalShuffle={handleUniversalShuffle} />
         )}
       </main>
+
+      {currentMovie && !isLoading && (
+        <div className="md:hidden fixed inset-x-3 bottom-3 z-50 rounded-2xl border border-orange-300/20 bg-bg-primary/95 backdrop-blur-xl p-2.5 shadow-2xl shadow-black/40 safe-area-pb">
+          <div className="grid grid-cols-[1fr_auto] gap-2">
+            <button onClick={handleShuffle} disabled={pickDisabled} className="chic-btn-primary min-h-12 flex items-center justify-center gap-2 text-sm group">
+              <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
+              Pick another
+            </button>
+            <button onClick={handleEditPreferences} className="chic-btn-secondary min-h-12 px-4 flex items-center justify-center" aria-label="Change preferences">
+              <Settings2 className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      )}
 
       <section className="sr-only">
         <h2>Culture Check: Indian cinema across theatres, Netflix, Prime Video, JioHotstar, SonyLIV, ZEE5, Sun NXT and regional streaming services</h2>
