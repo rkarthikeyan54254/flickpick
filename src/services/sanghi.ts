@@ -1,6 +1,7 @@
 import { sanghiProfiles } from '../data/sanghiProfiles';
 import { sanghiProfileRevisions } from '../data/sanghiProfileRevisions';
 import { batch02Profiles } from '../data/batch02Profiles';
+import { chakDeIndiaRevision } from '../data/chakDeIndiaRevision';
 import { corpusExpansion01 } from '../data/corpusExpansion01';
 import { corpusExpansion02 } from '../data/corpusExpansion02';
 import { corpusExpansionIntegrityRevisions } from '../data/corpusExpansionIntegrityRevisions';
@@ -22,8 +23,6 @@ function profileKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
 }
 
 function allProfileVersions() {
-  // A focused source-audit record should own a title over a concurrent worker draft,
-  // even when historical databases disagree on the film's release year.
   const focusedExpansionTitles = new Set(
     [
       ...corpusExpansionIntegrityRevisions,
@@ -33,6 +32,7 @@ function allProfileVersions() {
   );
 
   return [
+    chakDeIndiaRevision,
     ...sanghiProfileRevisions,
     ...corpusExpansionIntegrityRevisions,
     ...corpusExpansion02,
@@ -115,7 +115,6 @@ export function getCorpusStats() {
     totalProfiles: profiles.length,
     batch02Total: batch.length,
     batch02GatePassed: gatePassed,
-    // Internal/admin metric only; consumer UI intentionally does not market corpus counts.
     batch02Published: gatePassed,
     batch02AutoPublish: results.filter((result) => result.lane === 'auto-publish').length,
     batch02HumanReview: results.filter((result) => result.lane === 'human-review').length,
