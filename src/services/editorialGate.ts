@@ -20,6 +20,7 @@ const HIGH_RISK_INTEGRITY_TYPES = new Set([
   'identity-asymmetry',
   'identity-substitution',
   'ideological-substitution',
+  'community-contempt',
   'source-fidelity',
   'adaptation-delta',
   'quantitative-claim',
@@ -101,6 +102,16 @@ function evaluateEvidenceDerivedV2(profile: SanghiProfile): EditorialGateResult 
   }
 
   escalationReasons.push(...readiness.ambiguousHighRisk.map((id) => `research-ambiguity:${id}`));
+
+  const communityContempt = profile.researchDossier?.riskProbes.find((probe) => probe.id === 'community-contempt');
+  if (communityContempt && ['finding', 'ambiguous'].includes(communityContempt.status)) {
+    const material = ['medium', 'high'].includes(communityContempt.materiality);
+    if ((profile.status === 'certified' && material) || communityContempt.materiality === 'high') {
+      escalationReasons.push(
+        `community-contempt:${profile.status}:${communityContempt.status}:${communityContempt.materiality}`,
+      );
+    }
+  }
 
   // In v2, a supported/verified caveat is already adjudicated and remains visible without
   // creating a human bottleneck. Only materially disputed high-risk findings escalate.
