@@ -29,13 +29,6 @@ const HIGH_RISK_INTEGRITY_TYPES = new Set([
   'historical-claim',
 ]);
 
-function isHighRiskIntegrityFlag(flag: IntegrityFlag) {
-  return (
-    HIGH_RISK_INTEGRITY_TYPES.has(flag.type) &&
-    ['verified', 'supported', 'disputed'].includes(flag.status)
-  );
-}
-
 function isUnresolvedHighRiskIntegrityFlag(flag: IntegrityFlag) {
   return HIGH_RISK_INTEGRITY_TYPES.has(flag.type) && flag.status === 'disputed';
 }
@@ -74,7 +67,6 @@ function shouldEscalateNegativeValence(profile: SanghiProfile, probe: ResearchPr
 
 function evaluateLegacyV1(profile: SanghiProfile): EditorialGateResult {
   const failures = baseFailures(profile);
-  const escalationReasons: string[] = [];
   const gate = profile.publicationGate;
 
   if (!gate) {
@@ -91,22 +83,27 @@ function evaluateLegacyV1(profile: SanghiProfile): EditorialGateResult {
   }
 
   if (failures.length > 0) {
-    return { eligible: false, gatePassed: false, failures, lane: 'provisional-hold', escalationReasons, approvalApplied: false };
+    return {
+      eligible: false,
+      gatePassed: false,
+      failures,
+      lane: 'provisional-hold',
+      escalationReasons: ['legacy-v2-revalidation-required'],
+      approvalApplied: false,
+    };
   }
 
-  const highRiskFindings = profile.integrityFlags.filter(isHighRiskIntegrityFlag);
-  escalationReasons.push(...highRiskFindings.map((flag) => `high-risk-integrity:${flag.type}:${flag.status}`));
-
-  const key = escalationKey(profile);
-  escalationReasons.push(...(editorialEscalations[key] || []).map((reason) => `calibration:${reason}`));
-  if (profile.confidence !== 'high') escalationReasons.push(`confidence:${profile.confidence}`);
-
-  const approvalApplied = Boolean(editorialApprovals[key]);
-  if (escalationReasons.length > 0 && !approvalApplied) {
-    return { eligible: false, gatePassed: true, failures, lane: 'human-review', escalationReasons, approvalApplied: false };
-  }
-
-  return { eligible: true, gatePassed: true, failures, lane: 'auto-publish', escalationReasons, approvalApplied };
+  // Legacy records were produced before the evidence-derived v2 dossier, symmetric
+  // community-contempt screen and sacred-valence red-team pass existed. They may remain
+  // in revision history, but they cannot present a durable public verdict until migrated.
+  return {
+    eligible: false,
+    gatePassed: true,
+    failures,
+    lane: 'human-review',
+    escalationReasons: ['legacy-v2-revalidation-required'],
+    approvalApplied: false,
+  };
 }
 
 function evaluateEvidenceDerivedV2(profile: SanghiProfile): EditorialGateResult {
