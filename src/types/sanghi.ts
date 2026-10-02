@@ -53,6 +53,7 @@ export interface EvidenceItem {
   url?: string;
 }
 
+/** Legacy v1 gate. v2+ profiles are gated from ResearchDossier evidence instead. */
 export interface PublicationGate {
   adversarialPass: boolean;
   regionalContextPass: boolean;
@@ -63,6 +64,66 @@ export interface PublicationGate {
   evidenceSufficiencyPass: boolean;
   explanationPass: boolean;
   selfFalsificationPass: boolean;
+}
+
+export type ResearchSourceBasis =
+  | 'original-fiction'
+  | 'fiction-adaptation'
+  | 'history'
+  | 'biopic'
+  | 'true-story'
+  | 'folklore-sacred-tradition'
+  | 'mixed-unknown';
+
+export type ResearchProbeId =
+  | 'source-adaptation'
+  | 'identity-substitution'
+  | 'historical-claims'
+  | 'quantitative-claims'
+  | 'real-person-attribution'
+  | 'sacred-religious-valence'
+  | 'regional-context'
+  | 'creator-source-conflict'
+  | 'social-radar'
+  | 'self-falsification';
+
+export type ResearchProbeStatus = 'clear' | 'finding' | 'ambiguous' | 'not-applicable';
+export type ResearchMateriality = 'low' | 'medium' | 'high';
+
+export interface ResearchProbe {
+  id: ResearchProbeId;
+  status: ResearchProbeStatus;
+  materiality: ResearchMateriality;
+  summary: string;
+  /** URLs from the profile evidence list that substantiate this probe. */
+  evidenceUrls: string[];
+}
+
+export interface ResearchRedTeam {
+  completed: boolean;
+  strongestChallenge: string;
+  outcome: 'cleared' | 'qualified' | 'unresolved';
+  evidenceUrls: string[];
+  verdictImpact: string;
+}
+
+export interface FactInterpretationIntentRecord {
+  fact: string;
+  interpretation: string;
+  intent: string;
+}
+
+/** Durable v2 research artifact. Publication is derived from evidence, not pass booleans. */
+export interface ResearchDossier {
+  version: '2.0';
+  completedAt: string;
+  complete: boolean;
+  sourceBasis: ResearchSourceBasis;
+  filmUnderstanding: string;
+  riskProbes: ResearchProbe[];
+  strongestCounterEvidence: EvidenceItem[];
+  redTeam: ResearchRedTeam;
+  factInterpretationIntent: FactInterpretationIntentRecord;
 }
 
 export interface SanghiProfile {
@@ -78,6 +139,7 @@ export interface SanghiProfile {
   reviewDepth?: ReviewDepth;
   auditStatus?: AuditStatus;
   publicationGate?: PublicationGate;
+  researchDossier?: ResearchDossier;
   dimensions: SanghiDimensions;
   tags: string[];
   reasons: string[];
