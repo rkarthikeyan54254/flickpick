@@ -22,33 +22,24 @@ function getDateRangeForDecade(decade: string): { start_date: string; end_date: 
   const currentDay = new Date().getDate();
 
   switch (decade) {
-    case '70s':
-      return { start_date: '1970-01-01', end_date: '1979-12-31' };
-    case '80s':
-      return { start_date: '1980-01-01', end_date: '1989-12-31' };
-    case '90s':
-      return { start_date: '1990-01-01', end_date: '1999-12-31' };
-    case '2K':
-      return { start_date: '2000-01-01', end_date: '2009-12-31' };
-    case '2010s':
-      return { start_date: '2010-01-01', end_date: '2019-12-31' };
-    case '2020s':
-      return { start_date: '2020-01-01', end_date: `${currentYear}-12-31` };
+    case '70s': return { start_date: '1970-01-01', end_date: '1979-12-31' };
+    case '80s': return { start_date: '1980-01-01', end_date: '1989-12-31' };
+    case '90s': return { start_date: '1990-01-01', end_date: '1999-12-31' };
+    case '2K': return { start_date: '2000-01-01', end_date: '2009-12-31' };
+    case '2010s': return { start_date: '2010-01-01', end_date: '2019-12-31' };
+    case '2020s': return { start_date: '2020-01-01', end_date: `${currentYear}-12-31` };
     case 'Latest':
       return {
         start_date: `${currentYear - 2}-${currentMonth.toString().padStart(2, '0')}-${currentDay.toString().padStart(2, '0')}`,
         end_date: `${currentYear}-${currentMonth.toString().padStart(2, '0')}-${currentDay.toString().padStart(2, '0')}`
       };
-    default:
-      return { start_date: '1970-01-01', end_date: `${currentYear}-12-31` };
+    default: return { start_date: '1970-01-01', end_date: `${currentYear}-12-31` };
   }
 }
 
 export async function fetchGenres(): Promise<Genre[]> {
   try {
-    const response = await axios.get(`${TMDB_BASE_URL}/genre/movie/list`, {
-      params: { api_key: TMDB_API_KEY }
-    });
+    const response = await axios.get(`${TMDB_BASE_URL}/genre/movie/list`, { params: { api_key: TMDB_API_KEY } });
     return response.data.genres;
   } catch (error) {
     console.error('Failed to fetch genres', error);
@@ -85,31 +76,19 @@ export async function fetchMoviesByLanguage(
 
     const movies = response.data.results;
     const moviesWithProviders = await Promise.all(
-      movies.map(async (movie) => {
-        const watchProviders = await fetchWatchProviders(movie.id, region);
-        return { ...movie, watch_providers: watchProviders };
-      })
+      movies.map(async (movie) => ({ ...movie, watch_providers: await fetchWatchProviders(movie.id, region) }))
     );
 
     return moviesWithProviders.filter((movie) =>
-      movie.watch_providers?.flatrate?.some(
-        provider => providerIds.includes(provider.provider_id)
-      )
+      movie.watch_providers?.flatrate?.some(provider => providerIds.includes(provider.provider_id))
     );
   } catch (error) {
-    const errorMessage = error instanceof AxiosError
-      ? `API Error: ${error.message}`
-      : 'An unexpected error occurred';
+    const errorMessage = error instanceof AxiosError ? `API Error: ${error.message}` : 'An unexpected error occurred';
     console.error(errorMessage);
     return [];
   }
 }
 
-/**
- * Resolve our pre-reviewed editorial corpus into live TMDb movie objects.
- * In certification modes the editorial corpus is the source of candidates;
- * TMDb only hydrates those candidates with poster/provider metadata.
- */
 export async function fetchCuratedMovies(
   profiles: Array<{ title: string; year: number }>,
   region: string = 'IN',
@@ -119,28 +98,17 @@ export async function fetchCuratedMovies(
     const resolved = await Promise.all(
       profiles.map(async (profile) => {
         const response = await axios.get<TMDBResponse>(`${TMDB_BASE_URL}/search/movie`, {
-          params: {
-            api_key: TMDB_API_KEY,
-            query: profile.title,
-            year: profile.year,
-            region
-          }
+          params: { api_key: TMDB_API_KEY, query: profile.title, year: profile.year, region }
         });
 
-        const exact = response.data.results.find(movie => {
-          const releaseYear = Number(movie.release_date?.slice(0, 4));
-          return releaseYear === profile.year;
-        }) || response.data.results[0];
-
+        const exact = response.data.results.find(movie => Number(movie.release_date?.slice(0, 4)) === profile.year) || response.data.results[0];
         if (!exact) return null;
 
         const watchProviders = await fetchWatchProviders(exact.id, region);
         const hydrated: Movie = { ...exact, watch_providers: watchProviders };
 
         if (providerIds.length > 0) {
-          const availableOnSelectedProvider = hydrated.watch_providers?.flatrate?.some(
-            provider => providerIds.includes(provider.provider_id)
-          );
+          const availableOnSelectedProvider = hydrated.watch_providers?.flatrate?.some(provider => providerIds.includes(provider.provider_id));
           if (!availableOnSelectedProvider) return null;
         }
 
@@ -158,10 +126,7 @@ export async function fetchCuratedMovies(
 export async function fetchMovieDetails(movieId: number, region: string = 'IN'): Promise<Movie | null> {
   try {
     const response = await axios.get<Movie>(`${TMDB_BASE_URL}/movie/${movieId}`, {
-      params: {
-        api_key: TMDB_API_KEY,
-        append_to_response: 'credits,videos'
-      }
+      params: { api_key: TMDB_API_KEY, append_to_response: 'credits,videos' }
     });
     const watchProviders = await fetchWatchProviders(movieId, region);
     return { ...response.data, watch_providers: watchProviders };
@@ -174,11 +139,7 @@ export async function fetchMovieDetails(movieId: number, region: string = 'IN'):
 export async function searchMovies(query: string, region: string = 'IN'): Promise<Movie[]> {
   try {
     const response = await axios.get<TMDBResponse>(`${TMDB_BASE_URL}/search/movie`, {
-      params: {
-        api_key: TMDB_API_KEY,
-        query,
-        region
-      }
+      params: { api_key: TMDB_API_KEY, query, region }
     });
     return response.data.results;
   } catch (error) {
@@ -187,16 +148,39 @@ export async function searchMovies(query: string, region: string = 'IN'): Promis
   }
 }
 
+export interface OttArtwork {
+  tmdbId: number;
+  posterUrl: string | null;
+  backdropUrl: string | null;
+}
+
+export async function fetchOttArtwork(title: string, releaseDate?: string): Promise<OttArtwork | null> {
+  try {
+    const year = releaseDate ? Number(releaseDate.slice(0, 4)) : undefined;
+    const response = await axios.get<TMDBResponse>(`${TMDB_BASE_URL}/search/movie`, {
+      params: { api_key: TMDB_API_KEY, query: title, year, region: 'IN' }
+    });
+
+    const candidate = response.data.results.find(movie => !year || Number(movie.release_date?.slice(0, 4)) === year)
+      || response.data.results[0];
+    if (!candidate) return null;
+
+    return {
+      tmdbId: candidate.id,
+      posterUrl: candidate.poster_path ? `https://image.tmdb.org/t/p/w500${candidate.poster_path}` : null,
+      backdropUrl: candidate.backdrop_path ? `https://image.tmdb.org/t/p/w780${candidate.backdrop_path}` : null,
+    };
+  } catch (error) {
+    console.error(`Failed to resolve OTT artwork for ${title}`, error);
+    return null;
+  }
+}
+
 async function fetchWatchProviders(movieId: number, region: string) {
   try {
-    const response = await axios.get(
-      `${TMDB_BASE_URL}/movie/${movieId}/watch/providers`,
-      {
-        params: {
-          api_key: TMDB_API_KEY,
-        },
-      }
-    );
+    const response = await axios.get(`${TMDB_BASE_URL}/movie/${movieId}/watch/providers`, {
+      params: { api_key: TMDB_API_KEY },
+    });
     return response.data.results[region];
   } catch (error) {
     console.error('Failed to fetch watch providers', error);
@@ -218,7 +202,6 @@ function getLanguageCode(language: string): string {
 
 export function getDirectStreamingLink(title: string, providerId: number, region: string) {
   const encodedTitle = encodeURIComponent(title);
-
   const searchUrls: Record<number, string> = {
     8: `https://www.netflix.com/search?q=${encodedTitle}`,
     119: `https://www.primevideo.com/search/?phrase=${encodedTitle}`,
