@@ -9,7 +9,7 @@ interface AdSenseProps {
 
 declare global {
   interface Window {
-    adsbygoogle: any[];
+    adsbygoogle: Array<Record<string, unknown>>;
   }
 }
 
@@ -18,13 +18,15 @@ export function AdSense({ style, className, adSlot, adFormat = 'auto' }: AdSense
   const initialized = useRef(false);
 
   useEffect(() => {
-    if (adRef.current && !initialized.current) {
+    const adElement = adRef.current;
+
+    if (adElement && !initialized.current) {
       try {
         if (!window.adsbygoogle) {
           window.adsbygoogle = [];
         }
-        
-        if (!adRef.current.getAttribute('data-ad-status')) {
+
+        if (!adElement.getAttribute('data-ad-status')) {
           window.adsbygoogle.push({});
           initialized.current = true;
         }
@@ -34,8 +36,8 @@ export function AdSense({ style, className, adSlot, adFormat = 'auto' }: AdSense
     }
 
     return () => {
-      if (adRef.current) {
-        adRef.current.remove();
+      if (adElement) {
+        adElement.remove();
         initialized.current = false;
       }
     };
