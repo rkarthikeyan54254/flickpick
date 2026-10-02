@@ -61,12 +61,14 @@ function shouldEscalateNegativeValence(profile: SanghiProfile, probe: ResearchPr
   // Ambiguity at high materiality always needs adjudication, whatever the proposed verdict.
   if (probe.status === 'ambiguous' && probe.materiality === 'high') return true;
 
-  // A positive/neutral verdict cannot silently coexist with a material contempt/sacred-valence concern.
+  // Certified cannot silently coexist with a material contempt/sacred-valence concern.
   if (profile.status === 'certified') return true;
-  if (['mixed', 'neutral'].includes(profile.status) && probe.materiality === 'high') return true;
 
-  // A supported negative-valence finding may itself be part of the evidence for Not Certified.
-  // Do not force a redundant exception review when the proposed verdict already reflects it.
+  // A neutral verdict should not conceal a high negative-valence finding.
+  if (profile.status === 'neutral' && probe.materiality === 'high') return true;
+
+  // Confirmed negative-valence evidence may itself justify Mixed / Contested or Not Certified.
+  // Those verdicts already surface the concern, so a redundant exception review is unnecessary.
   return false;
 }
 
