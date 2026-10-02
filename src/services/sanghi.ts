@@ -21,13 +21,19 @@ function profileKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
 }
 
 function allProfileVersions() {
+  // A focused source-audit record should own a title over a concurrent worker draft,
+  // even when historical databases disagree on the film's release year.
+  const focusedExpansionTitles = new Set(
+    [...corpusExpansion02, ...corpusExpansion01].map((profile) => normalizeTitle(profile.title))
+  );
+
   return [
     ...sanghiProfileRevisions,
     ...corpusExpansion02,
     ...corpusExpansion01,
-    // Expansion 01 owns Kadaisi Vivasayi's canonical 2022 public-release record.
-    // Excluding the earlier festival/premiere-year variant prevents a duplicate title in discovery.
-    ...continuousCorpusProfiles.filter((profile) => normalizeTitle(profile.title) !== 'kadaisi vivasayi'),
+    ...continuousCorpusProfiles.filter(
+      (profile) => !focusedExpansionTitles.has(normalizeTitle(profile.title))
+    ),
     ...batch02Profiles,
     ...sanghiProfiles,
   ];
