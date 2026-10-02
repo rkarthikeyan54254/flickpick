@@ -102,7 +102,7 @@ const syeRaaResearch = 'https://www.cinemaexpress.com/videos/trailers/2018/Aug/2
 const satakarniDirector = 'https://telugucinema.com/interviews/krish-gpsk-has-divine-intervention/amp';
 const satakarniCounter = 'https://www.newindianexpress.com/amp/story/cities/hyderabad/2017/Jan/14/historians-claim-balakrishnas-gautamiputra-satakarni-is-historically-inaccurate-1559475.html';
 const satakarniHistory = 'https://ignca.gov.in/Asi_data/17904.pdf';
-const malleshamTedx = 'https://www.youtube.com/watch?v=JdYeYdN3Syk';
+const malleshamTedx = 'https://www.youtube.com/watch?v=qSpjfurPjus';
 const malleshamReview = 'https://indianexpress.com/article/entertainment/movie-review/mallesham-priyadarshi-shines-in-this-no-frills-biopic-drama-5799709/';
 const malleshamCounter = 'https://timesofindia.indiatimes.com/city/hyderabad/mallesham-biopic-row-over-invention-of-asu-machine/articleshow/69795206.cms';
 const rangasthalamReview = 'https://www.cinemaexpress.com/reviews/telugu/2018/Mar/30/rangasthalam-review-cherry-on-top-5295.html';
@@ -334,7 +334,7 @@ export const fullRecertificationV2Worker3Batch02: SanghiProfile[] = [
     ],
     integrityFlags: [{ type: 'invention-attribution', status: 'disputed', summary: 'A contemporaneous report records a competing claim by Y Srinivas and Y Satyanarayana regarding prior invention of an Asu machine; Chintakindi Mallesham’s patent and public recognition remain part of the record.' }],
     evidence: [
-      { kind: 'primary', source: 'TEDxHyderabad — Chintakindi Mallesham and Raj Rachakonda', claim: 'The real inventor subject and director describe how Mallesham’s TEDx account became the film’s core reference and how the Asu machine served Pochampally weavers.', url: malleshamTedx },
+      { kind: 'primary', source: 'TEDxHyderabad — Chintakindi Mallesham', claim: 'The real inventor subject describes how he developed the Asu machine to reduce the physical suffering of his mother and other Pochampally weavers.', url: malleshamTedx },
       { kind: 'review', source: 'Indian Express — Mallesham review', claim: 'Frames the film as a grounded biopic about preserving handloom heritage and reducing the punishing labour borne by Pochampally weavers.', url: malleshamReview },
       { kind: 'review', source: 'Times of India — Asu machine attribution dispute', claim: 'Records a competing claim that brothers Y Srinivas and Y Satyanarayana built an Asu machine before Mallesham’s version.', url: malleshamCounter },
     ],
@@ -343,7 +343,7 @@ export const fullRecertificationV2Worker3Batch02: SanghiProfile[] = [
     filmUnderstanding: 'A Telugu biopic of Padma Shri Chintakindi Mallesham, following his effort to mechanize the Asu process after witnessing the physical suffering and economic precarity of Pochampally weaving families.',
     queries: ['Mallesham Chintakindi biopic TEDx source', 'Mallesham Asu machine invention dispute Srinivas Satyanarayana', 'Mallesham Pochampally weavers craft heritage', 'Mallesham caste community representation'],
     evidence: [
-      { kind: 'primary', source: 'TEDxHyderabad — Chintakindi Mallesham and Raj Rachakonda', claim: 'The real inventor subject and director describe how Mallesham’s TEDx account became the film’s core reference and how the Asu machine served Pochampally weavers.', url: malleshamTedx },
+      { kind: 'primary', source: 'TEDxHyderabad — Chintakindi Mallesham', claim: 'The real inventor subject describes how he developed the Asu machine to reduce the physical suffering of his mother and other Pochampally weavers.', url: malleshamTedx },
       { kind: 'review', source: 'Indian Express — Mallesham review', claim: 'Frames the film as a grounded biopic about preserving handloom heritage and reducing the punishing labour borne by Pochampally weavers.', url: malleshamReview },
       { kind: 'review', source: 'Times of India — Asu machine attribution dispute', claim: 'Records a competing claim that brothers Y Srinivas and Y Satyanarayana built an Asu machine before Mallesham’s version.', url: malleshamCounter },
     ],
