@@ -195,7 +195,14 @@ function getLanguageCode(language: string): string {
     'Tamil': 'ta',
     'Telugu': 'te',
     'Malayalam': 'ml',
-    'Kannada': 'kn'
+    'Kannada': 'kn',
+    'Bengali': 'bn',
+    'Marathi': 'mr',
+    'Punjabi': 'pa',
+    'Gujarati': 'gu',
+    'Assamese': 'as',
+    'Odia': 'or',
+    'Bhojpuri': 'bho',
   };
   return languageCodes[language] || 'en';
 }
