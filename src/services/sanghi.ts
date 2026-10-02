@@ -1,7 +1,9 @@
 import { sanghiProfiles } from '../data/sanghiProfiles';
 import { sanghiProfileRevisions } from '../data/sanghiProfileRevisions';
+import { batch02Profiles } from '../data/batch02Profiles';
 import type { Movie } from '../types/movie';
 import type { CertificationStatus, SanghiProfile } from '../types/sanghi';
+import { isPublicationEligible } from './editorialGate';
 
 function normalizeTitle(value: string) {
   return value
@@ -16,11 +18,18 @@ function profileKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
 }
 
 function currentProfiles() {
-  const revisedKeys = new Set(sanghiProfileRevisions.map(profileKey));
-  return [
+  const ordered = [
     ...sanghiProfileRevisions,
-    ...sanghiProfiles.filter(profile => !revisedKeys.has(profileKey(profile)))
+    ...batch02Profiles,
+    ...sanghiProfiles,
   ];
+  const seen = new Set<string>();
+  return ordered.filter((profile) => {
+    const key = profileKey(profile);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function movieYear(movie: Movie) {
@@ -60,13 +69,26 @@ export function getProfilesForSelection(
   return currentProfiles().filter(profile => {
     if (profile.language !== language) return false;
     if (!yearMatchesDecade(profile.year, decade)) return false;
+    if (!isPublicationEligible(profile)) return false;
     if (filter === 'certified') return profile.status === 'certified';
     return profile.status !== 'unrated';
   });
 }
 
+export function getCorpusStats() {
+  const profiles = currentProfiles();
+  const batch = batch02Profiles;
+  return {
+    totalProfiles: profiles.length,
+    batch02Total: batch.length,
+    batch02Published: batch.filter(isPublicationEligible).length,
+    batch02Provisional: batch.filter((profile) => !isPublicationEligible(profile)).length,
+  };
+}
+
 export function isReviewed(movie: Movie) {
-  return Boolean(getSanghiProfile(movie));
+  const profile = getSanghiProfile(movie);
+  return Boolean(profile && isPublicationEligible(profile));
 }
 
 export function matchesCertificationFilter(
@@ -75,7 +97,7 @@ export function matchesCertificationFilter(
 ) {
   if (filter === 'all') return true;
   const profile = getSanghiProfile(movie);
-  if (!profile) return false;
+  if (!profile || !isPublicationEligible(profile)) return false;
   if (filter === 'reviewed') return true;
   return profile.status === 'certified';
 }
