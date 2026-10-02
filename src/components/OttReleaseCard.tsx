@@ -19,13 +19,15 @@ export function OttReleaseCard({ item }: { item: OttReleaseItem }) {
     return () => { cancelled = true; };
   }, [item.title, item.releaseDate]);
 
+  const imageUrl = artwork?.posterUrl || artwork?.backdropUrl;
+
   return (
     <article className="group min-w-[220px] max-w-[240px] snap-start overflow-hidden rounded-[1.8rem] border border-white/10 bg-white/[0.025] shadow-xl">
       <div className="relative aspect-[2/3] overflow-hidden bg-gradient-to-br from-orange-500/10 via-black to-black">
-        {artwork?.posterUrl ? (
+        {imageUrl ? (
           <img
-            src={artwork.posterUrl}
-            alt={`${item.title} poster`}
+            src={imageUrl}
+            alt={`${item.title} artwork`}
             loading="lazy"
             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
           />
