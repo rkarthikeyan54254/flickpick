@@ -158,39 +158,39 @@ export function Home() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Culture Check",
-    "url": "https://justflickpick.netlify.app/",
+    "url": "https://culturechk.netlify.app/",
     "description": "Every film held up to Bharat's values: Indian cinema discovery, OTT availability and evidence-backed Bharatiya editorial analysis.",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://justflickpick.netlify.app/?q={search_term_string}",
+      "target": "https://culturechk.netlify.app/?q={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   };
 
   return (
-    <div className="space-y-14 md:space-y-24 animate-fade-in">
+    <div className="space-y-12 md:space-y-16 lg:space-y-20 animate-fade-in">
       <SEO
         title="Culture Check — Every film held up to Bharat's values."
         description="Discover Indian films across cinemas and major OTT platforms, then read an evidence-backed Bharatiya cultural assessment before you watch."
         schemaData={homeSchema}
       />
 
-      <header className="max-w-6xl mx-auto text-center space-y-8 md:space-y-10 relative">
-        <div className="absolute top-[-90px] left-1/2 -translate-x-1/2 w-[120%] h-[500px] pointer-events-none opacity-20 -z-10">
+      <header className="max-w-6xl mx-auto text-center space-y-7 md:space-y-8 relative">
+        <div className="absolute top-[-90px] left-1/2 -translate-x-1/2 w-[120%] h-[460px] pointer-events-none opacity-20 -z-10">
           <img src="/hero.png" alt="Indian cinema" className="w-full h-full object-cover mask-radial grayscale-[35%]" />
         </div>
 
-        <div className="space-y-6 pt-14 md:pt-20">
+        <div className="space-y-5 pt-10 md:pt-14 lg:pt-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-orange-300/20 bg-orange-400/10 text-orange-200 text-[10px] font-black uppercase tracking-[0.2em]">
             <ShieldCheck className="w-4 h-4" /> Continuously audited · freshness monitored
           </div>
           <div>
-            <p className="text-[11px] md:text-xs font-black uppercase tracking-[0.38em] text-orange-300">Culture Check</p>
-            <h1 className="mt-4 text-5xl md:text-8xl font-black tracking-[-0.055em] leading-[0.9]">
+            <p className="text-[11px] md:text-xs font-black uppercase tracking-[0.32em] text-orange-300">A Bharatiya lens on Indian cinema</p>
+            <h1 className="mt-4 mx-auto max-w-5xl text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-black tracking-[-0.055em] leading-[0.92]">
               EVERY FILM.<br /><span className="text-orange-200 italic">HELD UP TO BHARAT'S VALUES.</span>
             </h1>
           </div>
-          <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto font-medium leading-relaxed">
+          <p className="text-base md:text-lg text-text-secondary max-w-3xl mx-auto font-medium leading-relaxed">
             Know what a film affirms, distorts or dismisses before you press play — across culture, civilization, national integrity, sacred traditions, regional roots and historical memory.
           </p>
           <Link to="/methodology" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-text-secondary hover:text-orange-200 transition-colors">
@@ -199,7 +199,7 @@ export function Home() {
         </div>
 
         <div className="flex flex-col md:flex-row items-center gap-4 justify-center">
-          <div className="w-full md:max-w-md">
+          <div className="w-full md:max-w-lg">
             <SearchBar onSearch={setSearchQuery} onClear={() => setSearchQuery('')} />
           </div>
           <button onClick={() => setShowFilters(!showFilters)} className={`chic-btn-secondary flex items-center gap-2 ${showFilters ? 'bg-orange-500/10' : ''}`}>
@@ -252,26 +252,26 @@ export function Home() {
           </div>
         )}
 
-        <div className="flex justify-center pt-2">
-          <button onClick={handleShuffle} disabled={isLoading || (movies.length === 0 && selectedProviders.length > 0)} className="chic-btn-primary px-12 py-5 text-xl flex items-center gap-3 animate-breath group">
-            <RefreshCw className={`w-6 h-6 group-hover:rotate-180 transition-transform duration-500 ${isLoading ? 'animate-spin' : ''}`} />
+        <div className="flex justify-center pt-1">
+          <button onClick={handleShuffle} disabled={isLoading || (movies.length === 0 && selectedProviders.length > 0)} className="chic-btn-primary px-10 py-4 text-lg flex items-center gap-3 animate-breath group">
+            <RefreshCw className={`w-5 h-5 group-hover:rotate-180 transition-transform duration-500 ${isLoading ? 'animate-spin' : ''}`} />
             {isLoading ? 'Scanning India…' : 'Pick a film'}
           </button>
         </div>
       </header>
 
-      <section className="max-w-6xl mx-auto space-y-6">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
+      <section className="max-w-6xl mx-auto space-y-5">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 lg:gap-8">
+          <div className="shrink-0">
             <p className="text-[10px] font-black uppercase tracking-[0.24em] text-orange-300">Indian cinema · live release watch</p>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight mt-2">Now and coming next.</h2>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mt-2">Now and coming next.</h2>
           </div>
-          <p className="text-sm text-text-secondary max-w-lg leading-relaxed">
+          <p className="text-sm text-text-secondary max-w-xl leading-relaxed lg:text-right">
             The release feed is re-verified throughout the day across theatrical and streaming releases. Films already public enter full Culture Check immediately; genuinely unreleased films can carry a clearly labeled pre-release assessment, never a trailer-only final verdict.
           </p>
         </div>
         {freshOttReleases.length > 0 ? (
-          <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+          <div className="flex gap-3 overflow-x-auto pb-4 pr-1 snap-x snap-mandatory scrollbar-hide overscroll-x-contain">
             {freshOttReleases.map((item) => (
               <OttReleaseCard key={`${item.title}-${item.releaseDate}`} item={item} />
             ))}
@@ -283,7 +283,7 @@ export function Home() {
         )}
       </section>
 
-      <main className="max-w-6xl mx-auto pb-20">
+      <main className="max-w-6xl mx-auto pb-16">
         {isLoading ? (
           <div className="space-y-8"><SkeletonCard /></div>
         ) : currentMovie ? (
