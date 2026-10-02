@@ -26,14 +26,17 @@ export function SanghiBadge({ profile, compact = false }: SanghiBadgeProps) {
       <div className="flex flex-col gap-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-2">
-            <p className="text-[9px] font-black uppercase tracking-[0.28em] text-text-secondary">Editorial lens</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.28em] text-text-secondary">Culture Check verdict</p>
             <div className="flex items-center gap-3">
               <span className="w-9 h-9 rounded-full border border-white/10 bg-black/20 flex items-center justify-center">
                 <Icon className="w-4 h-4" />
               </span>
               <div>
                 <p className="text-lg md:text-xl font-black tracking-tight">{verdictLabel}</p>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-text-secondary font-bold">
+                {profile.status === 'certified' && eligible && (
+                  <p className="text-[10px] font-bold text-orange-200 mt-0.5">Called an insult. Worn as a badge.</p>
+                )}
+                <p className="text-[10px] uppercase tracking-[0.18em] text-text-secondary font-bold mt-1">
                   {profile.confidence} confidence · {reviewLabel}
                 </p>
               </div>
@@ -53,13 +56,13 @@ export function SanghiBadge({ profile, compact = false }: SanghiBadgeProps) {
 
         {!eligible && (
           <div className="rounded-2xl border border-amber-200/15 bg-amber-300/[0.06] px-4 py-3 text-xs leading-relaxed text-text-secondary">
-            Calibration record. This verdict has not yet passed the v1 editorial publication gate.
+            Calibration record. This verdict has not yet passed the editorial publication gate.
           </div>
         )}
 
         {compact && (
           <div className="border-t border-white/10 pt-4 space-y-3">
-            <p className="text-[9px] font-black uppercase tracking-[0.24em] text-text-secondary">Why you’re seeing this</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.24em] text-text-secondary">Why this result</p>
             <div className="space-y-2">
               {profile.reasons.slice(0, 2).map((reason, index) => (
                 <div key={reason} className="flex gap-3 text-sm leading-relaxed text-text-secondary">
