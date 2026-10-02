@@ -14,7 +14,7 @@ export function SEO({
   title = "Culture Check — Every film held up to Bharat's values.",
   description = "Discover Indian cinema across major OTT platforms with evidence-backed Bharatiya editorial analysis and Sanghi Certified context.",
   image = "/hero.png",
-  url = "https://justflickpick.netlify.app/",
+  url = "https://culturechk.netlify.app/",
   type = "website",
   schemaData
 }: SEOProps) {
