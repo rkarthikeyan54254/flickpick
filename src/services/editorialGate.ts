@@ -1,16 +1,18 @@
 import type { IntegrityFlag, SanghiProfile } from '../types/sanghi';
 import { editorialEscalations } from '../data/editorialEscalations';
+import { editorialApprovals } from '../data/editorialApprovals';
 
 export type PublicationLane = 'auto-publish' | 'provisional-hold' | 'human-review';
 
 export interface EditorialGateResult {
-  /** True only when this record may publish without a human exception review. */
+  /** True only when this record may publish without a pending human exception review. */
   eligible: boolean;
   /** True when the evidence/process gate passed even if an exception review is required. */
   gatePassed: boolean;
   failures: string[];
   lane: PublicationLane;
   escalationReasons: string[];
+  approvalApplied: boolean;
 }
 
 const HIGH_RISK_INTEGRITY_TYPES = new Set([
@@ -69,6 +71,7 @@ export function evaluateEditorialGate(profile: SanghiProfile): EditorialGateResu
       failures,
       lane: 'provisional-hold',
       escalationReasons,
+      approvalApplied: false,
     };
   }
 
@@ -77,18 +80,21 @@ export function evaluateEditorialGate(profile: SanghiProfile): EditorialGateResu
     escalationReasons.push(...highRiskFindings.map((flag) => `high-risk-integrity:${flag.type}:${flag.status}`));
   }
 
-  const calibrated = editorialEscalations[escalationKey(profile)] || [];
+  const key = escalationKey(profile);
+  const calibrated = editorialEscalations[key] || [];
   escalationReasons.push(...calibrated.map((reason) => `calibration:${reason}`));
 
   if (profile.confidence !== 'high') escalationReasons.push(`confidence:${profile.confidence}`);
 
-  if (escalationReasons.length > 0) {
+  const approvalApplied = Boolean(editorialApprovals[key]);
+  if (escalationReasons.length > 0 && !approvalApplied) {
     return {
       eligible: false,
       gatePassed: true,
       failures,
       lane: 'human-review',
       escalationReasons,
+      approvalApplied: false,
     };
   }
 
@@ -98,6 +104,7 @@ export function evaluateEditorialGate(profile: SanghiProfile): EditorialGateResu
     failures,
     lane: 'auto-publish',
     escalationReasons,
+    approvalApplied,
   };
 }
 
