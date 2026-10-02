@@ -3,28 +3,28 @@
 @tailwind utilities;
 
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --text-primary: #111111;
-  --text-secondary: #666666;
-  --accent-main: #9333ea;
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(0, 0, 0, 0.05);
+  --bg-primary: #f7f1e7;
+  --bg-secondary: #efe6d8;
+  --text-primary: #1f1712;
+  --text-secondary: #725f52;
+  --accent-main: #c65a18;
+  --glass-bg: rgba(255, 251, 245, 0.72);
+  --glass-border: rgba(69, 45, 28, 0.10);
 }
 
 .dark {
-  --bg-primary: #000000;
-  --bg-secondary: #0a0a0a;
-  --text-primary: #ffffff;
-  --text-secondary: #a1a1aa;
-  --accent-main: #a855f7;
-  --glass-bg: rgba(20, 20, 20, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  --bg-primary: #0b0908;
+  --bg-secondary: #15110e;
+  --text-primary: #fff8ef;
+  --text-secondary: #b7a79b;
+  --accent-main: #fb923c;
+  --glass-bg: rgba(24, 18, 14, 0.68);
+  --glass-border: rgba(255, 237, 213, 0.10);
 }
 
 @layer base {
   body {
-    @apply antialiased transition-colors duration-500 font-sans selection:bg-purple-500/30;
+    @apply antialiased transition-colors duration-500 font-sans selection:bg-orange-500/30;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     letter-spacing: -0.01em;
@@ -47,28 +47,28 @@
   }
 
   .chic-btn-primary {
-    @apply chic-btn bg-white text-black hover:bg-gray-100 shadow-xl hover:shadow-white/10;
+    @apply chic-btn bg-stone-950 text-orange-50 hover:bg-stone-900 shadow-xl hover:shadow-orange-950/10;
   }
 
   .dark .chic-btn-primary {
-    @apply bg-white text-black hover:bg-gray-200;
+    @apply bg-orange-50 text-stone-950 hover:bg-orange-100;
   }
 
   .chic-btn-secondary {
-    @apply chic-btn chic-glass hover:bg-white/10;
+    @apply chic-btn chic-glass hover:bg-orange-400/5;
     color: var(--text-primary);
   }
 
   .chic-input {
-    @apply chic-glass px-6 py-4 rounded-2xl outline-none focus:ring-2 focus:ring-purple-500/50 w-full text-lg;
+    @apply chic-glass px-6 py-4 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/40 w-full text-lg;
   }
 }
 
 @layer utilities {
   .text-gradient-chic {
-    @apply bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60;
+    @apply bg-clip-text text-transparent bg-gradient-to-b from-orange-50 to-orange-100/60;
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
@@ -82,7 +82,6 @@
   }
 }
 
-/* Custom spotlight animation for movie cards */
 .spotlight-reveal {
   animation: scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

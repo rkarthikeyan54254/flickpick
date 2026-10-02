@@ -23,7 +23,7 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
           <div className="space-y-7">
             <div className="flex flex-wrap items-center gap-3">
               <span className="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-white/10 bg-black/20 text-[9px] font-black uppercase tracking-[0.24em] text-text-secondary">
-                <Icon className="w-4 h-4" /> Editorial verdict
+                <Icon className="w-4 h-4" /> Culture Check verdict
               </span>
               <span className="text-[9px] uppercase tracking-[0.20em] text-text-secondary font-bold">
                 methodology v{profile.methodologyVersion} · reviewed {profile.reviewedAt}
@@ -32,6 +32,9 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
 
             <div className="space-y-3">
               <h3 className="text-4xl md:text-6xl font-black tracking-[-0.04em] leading-none">{verdictLabel}</h3>
+              {profile.status === 'certified' && gate.eligible && (
+                <p className="text-sm font-black text-orange-200">Called an insult. Worn as a badge.</p>
+              )}
               <p className="text-sm md:text-base text-text-secondary font-medium">
                 {profile.confidence.toUpperCase()} confidence · {reviewDepth} · {auditStatus}
               </p>
@@ -40,7 +43,7 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
             {!gate.eligible && (
               <div className="rounded-2xl border border-amber-200/15 bg-amber-300/[0.06] p-4 text-sm leading-relaxed text-text-secondary">
                 <span className="font-black text-amber-100">Publication gate pending.</span>{' '}
-                This calibration record remains provisional until the v1 editorial gate is fully documented.
+                This calibration record remains provisional until the editorial gate is fully documented.
               </div>
             )}
 
@@ -60,7 +63,7 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
           <div className="space-y-5">
             <div className="flex items-end justify-between gap-4">
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.26em] text-text-secondary">Signal map</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.26em] text-text-secondary">Bharatiya signal map</p>
                 <p className="mt-2 text-sm text-text-secondary">Context for the verdict, not a quality score.</p>
               </div>
               <div className="flex flex-wrap gap-2 justify-end">
@@ -73,7 +76,9 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
             </div>
 
             <div className="rounded-[2rem] border border-white/10 bg-black/20 p-5 md:p-6 space-y-4">
-              {dimensions.map(([key, rawValue]) => {
+              {dimensions.length === 0 ? (
+                <p className="text-sm text-text-secondary">The current record is qualitative; dimension values have not yet been backfilled for this title.</p>
+              ) : dimensions.map(([key, rawValue]) => {
                 const value = rawValue as number;
                 const isRisk = key === 'contemptRisk';
                 const width = `${Math.max(0, Math.min(100, value * 20))}%`;
@@ -82,7 +87,7 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
                     <p className="text-[10px] uppercase tracking-[0.14em] text-text-secondary font-black">{dimensionLabels[key] || key}</p>
                     <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
                       <div
-                        className={`h-full rounded-full ${isRisk && value >= 3 ? 'bg-amber-300/80' : 'bg-white/70'}`}
+                        className={`h-full rounded-full ${isRisk && value >= 3 ? 'bg-amber-300/80' : 'bg-orange-100/75'}`}
                         style={{ width }}
                       />
                     </div>
@@ -99,7 +104,7 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
         <div className="space-y-5">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.26em] text-text-secondary">Narrative integrity</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.26em] text-text-secondary">Narrative Integrity</p>
               <h4 className="mt-2 text-2xl md:text-3xl font-black tracking-tight">What changed, what it may mean, and what we can actually prove.</h4>
             </div>
             {profile.integrityFlags.length > 0 && (
@@ -111,7 +116,7 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
 
           {profile.integrityFlags.length === 0 ? (
             <div className="rounded-2xl border border-white/10 bg-black/20 p-5 text-text-secondary">
-              No material narrative-integrity concern is recorded in the current review.
+              No material Narrative Integrity concern is recorded in the current review.
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4">
@@ -178,7 +183,7 @@ export function SanghiPanel({ profile }: SanghiPanelProps) {
         </details>
 
         <p className="text-[11px] text-text-secondary leading-relaxed border-t border-white/10 pt-6">
-          This is a worldview/discovery signal, not a quality rating. The editorial method is explicitly India-grounded and requires facts, interpretation and claims about intent to be kept separate.
+          Culture Check is a declared Bharatiya cultural signal, not a quality rating. Facts, interpretation and claims about intent are kept separate, and factual caveats do not automatically override the certification axis.
         </p>
       </div>
     </section>
