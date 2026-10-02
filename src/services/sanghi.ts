@@ -2,6 +2,7 @@ import { sanghiProfiles } from '../data/sanghiProfiles';
 import { sanghiProfileRevisions } from '../data/sanghiProfileRevisions';
 import { batch02Profiles } from '../data/batch02Profiles';
 import { corpusExpansion01 } from '../data/corpusExpansion01';
+import { continuousCorpusProfiles } from '../data/continuousCorpusProfiles';
 import type { Movie } from '../types/movie';
 import type { CertificationStatus, SanghiProfile } from '../types/sanghi';
 import { evaluateEditorialGate, isPublicationEligible } from './editorialGate';
@@ -22,6 +23,9 @@ function allProfileVersions() {
   return [
     ...sanghiProfileRevisions,
     ...corpusExpansion01,
+    // Expansion 01 owns Kadaisi Vivasayi's canonical 2022 public-release record.
+    // Excluding the earlier festival/premiere-year variant prevents a duplicate title in discovery.
+    ...continuousCorpusProfiles.filter((profile) => normalizeTitle(profile.title) !== 'kadaisi vivasayi'),
     ...batch02Profiles,
     ...sanghiProfiles,
   ];
@@ -97,7 +101,7 @@ export function getCorpusStats() {
     totalProfiles: profiles.length,
     batch02Total: batch.length,
     batch02GatePassed: gatePassed,
-    // Kept for the home-page wording: "reviewed" means gate-passed, not necessarily auto-published.
+    // Internal/admin metric only; consumer UI intentionally does not market corpus counts.
     batch02Published: gatePassed,
     batch02AutoPublish: results.filter((result) => result.lane === 'auto-publish').length,
     batch02HumanReview: results.filter((result) => result.lane === 'human-review').length,
