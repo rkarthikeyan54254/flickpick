@@ -43,6 +43,7 @@ function allProfileVersions() {
     ...fullRecertificationV2Batch02,
     ...fullRecertificationV2Batch01,
   ];
+  const migrationTitles = new Set(migrationProfiles.map((profile) => normalizeTitle(profile.title)));
   const hardenedNextTitles = new Set(
     [
       ...migrationProfiles,
@@ -65,7 +66,7 @@ function allProfileVersions() {
 
   return [
     ...migrationProfiles,
-    ...editorialIntegrityRevisions.filter((profile) => !hardenedNextTitles.has(normalizeTitle(profile.title))),
+    ...editorialIntegrityRevisions.filter((profile) => !migrationTitles.has(normalizeTitle(profile.title))),
     chakDeIndiaRevision,
     rangDeBasantiRevision,
     ...latestProfiles,
