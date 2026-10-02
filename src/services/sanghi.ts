@@ -11,6 +11,7 @@ import { fullRecertificationV2Batch04 } from '../data/fullRecertificationV2Batch
 import { fullRecertificationV2Batch05 } from '../data/fullRecertificationV2Batch05';
 import { fullRecertificationV2OwnerExceptions } from '../data/fullRecertificationV2OwnerExceptions';
 import { fullRecertificationV2Overrides } from '../data/fullRecertificationV2Overrides';
+import { fullRecertificationV2Residual } from '../data/fullRecertificationV2Residual';
 import { fullRecertificationV2Worker2Batch01 } from '../data/fullRecertificationV2Worker2Batch01';
 import { fullRecertificationV2Worker3Batch01 } from '../data/fullRecertificationV2Worker3Batch01';
 import { fullRecertificationV2Worker3Batch02 } from '../data/fullRecertificationV2Worker3Batch02';
@@ -50,6 +51,7 @@ function allProfileVersions() {
     // Explicit calibration overrides always win.
     ...fullRecertificationV2Overrides,
     ...fullRecertificationV2OwnerExceptions,
+    ...fullRecertificationV2Residual,
 
     // Parallel worker shards are the deepest title-specific re-audits and therefore
     // take precedence over overlapping integration batches created while workers ran.
@@ -211,6 +213,7 @@ export function getCorpusStats() {
     migratedV2Profiles:
       fullRecertificationV2Overrides.length +
       fullRecertificationV2OwnerExceptions.length +
+      fullRecertificationV2Residual.length +
       fullRecertificationV2Worker2Batch01.length +
       fullRecertificationV2Worker3Batch01.length +
       fullRecertificationV2Worker3Batch02.length +
