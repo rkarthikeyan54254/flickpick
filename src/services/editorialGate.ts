@@ -1,4 +1,5 @@
 import type { IntegrityFlag, SanghiProfile } from '../types/sanghi';
+import { editorialEscalations } from '../data/editorialEscalations';
 
 export type PublicationLane = 'auto-publish' | 'provisional-hold' | 'human-review';
 
@@ -25,6 +26,10 @@ function isHighRiskIntegrityFlag(flag: IntegrityFlag) {
     HIGH_RISK_INTEGRITY_TYPES.has(flag.type) &&
     ['verified', 'supported', 'disputed'].includes(flag.status)
   );
+}
+
+function escalationKey(profile: SanghiProfile) {
+  return `${profile.title.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, ' ').trim()}::${profile.year}`;
 }
 
 export function evaluateEditorialGate(profile: SanghiProfile): EditorialGateResult {
@@ -57,47 +62,28 @@ export function evaluateEditorialGate(profile: SanghiProfile): EditorialGateResu
   }
 
   const unverifiedIntegrity = profile.integrityFlags.filter((flag) => flag.status === 'unverified');
-  if (unverifiedIntegrity.length > 0) {
-    failures.push('unverified-integrity-finding');
-  }
+  if (unverifiedIntegrity.length > 0) failures.push('unverified-integrity-finding');
 
   const eligible = failures.length === 0;
-
   if (!eligible) {
-    return {
-      eligible,
-      failures,
-      lane: 'provisional-hold',
-      escalationReasons,
-    };
+    return { eligible, failures, lane: 'provisional-hold', escalationReasons };
   }
 
   const highRiskFindings = profile.integrityFlags.filter(isHighRiskIntegrityFlag);
   if (highRiskFindings.length > 0) {
-    escalationReasons.push(
-      ...highRiskFindings.map((flag) => `high-risk-integrity:${flag.type}:${flag.status}`),
-    );
+    escalationReasons.push(...highRiskFindings.map((flag) => `high-risk-integrity:${flag.type}:${flag.status}`));
   }
 
-  if (profile.confidence !== 'high') {
-    escalationReasons.push(`confidence:${profile.confidence}`);
-  }
+  const calibrated = editorialEscalations[escalationKey(profile)] || [];
+  escalationReasons.push(...calibrated.map((reason) => `calibration:${reason}`));
+
+  if (profile.confidence !== 'high') escalationReasons.push(`confidence:${profile.confidence}`);
 
   if (escalationReasons.length > 0) {
-    return {
-      eligible,
-      failures,
-      lane: 'human-review',
-      escalationReasons,
-    };
+    return { eligible, failures, lane: 'human-review', escalationReasons };
   }
 
-  return {
-    eligible,
-    failures,
-    lane: 'auto-publish',
-    escalationReasons,
-  };
+  return { eligible, failures, lane: 'auto-publish', escalationReasons };
 }
 
 export function isPublicationEligible(profile: SanghiProfile) {
