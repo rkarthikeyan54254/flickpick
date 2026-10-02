@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://movieselectprime.netlify.app/sitemap.xml
+Sitemap: https://justflickpick.netlify.app/sitemap.xml
