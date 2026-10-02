@@ -1,105 +1,55 @@
 # Sanghi Certified — Batch 02 progress
 
-**Branch:** `sanghi-certified-batch-02-50`  
+**Review branch:** `sanghi-certified-batch-02-50-pr`  
 **Editorial lens:** Bharatiyanism Editorial Lens v1  
 **Evidence/process:** v0.3 + Editorial Publication Gate v1  
 **Target:** 50 films (10 each Hindi/Tamil/Telugu/Malayalam/Kannada)
 
-## Status
+## Current state
 
-| Language | Target | Researched | Gate-passed | Provisional |
-|---|---:|---:|---:|---:|
-| Hindi | 10 | 10 | 9 | 1 |
-| Tamil | 10 | 10 | 9 | 1 |
-| Telugu | 10 | 10 | 9 | 1 |
-| Malayalam | 10 | 10 | 10 | 0 |
-| Kannada | 10 | 10 | 10 | 0 |
-| **Total** | **50** | **50** | **47** | **3** |
+| Metric | Count |
+|---|---:|
+| Researched | 50 / 50 |
+| Machine-readable profiles | 50 / 50 |
+| Evidence/process gate passed | 47 / 50 |
+| Auto-publish lane | 40 |
+| Human-review exception lane | 7 |
+| Provisional evidence holds | 3 |
 
-The research corpus is complete. A Bharatiyanism recalibration pass has also been completed across the 50 research records. The principal correction is **The Kerala Story: Mixed / Contested → Sanghi Certified**, while retaining its quantitative promotional claim as a separate high-severity Narrative Integrity warning. See `BHARATIYANISM_RECALIBRATION_PASS.md`.
+The research corpus, Bharatiyanism recalibration, machine-readable packaging, three-lane publication router, structured challenge flow, revision-history surface, visual redesign and OTT/provider foundation are now on the review branch.
 
-## Hindi tranche — complete
+The three provisional holds are **Laapataa Ladies, Captain Miller and Mangalavaaram**. They remain non-publication-eligible until the unresolved evidence gap is closed.
 
-1. 12th Fail — Neutral — reviewed
-2. Shershaah — Certified — reviewed
-3. Sam Bahadur — Certified — reviewed
-4. Sardar Udham — Certified — reviewed, historical-fidelity findings
-5. The Kerala Story — **Certified — reviewed; high-severity quantitative Narrative Integrity warning**
-6. Brahmāstra: Part One – Shiva — Certified — reviewed
-7. Animal — Mixed / Contested — reviewed
-8. Laapataa Ladies — **provisional hold**
-9. Rocketry: The Nambi Effect — Mixed / Contested — reviewed
-10. Ram Setu — Mixed / Contested — reviewed
+The seven calibrated human-review exceptions are **Sardar Udham, The Kerala Story, Animal, Rocketry: The Nambi Effect, Ram Setu, Major and Kannur Squad**. These records pass the base evidence/process gate but remain outside auto-publish until the exception review is cleared.
 
-## Tamil tranche — complete
+The remaining 40 Batch 02 records are routed to the auto-publish lane. The point of the router is to make the owner an exception reviewer rather than a line-by-line reviewer of the corpus.
 
-11. Lubber Pandhu — Neutral — reviewed
-12. Captain Miller — **provisional hold**
-13. Maaveeran — Neutral — reviewed
-14. Parking — Neutral — reviewed
-15. Ayothi — Mixed / Contested — reviewed
-16. Meiyazhagan — Certified — reviewed
-17. Vaazhai — Mixed / Contested — reviewed
-18. Kottukkaali — Mixed / Contested — reviewed
-19. Aranmanai 4 — Neutral — reviewed
-20. Raayan — Neutral — reviewed
+## Language coverage
 
-## Telugu tranche — complete
+### Hindi
+12th Fail · Shershaah · Sam Bahadur · Sardar Udham · The Kerala Story · Brahmāstra: Part One – Shiva · Animal · Laapataa Ladies · Rocketry: The Nambi Effect · Ram Setu
 
-21. Balagam — Certified — reviewed
-22. Virupaksha — Mixed / Contested — reviewed
-23. Dasara — Mixed / Contested — reviewed
-24. Major — Certified — reviewed
-25. Sita Ramam — Mixed / Contested — reviewed
-26. Akhanda — Certified — reviewed
-27. Bimbisara — Certified — reviewed
-28. GodFather — Neutral — reviewed
-29. Mangalavaaram — **provisional hold**
-30. Hi Nanna — Neutral — reviewed
+### Tamil
+Lubber Pandhu · Captain Miller · Maaveeran · Parking · Ayothi · Meiyazhagan · Vaazhai · Kottukkaali · Aranmanai 4 · Raayan
 
-## Malayalam tranche — complete
+### Telugu
+Balagam · Virupaksha · Dasara · Major · Sita Ramam · Akhanda · Bimbisara · GodFather · Mangalavaaram · Hi Nanna
 
-31. Aattam — Neutral — reviewed
-32. Bramayugam — Mixed / Contested — reviewed
-33. Aadujeevitham / The Goat Life — Mixed / Contested — reviewed
-34. Premalu — Neutral — reviewed
-35. Manjummel Boys — Neutral — reviewed
-36. Kaathal – The Core — Mixed / Contested — reviewed
-37. Neru — Neutral — reviewed
-38. Aavesham — Neutral — reviewed
-39. Kannur Squad — Mixed / Contested — reviewed
-40. Jana Gana Mana — Mixed / Contested — reviewed
+### Malayalam
+Aattam · Bramayugam · Aadujeevitham / The Goat Life · Premalu · Manjummel Boys · Kaathal – The Core · Neru · Aavesham · Kannur Squad · Jana Gana Mana
 
-## Kannada tranche — complete
+### Kannada
+Garuda Gamana Vrishabha Vahana · Sapta Sagaradaache Ello – Side B · K.G.F: Chapter 1 · Kaatera · Daredevil Musthafa · Avane Srimannarayana · Toby · Hostel Hudugaru Bekagiddare · Lucia · Godhi Banna Sadharana Mykattu
 
-41. Garuda Gamana Vrishabha Vahana — Mixed / Contested — reviewed; sacred archetype/gangster transposition audited
-42. Sapta Sagaradaache Ello — Side B — Neutral — reviewed; stalking/gender-agency criticism separated from Bharatiya classification
-43. K.G.F: Chapter 1 — Neutral — reviewed; violence/hero worship not converted into Bharatiya signal
-44. Kaatera — Mixed / Contested — reviewed; caste/custom representation audited; unverified social allegation excluded from verdict
-45. Daredevil Musthafa — Mixed / Contested — reviewed; communal-harmony thesis plus representation asymmetry recorded
-46. Avane Srimannarayana — Neutral — reviewed; mythic vocabulary distinguished from devotional claim
-47. Toby — Mixed / Contested — reviewed; Maari sacred archetype/violence transposition recorded
-48. Hostel Hudugaru Bekagiddare — Neutral — reviewed control
-49. Lucia — Neutral — reviewed control
-50. Godhi Banna Sadharana Mykattu — Certified — reviewed; filial/family dharma signal
+## Key regression rules
 
-## Batch-wide editorial observations after Bharatiyanism recalibration
+- Bharatiya alignment and factual reliability are independent axes.
+- A factual-integrity failure does not automatically revoke certification unless it materially changes the film's Bharatiya meaning.
+- The Kerala Story is the primary regression case: Certified on the Bharatiya/Raksha axis, with the unsupported-at-scale `32,000` promotional framing preserved as a high-severity Narrative Integrity finding.
+- Critique of caste, patriarchy, state failure, queer identity or social injustice is not anti-Bharatiya by default.
+- Social-media claims are discovery radar only and do not become durable evidence through engagement volume.
+- Neutral is an audited conclusion, not an absence of research.
 
-- Bharatiya alignment and factual reliability are independent axes. Certification never means every factual claim is correct.
-- The Kerala Story is the regression case: its Bharatiya/Raksha alignment survives while the unsupported-at-scale `32,000` promotional framing remains a visible Narrative Integrity warning.
-- Historical/biographical certification can coexist with fidelity flags; Sardar Udham and Major demonstrate this.
-- Creator intent cannot erase a representation choice; Animal remains a regression case.
-- Critique of patriarchy/caste/state failure is not anti-Bharatiya by default; the Tamil tranche, Dasara, Aattam, Jana Gana Mana and Kaatera reinforce the guardrail.
-- Positive rootedness is not immunity from adversarial critique; Meiyazhagan, Balagam and Bramayugam retain sourced caveats/disputes.
-- Faith and empirical/historical claims remain separate layers; Ram Setu, Akhanda, Bimbisara and Manjummel Boys reinforce this distinction.
-- Patriotism and biographical accuracy are independent axes; Rocketry, Major and Kannur Squad make this especially clear.
-- Genre supernaturalism can create a real mixed signal; Virupaksha and Bramayugam require description of the tension rather than flattening it.
-- Neutral is an audited conclusion, not absence of research.
-- Queer representation or female agency is not itself anti-Bharatiya; Kaathal and Premalu are explicit regression checks against inverse-bias classification.
-- Real-event films need adaptation-level labels: literal reconstruction, composite, literary adaptation, inspired-by, and fictional collage are not interchangeable.
-- Sacred metaphor needs a transposition test: GGVV and Toby are rooted and respectful in important ways while deliberately mapping sacred archetypes onto violent men.
-- Social-media allegations remain radar only. No durable verdict relies on engagement volume or an unverified post.
+## Review artifact
 
-## Remaining work before PR
-
-Research coverage and Bharatiyanism recalibration are complete. Before the batch is review-ready: (1) convert tranche research into machine-readable `SanghiProfile` records on this branch, (2) preserve the three provisional holds as non-publication-eligible, (3) run/inspect gate eligibility across all 50, (4) finalize the batch review report from the recalibration record, and (5) open the PR against `main`. Do not merge before human review.
+See `BATCH_02_REVIEW_REPORT.md` for the review-ready summary, publication-lane semantics, product changes and OTT foundation.
