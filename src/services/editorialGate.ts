@@ -34,6 +34,10 @@ function isHighRiskIntegrityFlag(flag: IntegrityFlag) {
   );
 }
 
+function isUnresolvedHighRiskIntegrityFlag(flag: IntegrityFlag) {
+  return HIGH_RISK_INTEGRITY_TYPES.has(flag.type) && flag.status === 'disputed';
+}
+
 function escalationKey(profile: SanghiProfile) {
   return `${profile.title.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, ' ').trim()}::${profile.year}`;
 }
@@ -98,8 +102,10 @@ function evaluateEvidenceDerivedV2(profile: SanghiProfile): EditorialGateResult 
 
   escalationReasons.push(...readiness.ambiguousHighRisk.map((id) => `research-ambiguity:${id}`));
 
-  const highRiskFindings = profile.integrityFlags.filter(isHighRiskIntegrityFlag);
-  escalationReasons.push(...highRiskFindings.map((flag) => `high-risk-integrity:${flag.type}:${flag.status}`));
+  // In v2, a supported/verified caveat is already adjudicated and remains visible without
+  // creating a human bottleneck. Only materially disputed high-risk findings escalate.
+  const unresolvedHighRisk = profile.integrityFlags.filter(isUnresolvedHighRiskIntegrityFlag);
+  escalationReasons.push(...unresolvedHighRisk.map((flag) => `high-risk-integrity:${flag.type}:${flag.status}`));
 
   const key = escalationKey(profile);
   escalationReasons.push(...(editorialEscalations[key] || []).map((reason) => `calibration:${reason}`));
