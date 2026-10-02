@@ -12,6 +12,7 @@ import { hardenedCorpusNextB } from '../data/hardenedCorpusNextB';
 import { hardenedCorpus50 } from '../data/hardenedCorpus50';
 import { hardenedCorpus50B } from '../data/hardenedCorpus50B';
 import { latestCertificationProfiles } from '../data/latestCertificationProfiles';
+import { latestCertificationProfilesExtra } from '../data/latestCertificationProfilesExtra';
 import type { Movie } from '../types/movie';
 import type { CertificationStatus, SanghiProfile } from '../types/sanghi';
 import { evaluateEditorialGate, isPublicationEligible } from './editorialGate';
@@ -29,8 +30,9 @@ function profileKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
 }
 
 function allProfileVersions() {
+  const latestProfiles = [...latestCertificationProfilesExtra, ...latestCertificationProfiles];
   const hardenedNextTitles = new Set(
-    [...latestCertificationProfiles, ...hardenedCorpus50B, ...hardenedCorpus50, ...hardenedCorpusNextA, ...hardenedCorpusNextB]
+    [...latestProfiles, ...hardenedCorpus50B, ...hardenedCorpus50, ...hardenedCorpusNextA, ...hardenedCorpusNextB]
       .map((profile) => normalizeTitle(profile.title))
   );
   const focusedExpansionTitles = new Set(
@@ -44,7 +46,7 @@ function allProfileVersions() {
   return [
     chakDeIndiaRevision,
     rangDeBasantiRevision,
-    ...latestCertificationProfiles,
+    ...latestProfiles,
     ...hardenedCorpus50B,
     ...hardenedCorpus50,
     ...hardenedCorpusNextA,
@@ -143,6 +145,8 @@ export function getCorpusStats() {
     batch02AutoPublish: results.filter((result) => result.lane === 'auto-publish').length,
     batch02HumanReview: results.filter((result) => result.lane === 'human-review').length,
     batch02Provisional: results.filter((result) => result.lane === 'provisional-hold').length,
+    nextHardenedBatchTotal: hardenedCorpus50B.length,
+    latestCertifiedOrReviewed: latestCertificationProfiles.length + latestCertificationProfilesExtra.length,
   };
 }
 
