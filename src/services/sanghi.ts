@@ -31,6 +31,7 @@ import { hardenedCorpus50C } from '../data/hardenedCorpus50C';
 import { hardenedCorpus50D } from '../data/hardenedCorpus50D';
 import { latestCertificationProfiles } from '../data/latestCertificationProfiles';
 import { latestCertificationProfilesExtra } from '../data/latestCertificationProfilesExtra';
+import { pakistanTerrorPerspectiveRevisions } from '../data/pakistanTerrorPerspectiveRevisions';
 import type { Movie } from '../types/movie';
 import type { CertificationStatus, SanghiProfile } from '../types/sanghi';
 import { evaluateEditorialGate, isPublicationEligible } from './editorialGate';
@@ -78,6 +79,7 @@ function allProfileVersions() {
   const migrationTitles = new Set(migrationProfiles.map((profile) => normalizeTitle(profile.title)));
   const hardenedNextTitles = new Set(
     [
+      ...pakistanTerrorPerspectiveRevisions,
       ...migrationProfiles,
       ...editorialIntegrityRevisions,
       ...latestProfiles,
@@ -98,6 +100,8 @@ function allProfileVersions() {
   );
 
   return [
+    // Binding perspective hard-gate revisions have the highest title/year precedence.
+    ...pakistanTerrorPerspectiveRevisions,
     ...migrationProfiles,
     ...editorialIntegrityRevisions.filter((profile) => !migrationTitles.has(normalizeTitle(profile.title))),
     chakDeIndiaRevision,
