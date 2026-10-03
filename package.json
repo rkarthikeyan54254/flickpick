@@ -12,7 +12,7 @@
     "validate:50d": "vite build --ssr src/services/corpus50DAudit.ts --outDir .corpus50d-audit --emptyOutDir && node scripts/validate-corpus-50d.mjs",
     "validate:50e": "vite build --ssr src/services/corpus50EAudit.ts --outDir .corpus50e-audit --emptyOutDir && node scripts/validate-corpus-50e.mjs",
     "validate:50f": "vite build --ssr src/services/corpus50FAudit.ts --outDir .corpus50f-audit --emptyOutDir && node scripts/validate-corpus-50f.mjs",
-    "validate:next150queue": "node scripts/validate-next-150-queue.mjs"
+    "validate:next150queue": "vite build --ssr src/services/next150QueueAudit.ts --outDir .next150queue-audit --emptyOutDir && node scripts/validate-next-150-queue.mjs"
   },
   "dependencies": {
     "axios": "^1.6.7",
