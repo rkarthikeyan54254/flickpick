@@ -60,6 +60,8 @@ function revise(spec: RevisionSpec): SanghiProfile {
       discoveryQueries: [
         ...dossier.discoveryQueries,
         `${spec.source.title} Pakistan terrorist militant perspective humanisation reconciliation rehabilitation moral equivalence`,
+        `${spec.source.title} religion caste community identity representation Pakistan cross border`,
+        `${spec.source.title} controversy criticism accuracy factual dispute Pakistan terror perspective`,
       ],
       strongestCounterEvidence: [...dossier.strongestCounterEvidence, spec.evidence],
       redTeam: {
