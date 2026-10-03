@@ -21,7 +21,7 @@ The tranche counts only Tamil-primary film records. Dubbed versions of films who
 ## 50-title verdict list
 
 1. Anbil Avan (2026) — Mixed / Contested
-2. Yezhu Kadal Yezhu Malai (2026) — Sanghi Certified
+2. Vaa Vaathiyaar (2026) — Sanghi Certified
 3. Baththa (2026) — Sanghi Certified
 4. Dorothy (2026) — Sanghi Certified
 5. The Grand Master (2026) — Sanghi Certified
