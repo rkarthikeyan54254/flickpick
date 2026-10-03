@@ -18,4 +18,5 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run validate:recert
+      - run: npm run validate:50d
       - run: npm run build
