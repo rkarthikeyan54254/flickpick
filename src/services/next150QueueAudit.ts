@@ -109,4 +109,5 @@ export const next150QueueAudit = {
   duplicateWithinQueue,
   overlapsWithExistingCorpus,
   wrongCohortLanguage,
+  candidates: certificationNext150Queue,
 };
