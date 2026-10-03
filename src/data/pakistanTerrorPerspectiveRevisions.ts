@@ -6,14 +6,21 @@ import { hardenedCorpus50E } from './hardenedCorpus50E';
 import { hardenedCorpusNextB } from './hardenedCorpusNextB';
 
 const reviewedAt = '2026-10-03';
+const sourceProfiles: SanghiProfile[] = [
+  ...fullRecertificationV2Batch05,
+  ...hardenedCorpus50,
+  ...hardenedCorpus50D,
+  ...hardenedCorpus50E,
+  ...hardenedCorpusNextB,
+];
 
 function normalizeTitle(value: string) {
   return value.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
-function requireProfile(pool: SanghiProfile[], title: string, year: number) {
+function requireProfile(title: string, year: number) {
   const normalized = normalizeTitle(title);
-  const profile = pool.find(
+  const profile = sourceProfiles.find(
     (candidate) => normalizeTitle(candidate.title) === normalized && candidate.year === year,
   );
   if (!profile) throw new Error(`Missing source profile for Pakistan/terror perspective revision: ${title} (${year})`);
@@ -71,15 +78,15 @@ function revise(spec: RevisionSpec): SanghiProfile {
   };
 }
 
-const border = requireProfile(hardenedCorpus50, 'Border', 1997);
-const chalMeraPutt = requireProfile(hardenedCorpusNextB, 'Chal Mera Putt', 2019);
-const skyForce = requireProfile(hardenedCorpus50D, 'Sky Force', 2025);
-const sitaRamam = requireProfile(fullRecertificationV2Batch05, 'Sita Ramam', 2022);
-const border2 = requireProfile(hardenedCorpus50E, 'Border 2', 2026);
-const bihuAttack = requireProfile(hardenedCorpus50E, 'Bihu Attack', 2026);
-const mainVaapasAaunga = requireProfile(hardenedCorpus50E, 'Main Vaapas Aaunga', 2026);
-const batwara1947 = requireProfile(hardenedCorpus50E, 'Batwara 1947', 2026);
-const ikkis = requireProfile(hardenedCorpus50E, 'Ikkis', 2026);
+const border = requireProfile('Border', 1997);
+const chalMeraPutt = requireProfile('Chal Mera Putt', 2019);
+const skyForce = requireProfile('Sky Force', 2025);
+const sitaRamam = requireProfile('Sita Ramam', 2022);
+const border2 = requireProfile('Border 2', 2026);
+const bihuAttack = requireProfile('Bihu Attack', 2026);
+const mainVaapasAaunga = requireProfile('Main Vaapas Aaunga', 2026);
+const batwara1947 = requireProfile('Batwara 1947', 2026);
+const ikkis = requireProfile('Ikkis', 2026);
 
 export const pakistanTerrorPerspectiveRevisions: SanghiProfile[] = [
   revise({
