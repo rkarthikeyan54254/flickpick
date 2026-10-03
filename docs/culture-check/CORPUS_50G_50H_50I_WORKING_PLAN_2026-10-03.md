@@ -18,6 +18,7 @@ The initial queue uses 2025 releases because 50E and 50F already cover fresh 202
 Machine-readable research queue: `research/certification-next-150-2026-10-03.json`
 Typed audit queue: `src/data/certificationNext150Queue.ts`
 Full-corpus preflight: `src/services/next150QueueAudit.ts`
+Evidence pilot: `research/certification-next-150-evidence-pilot.md`
 
 ## Binding rules
 
@@ -61,15 +62,20 @@ For every surviving title:
 
 ## Current checkpoint
 
-The branch has been created and the initial 150-title queue committed. CI now compiles a full-corpus preflight audit before validating the queue. The guard verifies:
+Queue hardening is complete for the current candidate set. The first full-corpus preflight found 14 title/year collisions with prior corpus records; a second pass found one additional collision (`Kesari Veer`, 2025). All 15 were replaced rather than overriding earlier certifications.
+
+The current branch-scoped preflight is **PASS** and verifies:
 
 - 50 Hindi candidates
 - 50 Tamil candidates
 - 50 Telugu candidates
-- 150 unique normalized title/year candidate keys across the working queue
+- 150 unique normalized title/year candidate keys
 - zero title/year overlap with the resolved pre-branch corpus
-- 2025 year/language consistency
+- research manifest and typed audit queue contain the same 150 title/year keys
+- 2025 year/language cohort consistency
 - queued/pending verdict state
 - publication hold remains enabled
 
-This is deliberately **not** a certification-complete checkpoint. The queued titles are candidates, not published verdicts. Primary-language verification and title-specific evidence work remain mandatory before the cohort files are wired into the live resolver.
+Title-specific evidence work has started with a nine-film pilot: three Hindi, three Tamil and three Telugu records. These pilot labels are explicitly provisional and remain outside the live resolver.
+
+This is deliberately **not** a certification-complete or merge-ready checkpoint. Primary-language verification plus full evidence-derived v2 dossiers and final editorial/research gates remain mandatory for the full 150 before resolver integration.
