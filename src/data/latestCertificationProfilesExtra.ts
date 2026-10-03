@@ -1,10 +1,12 @@
 import type { SanghiProfile } from '../types/sanghi';
 import { hardenedCorpus50E } from './hardenedCorpus50E';
+import { hardenedCorpus50F } from './hardenedCorpus50F';
 import { makeHardenedBatchFilm } from './hardenedBatch50Factory';
 
-// Keep the Hindi-only 50E tranche at resolver precedence ahead of older hardened batches.
-// It is also entirely 2026-released Hindi material, so it belongs on the latest-certification lane.
+// Keep the latest language-specific hardened tranches at resolver precedence ahead of older batches.
+// Both 50E and 50F are 2026 release tranches, so they belong on the latest-certification lane.
 export const latestCertificationProfilesExtra: SanghiProfile[] = [
+  ...hardenedCorpus50F,
   ...hardenedCorpus50E,
   makeHardenedBatchFilm({
     title: 'Ohh My Dog', year: 2026, language: 'Hindi', status: 'certified', sourceBasis: 'original-fiction',
