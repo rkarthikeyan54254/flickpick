@@ -39,7 +39,7 @@ const hindi50GTitles = [
   "Dil Dosti Aur Dogs",
   "Nadaaniyan",
   "Riwaj",
-  "Kesari Veer",
+  "Detective Sherdil",
   "My Melbourne",
   "Be Happy",
   "Inn Galiyon Mein",
