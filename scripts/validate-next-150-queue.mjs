@@ -15,8 +15,12 @@ function normalizeTitle(value) {
   return value.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
+function candidateKey(title, year) {
+  return `${normalizeTitle(title)}::${year}`;
+}
+
 const failures = [];
-const allKeys = [];
+const researchKeys = [];
 
 if (queue.branch !== 'certification-next-150-hi-ta-te-20261003') failures.push(`unexpected branch marker: ${queue.branch}`);
 if (queue.methodology?.editorialLens !== 'bharatiya-hindu-civilizational') failures.push('editorial lens must remain bharatiya-hindu-civilizational');
@@ -30,34 +34,36 @@ for (const cohort of queue.cohorts || []) {
     continue;
   }
   if (cohort.language !== expectedLanguage) failures.push(`${cohort.id}: expected ${expectedLanguage}, found ${cohort.language}`);
-  if (cohort.targetCount !== 50 || cohort.records?.length !== 50) failures.push(`${cohort.id}: expected exactly 50 records, found ${cohort.records?.length ?? 0}`);
+  if (cohort.year !== 2025) failures.push(`${cohort.id}: expected scoping year 2025, found ${cohort.year}`);
+  if (cohort.stage !== 'queued' || cohort.verdict !== 'pending') failures.push(`${cohort.id}: publication hold state must remain queued/pending`);
+  if (cohort.targetCount !== 50 || cohort.titles?.length !== 50) failures.push(`${cohort.id}: expected exactly 50 titles, found ${cohort.titles?.length ?? 0}`);
 
   const localKeys = new Set();
-  for (const record of cohort.records || []) {
-    const key = `${normalizeTitle(record.title)}::${record.year}`;
+  for (const title of cohort.titles || []) {
+    const key = candidateKey(title, cohort.year);
     if (localKeys.has(key)) failures.push(`${cohort.id}: duplicate ${key}`);
     localKeys.add(key);
-    allKeys.push(key);
-
-    if (record.year !== 2025) failures.push(`${cohort.id}: ${record.title} has unexpected year ${record.year}`);
-    if (record.language !== expectedLanguage) failures.push(`${cohort.id}: ${record.title} has language ${record.language}`);
-    if (record.stage !== 'queued' || record.verdict !== 'pending') failures.push(`${cohort.id}: ${record.title} must remain queued/pending until evidence work is complete`);
+    researchKeys.push(key);
   }
 }
 
-if (allKeys.length !== 150) failures.push(`expected 150 total records, found ${allKeys.length}`);
-if (new Set(allKeys).size !== allKeys.length) failures.push('duplicate title/year key exists across language queues');
+if (researchKeys.length !== 150) failures.push(`expected 150 total research titles, found ${researchKeys.length}`);
+if (new Set(researchKeys).size !== researchKeys.length) failures.push('duplicate title/year key exists across research queues');
 
 if (next150QueueAudit.total !== 150) failures.push(`typed queue expected 150 records, found ${next150QueueAudit.total}`);
 if (next150QueueAudit.unique !== 150) failures.push(`typed queue expected 150 unique records, found ${next150QueueAudit.unique}`);
-if (next150QueueAudit.counts.Hindi !== 50 || next150QueueAudit.counts.Tamil !== 50 || next150QueueAudit.counts.Telugu !== 50) {
-  failures.push(`typed cohort counts wrong: ${JSON.stringify(next150QueueAudit.counts)}`);
-}
+if (next150QueueAudit.counts.Hindi !== 50 || next150QueueAudit.counts.Tamil !== 50 || next150QueueAudit.counts.Telugu !== 50) failures.push(`typed cohort counts wrong: ${JSON.stringify(next150QueueAudit.counts)}`);
 if (next150QueueAudit.duplicateWithinQueue.length) failures.push(`typed queue duplicates: ${next150QueueAudit.duplicateWithinQueue.join(', ')}`);
 if (next150QueueAudit.wrongCohortLanguage.length) failures.push(`typed queue language/cohort mismatches: ${next150QueueAudit.wrongCohortLanguage.map((item) => item.title).join(', ')}`);
-if (next150QueueAudit.overlapsWithExistingCorpus.length) {
-  failures.push(`already-existing title/year candidates: ${next150QueueAudit.overlapsWithExistingCorpus.map((item) => `${item.cohort}:${item.title} (${item.year})`).join(', ')}`);
-}
+if (next150QueueAudit.overlapsWithExistingCorpus.length) failures.push(`already-existing title/year candidates: ${next150QueueAudit.overlapsWithExistingCorpus.map((item) => `${item.cohort}:${item.title} (${item.year})`).join(', ')}`);
+
+const typedKeys = next150QueueAudit.candidates.map((candidate) => candidateKey(candidate.title, candidate.year));
+const researchSet = new Set(researchKeys);
+const typedSet = new Set(typedKeys);
+const missingFromTyped = researchKeys.filter((key) => !typedSet.has(key));
+const missingFromResearch = typedKeys.filter((key) => !researchSet.has(key));
+if (missingFromTyped.length) failures.push(`research-only candidates: ${missingFromTyped.join(', ')}`);
+if (missingFromResearch.length) failures.push(`typed-only candidates: ${missingFromResearch.join(', ')}`);
 
 if (failures.length) {
   console.error('Next-150 queue validation FAILED');
@@ -71,5 +77,6 @@ console.log(JSON.stringify({
   counts: next150QueueAudit.counts,
   unique: next150QueueAudit.unique,
   overlapsWithExistingCorpus: next150QueueAudit.overlapsWithExistingCorpus.length,
+  queueSynchronization: 'PASS',
   publicationHold: queue.methodology.publicationMode,
 }, null, 2));
