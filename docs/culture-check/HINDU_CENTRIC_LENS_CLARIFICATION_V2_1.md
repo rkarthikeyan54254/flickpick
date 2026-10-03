@@ -33,6 +33,22 @@ The community-contempt gate protects people from generalized degradation; it doe
 
 A material community-contempt finding requires film-level evidence that the work generalizes inherent inferiority, collective guilt, ridicule, dehumanization or hatred to a community as a community. A practice-level observation, a villain's identity, asymmetric victim-centred storytelling or criticism of religious doctrine does not satisfy that threshold by itself.
 
+## Film-level certification is not protagonist moral purity
+
+Sanghi Certified evaluates the film's dominant Bharatiya/Hindu-civilizational orientation. It is not a requirement that the protagonist be a saint, model citizen or consistently Dharmic individual.
+
+A protagonist may be violent, adulterous, arrogant, impulsive, criminal, compromised or tragic while the film itself remains strongly rooted in Bharatiya family, lineage, sacred inheritance, civilizational continuity, Raksha, Rashtra or regional tradition. Those character-level failures should lower the relevant Dharma or Social Dharma dimensions and remain visible in the explanation, but they do not automatically reverse a film-level certification.
+
+A moral failing should reverse certification only when the film's dominant treatment materially makes the anti-Dharmic conduct itself the civilizational ideal, uses it to corrode or ridicule Hindu/Bharatiya inheritance, or overwhelms the positive Bharatiya signals so thoroughly that the film-level orientation is no longer substantially compatible with the lens.
+
+The audit must therefore distinguish:
+
+- **character morality** — whether a protagonist behaves Dharmically;
+- **narrative endorsement** — how the film frames or rewards that conduct;
+- **civilizational orientation** — what the film materially affirms, preserves, respects or attacks about Bharatiya/Hindu life.
+
+This distinction prevents a culturally rooted film from being downgraded merely because its central character is morally disordered.
+
 ## Evidence discipline does not change
 
 A Hindu-centric lens does not permit unsupported claims about another community. Numerical prevalence, community-wide behaviour, coordinated conspiracy, conversion scale, demographic claims and historical attribution still require scale-matched evidence.
@@ -49,15 +65,16 @@ This distinction is mandatory:
 
 The audit must not turn that fact into an unsupported claim that Muslim polygyny is a majority practice. The cultural verdict should instead be decided from the film's Bharatiya signals and Dharmic tensions: Punjabi/Sikh rootedness, kinship and lineage, the use of `Arjan Vailly`, protection of family, Indian self-reliance imagery, and the protagonist's serious moral disorder, violence and betrayal.
 
-Therefore, the relevant contest is internal to the Hindu/Bharatiya lens — rootedness and Raksha versus Dharma and Social Dharma — not a requirement to neutralise the film because a Muslim antagonist practices polygyny.
+Ranvijay's moral failures reduce Dharma and Social Dharma, but the protagonist's failure to embody perfect Dharma is not equivalent to the film rejecting Bharatiya civilization. The film's rooted family/lineage grammar, Punjabi/Sikh identity, martial inheritance and Raksha orientation are substantial enough for **Sanghi Certified with explicit Dharmic qualification**.
 
 ## Publication rule
 
 For all future evidence-derived profiles:
 
 1. apply the Bharatiya/Hindu-civilizational lens before assigning cultural dimensions or verdict;
-2. keep factual scrutiny rigorous and scale-matched;
-3. do not treat non-Hindu doctrinal/practice criticism as a negative sacred-valence finding;
-4. do not create a community-contempt finding from identity or a permitted practice alone;
-5. do not manufacture interfaith representational balance;
-6. keep genuine generalized community degradation as a blocking or contesting concern regardless of whether the film otherwise aligns with Bharatiya values.
+2. distinguish protagonist morality from film-level civilizational orientation;
+3. keep factual scrutiny rigorous and scale-matched;
+4. do not treat non-Hindu doctrinal/practice criticism as a negative sacred-valence finding;
+5. do not create a community-contempt finding from identity or a permitted practice alone;
+6. do not manufacture interfaith representational balance;
+7. keep genuine generalized community degradation as a blocking or contesting concern regardless of whether the film otherwise aligns with Bharatiya values.
