@@ -3,6 +3,7 @@ import { fullRecertificationV2Batch05 } from './fullRecertificationV2Batch05';
 import { hardenedCorpus50 } from './hardenedCorpus50';
 import { hardenedCorpus50D } from './hardenedCorpus50D';
 import { hardenedCorpus50E } from './hardenedCorpus50E';
+import { hardenedCorpusNextB } from './hardenedCorpusNextB';
 
 const reviewedAt = '2026-10-03';
 
@@ -71,7 +72,7 @@ function revise(spec: RevisionSpec): SanghiProfile {
 }
 
 const border = requireProfile(hardenedCorpus50, 'Border', 1997);
-const chalMeraPutt = requireProfile(hardenedCorpus50, 'Chal Mera Putt', 2019);
+const chalMeraPutt = requireProfile(hardenedCorpusNextB, 'Chal Mera Putt', 2019);
 const skyForce = requireProfile(hardenedCorpus50D, 'Sky Force', 2025);
 const sitaRamam = requireProfile(fullRecertificationV2Batch05, 'Sita Ramam', 2022);
 const border2 = requireProfile(hardenedCorpus50E, 'Border 2', 2026);
