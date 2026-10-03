@@ -90,6 +90,7 @@ export type ResearchProbeId =
 
 export type ResearchProbeStatus = 'clear' | 'finding' | 'ambiguous' | 'not-applicable';
 export type ResearchMateriality = 'low' | 'medium' | 'high';
+export type EditorialLens = 'bharatiya-hindu-civilizational';
 
 export interface ResearchProbe {
   id: ResearchProbeId;
@@ -117,6 +118,7 @@ export interface FactInterpretationIntentRecord {
 /** Durable v2 research artifact. Publication is derived from evidence, not pass booleans. */
 export interface ResearchDossier {
   version: '2.0';
+  editorialLens: EditorialLens;
   completedAt: string;
   complete: boolean;
   sourceBasis: ResearchSourceBasis;
