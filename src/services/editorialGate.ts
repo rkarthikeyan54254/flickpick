@@ -44,6 +44,9 @@ function baseFailures(profile: SanghiProfile) {
   if (profile.reasons.length < 2) failures.push('reasons');
   if (profile.evidence.length < 1) failures.push('evidence');
   if (profile.integrityFlags.some((flag) => flag.status === 'unverified')) failures.push('unverified-integrity-finding');
+  if (profile.pakistanTerrorPerspectiveGate === 'fail' && profile.status === 'certified') {
+    failures.push('pakistan-terror-perspective-hard-stop');
+  }
   return failures;
 }
 
