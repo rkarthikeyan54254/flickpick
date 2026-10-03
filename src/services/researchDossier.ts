@@ -40,6 +40,7 @@ function validateDossier(profile: SanghiProfile, dossier: ResearchDossier): Rese
   const urls = evidenceUrls(profile);
 
   if (!dossier.complete) failures.push('dossier-incomplete');
+  if (dossier.editorialLens !== 'bharatiya-hindu-civilizational') failures.push('editorial-lens');
   if (!hasText(dossier.filmUnderstanding)) failures.push('film-understanding');
   if (!dossier.completedAt) failures.push('dossier-completed-at');
 

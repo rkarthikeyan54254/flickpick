@@ -12,11 +12,11 @@ import { REQUIRED_RESEARCH_PROBES } from '../services/researchDossier';
 const DEFAULT_PROBE_SUMMARIES: Record<ResearchProbeId, string> = {
   'source-adaptation': 'Source, adaptation and true-story status were explicitly checked before adjudication.',
   'identity-substitution': 'Religion, caste, community, regional and other identity substitutions were explicitly searched for before adjudication.',
-  'community-contempt': 'Caste, religious, regional and linguistic communities were screened for generalized derogation, recurring stereotyping, slurs, ridicule or asymmetric contempt; criticism of a specific person, practice or institution is not treated as community contempt by itself.',
+  'community-contempt': 'Communities were screened for film-level generalized degradation, collective guilt, ridicule or dehumanization. A negative character, asymmetric conflict, or criticism/depiction of a specific doctrine, practice or institution is not community contempt by itself.',
   'historical-claims': 'Material historical claims and chronology were checked when applicable; no unresolved issue is asserted by this default clearance.',
   'quantitative-claims': 'Material numerical or scale claims were checked when applicable; no unresolved issue is asserted by this default clearance.',
   'real-person-attribution': 'Real-person inspiration, credit and attribution were checked when applicable.',
-  'sacred-religious-valence': 'The film’s treatment of sacred, religious and ritual material was checked for respect, ridicule and narrative asymmetry.',
+  'sacred-religious-valence': 'The film was checked primarily for its treatment of Hindu/Bharatiya sacred inheritance: deities, temples, sacred geography, epics, rituals, gurus, symbols and inherited traditions. Negative treatment of a non-Hindu doctrine or practice is not a negative sacred-valence finding by itself.',
   'regional-context': 'The film was read in its relevant regional and linguistic context rather than flattened into a generic India-wide frame.',
   'creator-source-conflict': 'Creator statements and source/participant accounts were checked for material conflict.',
   'social-radar': 'Public discussion was searched for specific factual, adaptation, identity or representation challenges before adjudication.',
@@ -54,7 +54,8 @@ export function buildDossier(input: DossierInput): ResearchDossier {
 
   return {
     version: '2.0',
-    completedAt: '2026-10-02',
+    editorialLens: 'bharatiya-hindu-civilizational',
+    completedAt: '2026-10-03',
     complete: true,
     sourceBasis: input.sourceBasis,
     filmUnderstanding: input.filmUnderstanding,
@@ -74,7 +75,7 @@ export function hardenedProfile(
   return {
     ...value,
     methodologyVersion: '2.0-evidence-derived',
-    reviewedAt: '2026-10-02',
+    reviewedAt: '2026-10-03',
     reviewDepth: 'source-audit',
     auditStatus: 'hardened',
   };

@@ -4,6 +4,7 @@ import { batch02Profiles } from '../data/batch02Profiles';
 import { chakDeIndiaRevision } from '../data/chakDeIndiaRevision';
 import { rangDeBasantiRevision } from '../data/rangDeBasantiRevision';
 import { editorialIntegrityRevisions } from '../data/editorialIntegrityRevisions';
+import { hinduLensCalibrationRevisions } from '../data/hinduLensCalibrationRevisions';
 import { fullRecertificationV2Batch01 } from '../data/fullRecertificationV2Batch01';
 import { fullRecertificationV2Batch02 } from '../data/fullRecertificationV2Batch02';
 import { fullRecertificationV2Batch03 } from '../data/fullRecertificationV2Batch03';
@@ -48,7 +49,10 @@ function profileKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
 function allProfileVersions() {
   const latestProfiles = [...latestCertificationProfilesExtra, ...latestCertificationProfiles];
   const migrationProfiles = [
-    // Explicit calibration overrides always win.
+    // Binding Hindu/Bharatiya calibration revisions always win over older title records.
+    ...hinduLensCalibrationRevisions,
+
+    // Explicit migration calibration overrides always win over batch records.
     ...fullRecertificationV2Overrides,
     ...fullRecertificationV2OwnerExceptions,
     ...fullRecertificationV2Residual,
@@ -211,6 +215,7 @@ export function getCorpusStats() {
         !isPublicationEligible(profile)
     ).length,
     migratedV2Profiles:
+      hinduLensCalibrationRevisions.length +
       fullRecertificationV2Overrides.length +
       fullRecertificationV2OwnerExceptions.length +
       fullRecertificationV2Residual.length +
