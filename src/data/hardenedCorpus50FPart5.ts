@@ -10,7 +10,7 @@ const rows: Film50FRow[] = [
     fact: 'The story begins with a group of men hiring a single sex worker to accompany them on a trip.',
     caveat: 'The premise can expose exploitation, but it also depends heavily on objectification and transactional treatment of a woman, leaving the film-level social signal contested.',
     evidenceUrl: 'https://minnambalam.com/the-bed-movie-review-in-tamil-2026/', evidenceSource: 'Minnambalam — The Bed review' },
-  { title: 'Anantha', status: 'certified', lane: 'sacred', sourceBasis: 'true-story', risk: 'sacred',
+  { title: 'Anantha', status: 'certified', lane: 'sacred', sourceBasis: 'true-story',
     fact: 'The film is presented around followers’ stories of Sathya Sai Baba and explicitly frames faith and divine grace as transformative.',
     caveat: 'The film is overtly devotional and treats claimed miracles as faith testimony; certification records its sacred-regard orientation without converting those miracle claims into independently verified fact.',
     evidenceUrl: 'https://tv.apple.com/in/movie/anantha/umc.cmc.73irilln2mo5trp3qtisa5488', evidenceSource: 'Apple TV — Anantha' },
