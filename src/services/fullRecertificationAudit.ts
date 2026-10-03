@@ -4,6 +4,7 @@ import { batch02Profiles } from '../data/batch02Profiles';
 import { chakDeIndiaRevision } from '../data/chakDeIndiaRevision';
 import { rangDeBasantiRevision } from '../data/rangDeBasantiRevision';
 import { editorialIntegrityRevisions } from '../data/editorialIntegrityRevisions';
+import { pakistanTerrorPerspectiveRevisions } from '../data/pakistanTerrorPerspectiveRevisions';
 import { fullRecertificationV2Batch01 } from '../data/fullRecertificationV2Batch01';
 import { fullRecertificationV2Batch02 } from '../data/fullRecertificationV2Batch02';
 import { fullRecertificationV2Batch03 } from '../data/fullRecertificationV2Batch03';
@@ -47,6 +48,7 @@ function key(profile: Pick<SanghiProfile, 'title' | 'year'>) {
 }
 
 const candidateProfiles: SanghiProfile[] = [
+  ...pakistanTerrorPerspectiveRevisions,
   ...fullRecertificationV2Overrides,
   ...fullRecertificationV2OwnerExceptions,
   ...fullRecertificationV2Residual,

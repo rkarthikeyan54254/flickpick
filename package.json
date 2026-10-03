@@ -11,7 +11,8 @@
     "validate:recert": "vite build --ssr src/services/fullRecertificationAudit.ts --outDir .recert-audit --emptyOutDir && node scripts/validate-full-recertification.mjs",
     "validate:50d": "vite build --ssr src/services/corpus50DAudit.ts --outDir .corpus50d-audit --emptyOutDir && node scripts/validate-corpus-50d.mjs",
     "validate:50e": "vite build --ssr src/services/corpus50EAudit.ts --outDir .corpus50e-audit --emptyOutDir && node scripts/validate-corpus-50e.mjs",
-    "validate:50f": "vite build --ssr src/services/corpus50FAudit.ts --outDir .corpus50f-audit --emptyOutDir && node scripts/validate-corpus-50f.mjs"
+    "validate:50f": "vite build --ssr src/services/corpus50FAudit.ts --outDir .corpus50f-audit --emptyOutDir && node scripts/validate-corpus-50f.mjs",
+    "validate:perspective": "vite build --ssr src/services/pakistanTerrorPerspectiveAudit.ts --outDir .perspective-audit --emptyOutDir && node scripts/validate-pakistan-terror-perspective.mjs"
   },
   "dependencies": {
     "axios": "^1.6.7",

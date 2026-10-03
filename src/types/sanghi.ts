@@ -8,6 +8,7 @@ export type CertificationStatus =
 export type Confidence = 'high' | 'medium' | 'low';
 export type ReviewDepth = 'desk' | 'source-audit' | 'scene-audit';
 export type AuditStatus = 'provisional' | 'reviewed' | 'hardened';
+export type PakistanTerrorPerspectiveGate = 'not-applicable' | 'clear' | 'fail';
 
 /** Primary languages that receive first-class discovery filters. */
 export type IndianFilmLanguage =
@@ -145,6 +146,11 @@ export interface SanghiProfile {
   auditStatus?: AuditStatus;
   publicationGate?: PublicationGate;
   researchDossier?: ResearchDossier;
+  /**
+   * Binding hard gate for Pakistan/terror perspective handling. A `fail` record may
+   * publish as reviewed, but it can never publish with `status: certified`.
+   */
+  pakistanTerrorPerspectiveGate?: PakistanTerrorPerspectiveGate;
   dimensions: SanghiDimensions;
   tags: string[];
   reasons: string[];
