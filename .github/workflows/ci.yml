@@ -21,4 +21,5 @@ jobs:
       - run: npm run validate:50d
       - run: npm run validate:50e
       - run: npm run validate:50f
+      - run: npm run validate:next150queue
       - run: npm run build
