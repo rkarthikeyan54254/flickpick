@@ -28,6 +28,7 @@ import { hardenedCorpusNextB } from '../data/hardenedCorpusNextB';
 import { hardenedCorpus50 } from '../data/hardenedCorpus50';
 import { hardenedCorpus50B } from '../data/hardenedCorpus50B';
 import { hardenedCorpus50C } from '../data/hardenedCorpus50C';
+import { hardenedCorpus50D } from '../data/hardenedCorpus50D';
 import { latestCertificationProfiles } from '../data/latestCertificationProfiles';
 import { latestCertificationProfilesExtra } from '../data/latestCertificationProfilesExtra';
 import type { Movie } from '../types/movie';
@@ -80,6 +81,7 @@ function allProfileVersions() {
       ...migrationProfiles,
       ...editorialIntegrityRevisions,
       ...latestProfiles,
+      ...hardenedCorpus50D,
       ...hardenedCorpus50C,
       ...hardenedCorpus50B,
       ...hardenedCorpus50,
@@ -101,6 +103,7 @@ function allProfileVersions() {
     chakDeIndiaRevision,
     rangDeBasantiRevision,
     ...latestProfiles,
+    ...hardenedCorpus50D,
     ...hardenedCorpus50C,
     ...hardenedCorpus50B,
     ...hardenedCorpus50,
@@ -236,8 +239,8 @@ export function getCorpusStats() {
     batch02AutoPublish: results.filter((result) => result.lane === 'auto-publish').length,
     batch02HumanReview: results.filter((result) => result.lane === 'human-review').length,
     batch02Provisional: results.filter((result) => result.lane === 'provisional-hold').length,
-    nextHardenedBatchTotal: hardenedCorpus50C.length,
-    previousHardenedBatchTotal: hardenedCorpus50B.length,
+    nextHardenedBatchTotal: hardenedCorpus50D.length,
+    previousHardenedBatchTotal: hardenedCorpus50C.length,
     latestCertifiedOrReviewed: latestCertificationProfiles.length + latestCertificationProfilesExtra.length,
   };
 }
