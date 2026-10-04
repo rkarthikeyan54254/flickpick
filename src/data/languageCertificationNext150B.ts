@@ -41,7 +41,10 @@ import {
   languageCertificationTamilBReplacements,
   languageCertificationTeluguBReplacements,
 } from './languageCertificationBReplacements';
-import { languageCertificationHindiBReplacementExtras } from './languageCertificationBReplacementExtras';
+import {
+  languageCertificationHindiBReplacementExtras,
+  languageCertificationTamilBReplacementExtras,
+} from './languageCertificationBReplacementExtras';
 
 function normalizedKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
   return `${profile.title.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, ' ').trim()}::${profile.year}`;
@@ -114,7 +117,10 @@ export const languageCertificationHindi50BActive = selectNew(
   [...languageCertificationHindiBReplacements, ...languageCertificationHindiBReplacementExtras],
 );
 export const languageCertificationTamil50BActive = selectNew(
-  'Tamil B', 'Tamil', languageCertificationTamil50B, languageCertificationTamilBReplacements,
+  'Tamil B',
+  'Tamil',
+  languageCertificationTamil50B,
+  [...languageCertificationTamilBReplacements, ...languageCertificationTamilBReplacementExtras],
 );
 export const languageCertificationTelugu50BActive = selectNew(
   'Telugu B', 'Telugu', languageCertificationTelugu50B, languageCertificationTeluguBReplacements,
