@@ -33,7 +33,7 @@ import { latestCertificationProfilesExtra } from '../data/latestCertificationPro
 import type { Movie } from '../types/movie';
 import type { SanghiProfile } from '../types/sanghi';
 import { isPublicationEligible } from './editorialGate';
-import { getCorpusStats, getSanghiProfileForAudit } from './sanghi';
+import { getCorpusStats, getSanghiProfile, getSanghiProfileForAudit } from './sanghi';
 
 function normalizeTitle(value: string) {
   return value
@@ -112,8 +112,18 @@ export function getFullRecertificationAudit() {
       isPublicationEligible(profile)
   );
 
+  const localizedTitleMovie = {
+    id: -2,
+    title: 'Two Acres of Land',
+    original_title: 'Do Bigha Zamin',
+    release_date: '1953-01-01',
+  } as Movie & { original_title: string };
+  const localizedTitleProfile = getSanghiProfile(localizedTitleMovie);
+
   return {
     ...getCorpusStats(),
+    originalTitleResolutionRegression:
+      localizedTitleProfile?.title === 'Do Bigha Zamin' && localizedTitleProfile.year === 1953,
     legacyHeld: legacyHeld.map(({ title, year, language, methodologyVersion }) => ({
       title,
       year,
