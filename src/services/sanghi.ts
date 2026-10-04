@@ -158,11 +158,16 @@ function yearMatchesDecade(year: number, decade: string) {
 
 function getCurrentProfile(movie: Movie): SanghiProfile | undefined {
   const year = movieYear(movie);
-  const normalizedMovieTitle = normalizeTitle(movie.title);
+  const originalTitle = (movie as Movie & { original_title?: string }).original_title;
+  const normalizedMovieTitles = new Set(
+    [movie.title, originalTitle]
+      .filter((title): title is string => Boolean(title))
+      .map(normalizeTitle)
+  );
 
   return currentProfiles().find(profile => {
     if (profile.tmdbId && profile.tmdbId === movie.id) return true;
-    const titleMatches = normalizeTitle(profile.title) === normalizedMovieTitle;
+    const titleMatches = normalizedMovieTitles.has(normalizeTitle(profile.title));
     return titleMatches && (!year || profile.year === year);
   });
 }
