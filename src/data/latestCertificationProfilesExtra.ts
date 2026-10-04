@@ -1,11 +1,13 @@
 import type { SanghiProfile } from '../types/sanghi';
 import { hardenedCorpus50E } from './hardenedCorpus50E';
 import { hardenedCorpus50F } from './hardenedCorpus50F';
+import { languageCertificationNext150 } from './languageCertificationNext150';
 import { makeHardenedBatchFilm } from './hardenedBatch50Factory';
 
 // Keep the latest language-specific hardened tranches at resolver precedence ahead of older batches.
-// Both 50E and 50F are 2026 release tranches, so they belong on the latest-certification lane.
+// Binding calibration and Pakistan/terror perspective revisions still win in the resolver before this lane.
 export const latestCertificationProfilesExtra: SanghiProfile[] = [
+  ...languageCertificationNext150,
   ...hardenedCorpus50F,
   ...hardenedCorpus50E,
   makeHardenedBatchFilm({
