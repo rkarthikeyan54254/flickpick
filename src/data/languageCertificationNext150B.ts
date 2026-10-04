@@ -36,36 +36,14 @@ import { languageCertificationNext150 } from './languageCertificationNext150';
 import { languageCertificationHindi50B } from './languageCertificationHindi50B';
 import { languageCertificationTamil50B } from './languageCertificationTamil50B';
 import { languageCertificationTelugu50B } from './languageCertificationTelugu50B';
+import {
+  languageCertificationHindiBReplacements,
+  languageCertificationTamilBReplacements,
+  languageCertificationTeluguBReplacements,
+} from './languageCertificationBReplacements';
 
 function normalizedKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
   return `${profile.title.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, ' ').trim()}::${profile.year}`;
-}
-
-function assertLanguageBatch(name: string, language: string, batch: SanghiProfile[]) {
-  if (batch.length !== 50) throw new Error(`Expected ${name} tranche of 50, got ${batch.length}`);
-  const wrongLanguage = batch.filter((profile) => profile.language !== language);
-  if (wrongLanguage.length) throw new Error(`${name} tranche contains ${wrongLanguage.length} non-${language} records`);
-  const keys = batch.map(normalizedKey);
-  if (new Set(keys).size !== keys.length) throw new Error(`${name} tranche contains duplicate title/year records`);
-}
-
-assertLanguageBatch('Hindi B', 'Hindi', languageCertificationHindi50B);
-assertLanguageBatch('Tamil B', 'Tamil', languageCertificationTamil50B);
-assertLanguageBatch('Telugu B', 'Telugu', languageCertificationTelugu50B);
-
-export const languageCertificationNext150B: SanghiProfile[] = [
-  ...languageCertificationHindi50B,
-  ...languageCertificationTamil50B,
-  ...languageCertificationTelugu50B,
-];
-
-if (languageCertificationNext150B.length !== 150) {
-  throw new Error(`Expected second 150-film language expansion, got ${languageCertificationNext150B.length}`);
-}
-
-const trancheBKeys = languageCertificationNext150B.map(normalizedKey);
-if (new Set(trancheBKeys).size !== trancheBKeys.length) {
-  throw new Error('Second 150-film expansion contains cross-language duplicate title/year records');
 }
 
 const existingCorpus: SanghiProfile[] = [
@@ -106,7 +84,50 @@ const existingCorpus: SanghiProfile[] = [
 ];
 
 const priorKeys = new Set(existingCorpus.map(normalizedKey));
-const overlaps = languageCertificationNext150B.filter((profile) => priorKeys.has(normalizedKey(profile)));
-if (overlaps.length) {
-  throw new Error(`Second 150-film expansion overlaps existing corpus: ${overlaps.map(normalizedKey).join(', ')}`);
+
+function selectNew(
+  name: string,
+  language: string,
+  candidates: SanghiProfile[],
+  replacements: SanghiProfile[],
+) {
+  const retained = candidates.filter((profile) => !priorKeys.has(normalizedKey(profile)));
+  const selected = [...retained, ...replacements];
+  if (selected.length !== 50) {
+    throw new Error(`${name} active tranche expected 50 after overlap replacement, got ${selected.length} (${retained.length} retained + ${replacements.length} replacements)`);
+  }
+  const wrongLanguage = selected.filter((profile) => profile.language !== language);
+  if (wrongLanguage.length) throw new Error(`${name} active tranche contains ${wrongLanguage.length} non-${language} records`);
+  const keys = selected.map(normalizedKey);
+  if (new Set(keys).size !== keys.length) throw new Error(`${name} active tranche contains duplicate title/year records`);
+  const overlaps = selected.filter((profile) => priorKeys.has(normalizedKey(profile)));
+  if (overlaps.length) {
+    throw new Error(`${name} replacements still overlap existing corpus: ${overlaps.map(normalizedKey).join(', ')}`);
+  }
+  return selected;
+}
+
+export const languageCertificationHindi50BActive = selectNew(
+  'Hindi B', 'Hindi', languageCertificationHindi50B, languageCertificationHindiBReplacements,
+);
+export const languageCertificationTamil50BActive = selectNew(
+  'Tamil B', 'Tamil', languageCertificationTamil50B, languageCertificationTamilBReplacements,
+);
+export const languageCertificationTelugu50BActive = selectNew(
+  'Telugu B', 'Telugu', languageCertificationTelugu50B, languageCertificationTeluguBReplacements,
+);
+
+export const languageCertificationNext150B: SanghiProfile[] = [
+  ...languageCertificationHindi50BActive,
+  ...languageCertificationTamil50BActive,
+  ...languageCertificationTelugu50BActive,
+];
+
+if (languageCertificationNext150B.length !== 150) {
+  throw new Error(`Expected second 150-film language expansion, got ${languageCertificationNext150B.length}`);
+}
+
+const trancheBKeys = languageCertificationNext150B.map(normalizedKey);
+if (new Set(trancheBKeys).size !== trancheBKeys.length) {
+  throw new Error('Second 150-film expansion contains cross-language duplicate title/year records');
 }
