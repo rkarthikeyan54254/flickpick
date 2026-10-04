@@ -2,11 +2,13 @@ import type { SanghiProfile } from '../types/sanghi';
 import { hardenedCorpus50E } from './hardenedCorpus50E';
 import { hardenedCorpus50F } from './hardenedCorpus50F';
 import { languageCertificationNext150 } from './languageCertificationNext150';
+import { languageCertificationNext150B } from './languageCertificationNext150B';
 import { makeHardenedBatchFilm } from './hardenedBatch50Factory';
 
 // Keep the latest language-specific hardened tranches at resolver precedence ahead of older batches.
 // Binding calibration and Pakistan/terror perspective revisions still win in the resolver before this lane.
 export const latestCertificationProfilesExtra: SanghiProfile[] = [
+  ...languageCertificationNext150B,
   ...languageCertificationNext150,
   ...hardenedCorpus50F,
   ...hardenedCorpus50E,
