@@ -28,6 +28,11 @@ console.log(
   `Full re-certification audit: total=${audit.totalProfiles}, published=${audit.publishedProfiles}, migrated-v2=${audit.migratedV2Profiles}, legacy-held=${audit.legacyProfilesHeld}`
 );
 
+if (!audit.originalTitleResolutionRegression) {
+  throw new Error('Certification lookup regression: TMDb localized title did not resolve through original_title to Do Bigha Zamin (1953).');
+}
+console.log('Certification lookup regression: localized display title -> original_title resolution PASS');
+
 if (audit.legacyHeld.length) {
   console.error('Current legacy profiles still held:');
   for (const profile of audit.legacyHeld) {
