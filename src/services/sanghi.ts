@@ -27,6 +27,7 @@ import { hardenedCorpusNextB } from '../data/hardenedCorpusNextB';
 import { hardenedCorpus50 } from '../data/hardenedCorpus50';
 import { hardenedCorpus50B } from '../data/hardenedCorpus50B';
 import { hardenedCorpus50C } from '../data/hardenedCorpus50C';
+import { languageCertificationNext150 } from '../data/languageCertificationNext150';
 import { latestCertificationProfiles } from '../data/latestCertificationProfiles';
 import { latestCertificationProfilesExtra } from '../data/latestCertificationProfilesExtra';
 import type { Movie } from '../types/movie';
@@ -81,6 +82,7 @@ function allProfileVersions() {
       ...hardenedCorpus50,
       ...hardenedCorpusNextA,
       ...hardenedCorpusNextB,
+      ...languageCertificationNext150,
     ].map((profile) => normalizeTitle(profile.title))
   );
   const focusedExpansionTitles = new Set(
@@ -102,6 +104,11 @@ function allProfileVersions() {
     ...hardenedCorpus50,
     ...hardenedCorpusNextA,
     ...hardenedCorpusNextB,
+
+    // New language expansion is deliberately lower precedence than every already-hardened
+    // record above. If a title/year overlaps prior work, the prior record remains current.
+    ...languageCertificationNext150,
+
     ...sanghiProfileRevisions.filter((profile) => !hardenedNextTitles.has(normalizeTitle(profile.title))),
     ...corpusExpansionIntegrityRevisions.filter((profile) => !hardenedNextTitles.has(normalizeTitle(profile.title))),
     ...corpusExpansion02.filter((profile) => !hardenedNextTitles.has(normalizeTitle(profile.title))),
@@ -233,6 +240,7 @@ export function getCorpusStats() {
     batch02Provisional: results.filter((result) => result.lane === 'provisional-hold').length,
     nextHardenedBatchTotal: hardenedCorpus50C.length,
     previousHardenedBatchTotal: hardenedCorpus50B.length,
+    nextLanguageCertificationBatchTotal: languageCertificationNext150.length,
     latestCertifiedOrReviewed: latestCertificationProfiles.length + latestCertificationProfilesExtra.length,
   };
 }
