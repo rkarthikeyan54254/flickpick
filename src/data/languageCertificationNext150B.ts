@@ -44,6 +44,7 @@ import {
 import {
   languageCertificationHindiBReplacementExtras,
   languageCertificationTamilBReplacementExtras,
+  languageCertificationTeluguBReplacementExtras,
 } from './languageCertificationBReplacementExtras';
 
 function normalizedKey(profile: Pick<SanghiProfile, 'title' | 'year'>) {
@@ -123,7 +124,10 @@ export const languageCertificationTamil50BActive = selectNew(
   [...languageCertificationTamilBReplacements, ...languageCertificationTamilBReplacementExtras],
 );
 export const languageCertificationTelugu50BActive = selectNew(
-  'Telugu B', 'Telugu', languageCertificationTelugu50B, languageCertificationTeluguBReplacements,
+  'Telugu B',
+  'Telugu',
+  languageCertificationTelugu50B,
+  [...languageCertificationTeluguBReplacements, ...languageCertificationTeluguBReplacementExtras],
 );
 
 export const languageCertificationNext150B: SanghiProfile[] = [
